@@ -157,7 +157,7 @@ loading_predictor.set_model_id(name: str)
 from imbrium.predictors.multivarstandard import *
 
 # please make sure that the target feature is the first variable in the feature list
-predictor = BasicMultStepVar(steps_past: int, steps_future: int, data = pd.DataFrame(), features = [], scale: str = '')
+predictor = BasicMultStepMultVar(steps_past: int, steps_future: int, data = pd.DataFrame(), features = [], scale: str = '')
 
 # Choose between one of the architectures:
 
@@ -188,7 +188,7 @@ predictor.save_model()
 # Step 3: Invoke the method load_model()
 # optional Step 4: Use the setter method set_model_id(name: str) to give model a name
 
-loading_predictor = BasicMultStepVar(steps_past: int, steps_future: int)
+loading_predictor = BasicMultStepMultVar(steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
@@ -198,7 +198,7 @@ loading_predictor.set_model_id(name: str)
 from imbrium.predictors.multivarhybrid import *
 
 # please make sure that the target feature is the first variable in the feature list
-predictor = HybridMultStepVar(sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), features:list = [], scale: str = '')
+predictor = HybridMultStepMultVar(sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), features:list = [], scale: str = '')
 
 # Choose between one of the architectures:
 
