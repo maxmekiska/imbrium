@@ -1,8 +1,6 @@
 from imbrium.predictors.blueprints_predictors.abstract_univariate import UniVariateMultiStep
 from imbrium.architectures.models import *
 
-%run architectures/models.py
-
 import matplotlib.pyplot as plt
 from numpy import array
 from numpy import reshape
