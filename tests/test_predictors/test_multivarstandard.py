@@ -6,7 +6,7 @@ from imbrium.predictors.multivarstandard import *
 
 data = pd.read_csv('tests/example_dataset/CaliforniaHousing.csv')
 
-test0 = BasicMultStepVar(
+test0 = BasicMultStepMultVar(
     2,
     10,
     data=data,

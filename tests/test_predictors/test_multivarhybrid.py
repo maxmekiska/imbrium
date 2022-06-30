@@ -6,7 +6,7 @@ from imbrium.predictors.multivarhybrid import *
 
 data = pd.read_csv('tests/example_dataset/CaliforniaHousing.csv')
 
-test0 = HybridMultStepVar(
+test0 = HybridMultStepMultVar(
     1,
     5,
     5,
