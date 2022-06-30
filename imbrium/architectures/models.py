@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Bidirectional, TimeDistributed, GRU, SimpleRNN, RepeatVector
 
-def mlp(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def mlp(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates MLP model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -14,7 +14,7 @@ def mlp(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: in
 
     return model
 
-def rnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def rnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -26,7 +26,7 @@ def rnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: in
 
     return model
 
-def lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -38,7 +38,7 @@ def lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: i
 
     return model
 
-def gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -50,7 +50,7 @@ def gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: in
 
     return model
 
-def cnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates the CNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -64,7 +64,7 @@ def cnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: in
 
     return model
 
-def birnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def birnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates a bidirectional RNN model by defining all layers with activation functions, optimizer, loss function and evaluation matrics.
     '''
     model = keras.Sequential()
@@ -75,7 +75,7 @@ def birnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: 
 
     return model
 
-def bilstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def bilstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates a bidirectional LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation matrics.
     '''
     model = keras.Sequential()
@@ -86,7 +86,7 @@ def bilstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape:
 
     return model
 
-def bigru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def bigru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates a bidirectional GRU model by defining all layers with activation functions, optimizer, loss function and evaluation matrics.
     '''
     model = keras.Sequential()
@@ -97,7 +97,7 @@ def bigru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: 
 
     return model
 
-def encdec_rnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int):
+def encdec_rnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int) -> object:
     '''Creates Encoder-Decoder RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -111,7 +111,7 @@ def encdec_rnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_sh
 
     return model
 
-def encdec_lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int):
+def encdec_lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int) -> object:
     '''Creates Encoder-Decoder LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -125,7 +125,7 @@ def encdec_lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_s
 
     return model
 
-def encdec_gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int):
+def encdec_gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int) -> object:
     '''Creates Encoder-Decoder GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -139,7 +139,7 @@ def encdec_gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_sh
 
     return model
 
-def cnnrnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnnrnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates CNN-RNN hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -154,7 +154,7 @@ def cnnrnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape:
 
     return model
 
-def cnnlstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnnlstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates CNN-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -169,7 +169,7 @@ def cnnlstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape
 
     return model
 
-def cnngru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnngru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates CNN-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -185,7 +185,7 @@ def cnngru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape:
     return model
 
 
-def cnnbirnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnnbirnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates CNN-BI-RNN hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -200,7 +200,7 @@ def cnnbirnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shap
 
     return model
 
-def cnnbilstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnnbilstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates CNN-BI-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
@@ -215,7 +215,7 @@ def cnnbilstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_sha
 
     return model
 
-def cnnbigru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int):
+def cnnbigru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int) -> object:
     '''Creates CNN-BI-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''
     model = keras.Sequential()
