@@ -1,4 +1,5 @@
 from imbrium.predictors.blueprints_predictors.abstract_univariate import UniVariateMultiStep
+from imbrium.architectures.models import *
 
 import matplotlib.pyplot as plt
 from numpy import array
@@ -185,15 +186,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None,self.modified_back, 1)))
-        self.model.add(TimeDistributed(Conv1D(filters=32, kernel_size=1, activation='relu')))
-        self.model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-        self.model.add(TimeDistributed(Flatten()))
-        self.model.add(SimpleRNN(50, activation='relu', return_sequences=True))
-        self.model.add(SimpleRNN(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = cnnrnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnlstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
         '''Creates CNN-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
@@ -202,15 +195,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None,self.modified_back, 1)))
-        self.model.add(TimeDistributed(Conv1D(filters=32, kernel_size=1, activation='relu')))
-        self.model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-        self.model.add(TimeDistributed(Flatten()))
-        self.model.add(LSTM(50, activation='relu', return_sequences=True))
-        self.model.add(LSTM(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = cnnlstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnngru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
         '''Creates CNN-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
@@ -219,66 +204,34 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None,self.modified_back, 1)))
-        self.model.add(TimeDistributed(Conv1D(filters=32, kernel_size=1, activation='relu')))
-        self.model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-        self.model.add(TimeDistributed(Flatten()))
-        self.model.add(GRU(50, activation='relu', return_sequences=True))
-        self.model.add(GRU(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = cnngru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnbirnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-Bidirectional-RNN hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-BI-RNN hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
-        self.set_model_id('CNN-Bi-RNN')
+        self.set_model_id('CNN-BI-RNN')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None,self.modified_back, 1)))
-        self.model.add(TimeDistributed(Conv1D(filters=32, kernel_size=1, activation='relu')))
-        self.model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-        self.model.add(TimeDistributed(Flatten()))
-        self.model.add(Bidirectional(SimpleRNN(50, activation='relu', return_sequences=True)))
-        self.model.add(SimpleRNN(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = cnnbirnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnbilstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-Bidirectional-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-BI-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
-        self.set_model_id('CNN-Bi-LSTM')
+        self.set_model_id('CNN-BI-LSTM')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None,self.modified_back, 1)))
-        self.model.add(TimeDistributed(Conv1D(filters=32, kernel_size=1, activation='relu')))
-        self.model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-        self.model.add(TimeDistributed(Flatten()))
-        self.model.add(Bidirectional(LSTM(50, activation='relu', return_sequences=True)))
-        self.model.add(LSTM(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = cnnbilstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnbigru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-Bidirectional-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-BI-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
-        self.set_model_id('CNN-Bi-GRU')
+        self.set_model_id('CNN-BI-GRU')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None,self.modified_back, 1)))
-        self.model.add(TimeDistributed(Conv1D(filters=32, kernel_size=1, activation='relu')))
-        self.model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-        self.model.add(TimeDistributed(Flatten()))
-        self.model.add(Bidirectional(GRU(50, activation='relu', return_sequences=True)))
-        self.model.add(GRU(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = cnnbigru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def fit_model(self, epochs: int, show_progress: int = 1, validation_split=0.20, batch_size = 10):
         '''Trains the model on data provided. Perfroms validation.

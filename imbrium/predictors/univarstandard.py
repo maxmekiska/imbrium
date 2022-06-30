@@ -1,4 +1,5 @@
 from imbrium.predictors.blueprints_predictors.abstract_univariate import UniVariateMultiStep
+from imbrium.architectures.models import *
 
 import matplotlib.pyplot as plt
 from numpy import array
@@ -172,6 +173,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         '''
         return self.metrics
 
+
     def create_mlp(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
         '''Creates MLP model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
@@ -179,14 +181,9 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.input_x = self.input_x.reshape((self.input_x.shape[0], self.input_x.shape[1])) # necessary to account for different shape input for MLP compared to the other models.
+        self.input_x = self.input_x.reshape((self.input_x.shape[0], self.input_x.shape[1]))
 
-        self.model = keras.Sequential()
-        self.model.add(Dense(50, activation='relu', input_dim = self.input_x.shape[1]))
-        self.model.add(Dense(25, activation='relu'))
-        self.model.add(Dense(25, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = mlp(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=self.input_x.shape[1], output_shape=self.input_y.shape[1])
 
     def create_rnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
         '''Creates RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
@@ -195,12 +192,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(SimpleRNN(40, activation='relu', return_sequences=True, input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(SimpleRNN(50, activation='relu', return_sequences=True))
-        self.model.add(SimpleRNN(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = rnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
 
     def create_lstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
         '''Creates LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
@@ -209,12 +201,16 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(LSTM(40, activation='relu', return_sequences=True, input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(LSTM(50, activation='relu', return_sequences=True))
-        self.model.add(LSTM(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = lstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
+
+    def create_cnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        '''Creates CNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''
+        self.set_model_id('CNN')
+        self.loss = loss
+        self.metrics = metrics
+
+        self.model = cnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
 
     def create_gru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
         '''Creates GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
@@ -223,115 +219,62 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(GRU(40, activation='relu', return_sequences=True, input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(GRU(50, activation='relu', return_sequences=True))
-        self.model.add(GRU(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
-
-    def create_cnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates the CNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
-        '''
-        self.set_model_id('CNN')
-        self.loss = loss
-        self.metrics = metrics
-
-        self.model = keras.Sequential()
-        self.model.add(Conv1D(filters=64, kernel_size=1, activation='relu', input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(Conv1D(filters=32, kernel_size=1, activation='relu'))
-        self.model.add(MaxPooling1D(pool_size=2))
-        self.model.add(Flatten())
-        self.model.add(Dense(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = gru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
 
     def create_birnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates a bidirectional RNN model by defining all layers with activation functions, optimizer, loss function and evaluation matrics.
+        '''Creates BI-RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
-        self.set_model_id('Bidirectional RNN')
+        self.set_model_id('BI-RNN')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(Bidirectional(SimpleRNN(50, activation='relu', return_sequences=True), input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(SimpleRNN(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = birnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
+
 
     def create_bilstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates a bidirectional LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation matrics.
+        '''Creates BI-LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
-        self.set_model_id('Bidirectional LSTM')
+        self.set_model_id('BI-LSTM')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(Bidirectional(LSTM(50, activation='relu', return_sequences=True), input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(LSTM(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = bilstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
 
     def create_bigru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates a bidirectional GRU model by defining all layers with activation functions, optimizer, loss function and evaluation matrics.
+        '''Creates BI-GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
-        self.set_model_id('Bidirectional GRU')
+        self.set_model_id('BI-GRU')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(Bidirectional(GRU(50, activation='relu', return_sequences=True), input_shape=(self.input_x.shape[1], 1)))
-        self.model.add(GRU(50, activation='relu'))
-        self.model.add(Dense(self.input_y.shape[1]))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = bigru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], 1), output_shape=self.input_y.shape[1])
 
     def create_encdec_rnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates Encoder-Decoder RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates Encoder-Decoder-RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
         self.set_model_id('Encoder-Decoder-RNN')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(SimpleRNN(100, activation='relu', return_sequences = True, input_shape=(self.input_x.shape[1], self.input_x.shape[2])))
-        self.model.add(SimpleRNN(50, activation='relu'))
-        self.model.add(RepeatVector(self.input_y.shape[1]))
-        self.model.add(SimpleRNN(50, activation='relu', return_sequences = True))
-        self.model.add(SimpleRNN(100, activation='relu', return_sequences=True))
-        self.model.add(TimeDistributed(Dense(self.input_x.shape[2])))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = encdec_rnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_x.shape[2], repeat = self.input_y.shape[1])
 
     def create_encdec_lstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates Encoder-Decoder LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates Encoder-Decoder-LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
         self.set_model_id('Encoder-Decoder-LSTM')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(LSTM(100, activation='relu', return_sequences = True, input_shape=(self.input_x.shape[1], self.input_x.shape[2])))
-        self.model.add(LSTM(50, activation='relu'))
-        self.model.add(RepeatVector(self.input_y.shape[1]))
-        self.model.add(LSTM(50, activation='relu', return_sequences = True))
-        self.model.add(LSTM(100, activation='relu', return_sequences=True))
-        self.model.add(TimeDistributed(Dense(self.input_x.shape[2])))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = encdec_lstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_x.shape[2], repeat = self.input_y.shape[1])
 
     def create_encdec_gru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates Encoder-Decoder GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates Encoder-Decoder-LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
         self.set_model_id('Encoder-Decoder-GRU')
         self.loss = loss
         self.metrics = metrics
 
-        self.model = keras.Sequential()
-        self.model.add(GRU(100, activation='relu', return_sequences = True, input_shape=(self.input_x.shape[1], self.input_x.shape[2])))
-        self.model.add(GRU(50, activation='relu'))
-        self.model.add(RepeatVector(self.input_y.shape[1]))
-        self.model.add(GRU(50, activation='relu', return_sequences = True))
-        self.model.add(GRU(100, activation='relu', return_sequences=True))
-        self.model.add(TimeDistributed(Dense(self.input_x.shape[2])))
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        self.model = encdec_gru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_x.shape[2], repeat = self.input_y.shape[1])
 
     def fit_model(self, epochs: int, show_progress: int = 1, validation_split: float = 0.20, batch_size: int = 10):
         '''Trains the model on data provided. Performs validation.
