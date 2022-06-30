@@ -38,6 +38,7 @@ Standard supports the following architectures:
 - Bidirectional gated recurrent unit (BI-GRU)
 - Encoder-Decoder recurrent neural network (supported in Univariate-Multistep class)
 - Encoder-Decoder long-short term memory (supported in Univariate-Multistep class)
+- Encoder-Decoder convolutional neural network (supported in Univariate-Multistep class)
 - Encoder-Decoder gated recurrent unit (supported in Univariate-Multistep class)
 
 Hybrid supports:
@@ -85,6 +86,7 @@ predictor = BasicMultStepUniVar(steps_past: int, steps_future: int, data = pd.Da
 # predictor.create_bigru(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 # predictor.create_encdec_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 # predictor.create_encdec_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
+# predictor.create_encdec_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 # predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 
 # Fit the predictor object
