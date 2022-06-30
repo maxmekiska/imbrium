@@ -125,6 +125,22 @@ def encdec_lstm(optimizer: str, loss, metrics: str, input_shape: tuple, output_s
 
     return model
 
+def encdec_cnn(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int) -> object:
+    '''Creates Encoder-Decoder CNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+    '''
+    model = keras.Sequential()
+    model.add(Conv1D(filters=64, kernel_size=1, activation='relu', input_shape=input_shape))
+    model.add(Conv1D(filters=32, kernel_size=1, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Flatten())
+    model.add(RepeatVector(repeat))
+    model.add(GRU(50, activation='relu', return_sequences = True))
+    model.add(GRU(100, activation='relu', return_sequences=True))
+    model.add(TimeDistributed(Dense(output_shape)))
+    model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+
+    return model
+
 def encdec_gru(optimizer: str, loss, metrics: str, input_shape: tuple, output_shape: int, repeat: int) -> object:
     '''Creates Encoder-Decoder GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
     '''

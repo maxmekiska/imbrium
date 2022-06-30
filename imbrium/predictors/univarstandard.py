@@ -1,6 +1,8 @@
 from imbrium.predictors.blueprints_predictors.abstract_univariate import UniVariateMultiStep
 from imbrium.architectures.models import *
 
+%run architectures/models.py
+
 import matplotlib.pyplot as plt
 from numpy import array
 from numpy import reshape
@@ -268,13 +270,22 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.model = encdec_lstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_x.shape[2], repeat = self.input_y.shape[1])
 
     def create_encdec_gru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates Encoder-Decoder-LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates Encoder-Decoder-GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
         '''
         self.set_model_id('Encoder-Decoder-GRU')
         self.loss = loss
         self.metrics = metrics
 
         self.model = encdec_gru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_x.shape[2], repeat = self.input_y.shape[1])
+
+    def create_encdec_cnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        '''Creates Encoder-Decoder-CNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''
+        self.set_model_id('Encoder-Decoder-CNN')
+        self.loss = loss
+        self.metrics = metrics
+
+        self.model = encdec_cnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_x.shape[2], repeat = self.input_y.shape[1])
 
     def fit_model(self, epochs: int, show_progress: int = 1, validation_split: float = 0.20, batch_size: int = 10):
         '''Trains the model on data provided. Performs validation.
