@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     author="Maximilian Mekiska",
     author_email="maxmekiska@gmail.com",
-    url="https://github.com/maxmekiska/Cerberus",
+    url="https://github.com/maxmekiska/Imbrium",
     description="Standard and Hybrid Deep Learning Multivariate-Multi-Step & Univariate-Multi-Step Time Series Forecasting.",
     name="Imbrium",
     version="0.1.0",
