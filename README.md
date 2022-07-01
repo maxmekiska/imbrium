@@ -229,7 +229,7 @@ predictor.save_model()
 # Step 3: Invoke the method load_model()
 # optional Step 4: Use the setter method set_model_id(name: str) to give model a name
 
-loading_predictor =  HybridMultStepUniVar(sub_seq: int, steps_past: int, steps_future: int)
+loading_predictor =  HybridMultStepMultVar(sub_seq: int, steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
