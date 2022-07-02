@@ -17,9 +17,9 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Bidirectional, GRU, SimpleRNN
 
-
 class BasicMultStepMultVar(MultiVariateMultiStep):
-    '''Implements deep neural networks based on multivariate multipstep predictors.
+    '''Implements deep neural networks based on multivariate multipstep
+       standard predictors.
 
         Methods
         -------
@@ -27,22 +27,52 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             Private method to scale input data.
         _data_prep(self, stockdata: DataFrame) -> array:
             Private method to extract features and convert DataFrame to an array.
-        _sequence_prep(self, input_sequence: array, steps_past: int, steps_future: int) -> [(array, array)]:
+        _sequence_prep(self, input_sequence: array, steps_past: int,
+        steps_future: int) -> [(array, array)]:
             Private method to prepare data for predictor ingestion.
-        _multistep_prep(self, input_sequence: array, steps_past: int, steps_future: int) -> [(array, array)]:
+        _multistep_prep(self, input_sequence: array, steps_past: int,
+        steps_future: int) -> [(array, array)]:
             Private method to apply sequence_prep to every feature.
-        set_model_id(self, name: str)
+        set_model_id(self, name: str):
             Setter method to change model id name.
-        create_mlp(self):
+        get_X_input(self) -> array:
+            Getter method to retrieve transformed X input - training.
+        get_X_input_shape(self) -> tuple:
+            Getter method to retrieve transformed X shape.
+        get_y_input(self) -> array:
+            Getter method to retrieve transformed y input - target.
+        get_y_input_shape(self) -> array:
+            Getter method to retrieve transformed y input shape.
+        get_loss(self) -> str:
+            Getter method to retrieve used model loss.
+        get_metrics(self) -> str:
+            Getter method to retrieve model evaluation metrics used.
+        create_mlp(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
             Builds MLP structure.
-        create_lstm(self):
+        create_rnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds RNN structure.
+        create_lstm(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
             Builds LSTM structure.
-        create_cnn(self):
+        create_cnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
             Builds CNN structure.
-        create_bilstm(self):
+        create_gru(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds GRU structure.
+        create_birnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds bidirectional MLP structure.
+        create_bilstm(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
             Builds bidirectional LSTM structure.
+        create_bigru(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds bidirectional GRU structure.
         fit_model(self, epochs: int, show_progress: int = 1):
-            Training the in the prior defined model. Count of epochs need to be defined.
+            Fitting model onto provided data.
         model_blueprint(self):
             Print blueprint of layer structure.
         show_performance(self):
@@ -60,10 +90,13 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 steps_past (int): Steps predictor will look backward.
                 steps_future (int): Steps predictor will look forward.
                 data (DataFrame): Input data for model training.
+                features (list): List of features. First feature in list will be
+                set to the target variable.
+                scale (str): How to scale the data before making predictions.
         '''
         self.scaler = self._scaling(scale)
 
-        self.model_id = '' # to identify model (example: name)
+        self.model_id = ''
         self.loss = ''
         self.metrics = ''
 
@@ -95,9 +128,9 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         return scaler
 
     def _data_prep(self, data: DataFrame, features: list) -> array:
-        ''' Private method to extract features and convert DataFrame to an array. Extracts: Adj Close, Open, High and Low features.
+        ''' Private method to extract features and convert DataFrame to an array.
                 Parameters:
-                    stockdata (DataFrame): DataFrame containing multi-feature stock data.
+                    data (DataFrame): DataFrame containing multi-feature data.
                     features (list): All features that should be considered.
                 Returns:
                     data (array): Array containing sequences of selected features.
@@ -173,6 +206,8 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
     def set_model_id(self, name: str):
         '''Setter method to change model id field.
+            Parameters:
+                name (str): Name for selected Model.
         '''
         self.model_id = name
 
@@ -212,10 +247,12 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         '''
         return self.metrics
 
-
-
     def create_mlp(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates MLP model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates MLP model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('MLP')
         self.loss = loss
@@ -228,7 +265,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model = mlp(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=self.input_x.shape[1], output_shape=self.input_y.shape[1])
 
     def create_rnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates RNN model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('RNN')
         self.loss = loss
@@ -238,7 +279,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
 
     def create_lstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates LSTM model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('LSTM')
         self.loss = loss
@@ -247,7 +292,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model = lstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
 
     def create_cnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN')
         self.loss = loss
@@ -256,7 +305,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model = cnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
 
     def create_gru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates GRU model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('GRU')
         self.loss = loss
@@ -265,7 +318,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model = gru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
 
     def create_birnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates BI-RNN model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates BI-RNN model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('BI-RNN')
         self.loss = loss
@@ -275,7 +332,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
 
     def create_bilstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates BI-LSTM model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates BI-LSTM model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('BI-LSTM')
         self.loss = loss
@@ -284,7 +345,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model = bilstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
 
     def create_bigru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates BI-GRU model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates BI-GRU model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('BI-GRU')
         self.loss = loss
@@ -307,8 +372,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model.summary()
 
     def show_performance(self):
-        '''Plots:
-        1. Models mean squared error of trainings and validation data. (Model loss)
+        '''Plots model loss, validation loss over time.
         '''
         information = self.details
 

@@ -4,9 +4,6 @@ from imbrium.architectures.models import *
 import matplotlib.pyplot as plt
 from numpy import array
 from numpy import reshape
-import pandas as pd
-from pandas import DataFrame
-import os
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, FunctionTransformer
 
@@ -24,20 +21,52 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         Methods
         -------
         _scaling(self, method: str) -> object:
-            Private method to scale input data.
-        _sequence_prep(input_sequence: array, steps_past: int, steps_future: int, scale: str = 'standard') -> [(array, array, int)]:
+            Private method to return scikit scaling object.
+        _data_prep(self, data: DataFrame, features: list) -> array:
+            Private method to extract features and convert DataFrame to an array.
+            IMPORTANT: First feature is set to the target variable.
+        _sequence_prep(input_sequence: array, steps_past: int, steps_future: int)
+        -> [(array, array, int)]:
             Private method to prepare data for predictor ingestion.
         set_model_id(self, name: str):
             Setter method to change model id name.
-        create_cnnlstm(self):
+        get_X_input(self) -> array:
+            Getter method to retrieve transformed X input - training.
+        get_X_input_shape(self) -> tuple:
+            Getter method to retrieve transformed X shape.
+        get_y_input(self) -> array:
+            Getter method to retrieve transformed y input - target.
+        get_y_input_shape(self) -> array:
+            Getter method to retrieve transformed y input shape.
+        get_loss(self) -> str:
+            Getter method to retrieve used model loss.
+        get_metrics(self) -> str:
+            Getter method to retrieve model evaluation metrics used.
+        create_cnnrnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds CNN-RNN structure.
+        create_cnnlstm(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
             Builds CNN-LSTM structure.
+        create_cnngru(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds CNN-GRU structure.
+        create_cnnbirnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Buidls CNN bidirectional RNN structure.
+        create_cnnbilstm(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds CNN bidirectional LSTM structure.
+        create_cnnbigru(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds CNN bidirectional GRU structure.
         fit_model(self, epochs: int, show_progress: int = 1):
-            Training the in the prior defined model. Count of epochs need to be defined.
+            Fitting selected model to data provided.
         model_blueprint(self):
             Print blueprint of layer structure.
         show_performance(self):
             Evaluate and plot model performance.
-        predict(self, data: array, scale: str = 'standard'):
+        predict(self, data: array):
             Takes in input data and outputs model forecasts.
         save_model(self):
             Saves current ceras model to current directory.
@@ -47,10 +76,13 @@ class HybridMultStepUniVar(UniVariateMultiStep):
     def __init__(self, sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), scale: str = '') -> object:
         '''
             Parameters:
-                sub_seq (int): Further division of given steps a predictor will look backward.
+                sub_seq (int): Further division of given steps a predictor will
+                look backward.
                 steps_past (int): Steps predictor will look backward.
                 steps_future (int): Steps predictor will look forward.
-                data (array): Input data for model training. Default is empty to enable loading pre-trained models.
+                data (array): Input data for model training. Default is empty to
+                enable loading pre-trained models.
+                scale (str): How to scale the data before making predictions.
         '''
         self.sub_seq = sub_seq
         self.steps_past = steps_past
@@ -68,7 +100,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         else:
             self.data = data
 
-        self.model_id = '' # to identify model (example: name)
+        self.model_id = ''
 
     def _scaling(self, method: str) -> object:
         '''Scales data accordingly.
@@ -105,16 +137,21 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         return scaled
 
     def _sequence_prep(self, input_sequence: array, sub_seq: int, steps_past: int, steps_future: int) -> [(array, array, int)]:
-        '''Prepares data input into X and y sequences. Length of the X sequence is determined by steps_past while the length of y is determined by steps_future. In detail, the predictor looks at sequence X and predicts sequence y.
+        '''Prepares data input into X and y sequences. Length of the X sequence
+           is determined by steps_past while the length of y is determined by
+           steps_future. In detail, the predictor looks at sequence X and
+           predicts sequence y.
             Parameters:
-                input_sequence (array): Sequence that contains time series in array format
-                sub_seq (int): Further division of given steps a predictor will look backward.
-                steps_past (int): Steps the predictor will look backward
-                steps_future (int): Steps the predictor will look forward
+                input_sequence (array): Sequence that contains time series in
+                array format.
+                sub_seq (int): Further division of given steps a predictor will
+                look backward.
+                steps_past (int): Steps the predictor will look backward.
+                steps_future (int): Steps the predictor will look forward.
             Returns:
-                X (array): Array containing all looking back sequences
-                y (array): Array containing all looking forward sequences
-                modified_back (int): Modified looking back sequence length
+                X (array): Array containing all looking back sequences.
+                y (array): Array containing all looking forward sequences.
+                modified_back (int): Modified looking back sequence length.
         '''
         length = len(input_sequence)
         if length == 0:
@@ -136,10 +173,12 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         X = array(X)
         modified_back = X.shape[1]//sub_seq
         X = X.reshape((X.shape[0], sub_seq, modified_back, 1))
-        return X, y, modified_back # special treatment to account for sub sequence division
+        return X, y, modified_back
 
     def set_model_id(self, name: str):
         '''Setter method to change model id field.
+            Parameters:
+                name (str): Name for selected Model.
         '''
         self.model_id = name
 
@@ -180,7 +219,11 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         return self.metrics
 
     def create_cnnrnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-RNN hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-RNN hybrid model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN-RNN')
         self.loss = loss
@@ -189,7 +232,11 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model = cnnrnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnlstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-LSTM hybrid model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN-LSTM')
         self.loss = loss
@@ -198,7 +245,11 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model = cnnlstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnngru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-GRU hybrid model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN-GRU')
         self.loss = loss
@@ -207,7 +258,11 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model = cnngru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnbirnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-BI-RNN hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-BI-RNN hybrid model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN-BI-RNN')
         self.loss = loss
@@ -216,7 +271,11 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model = cnnbirnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnbilstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-BI-LSTM hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-BI-LSTM hybrid model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN-BI-LSTM')
         self.loss = loss
@@ -225,7 +284,11 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model = cnnbilstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(None,self.modified_back, 1), output_shape=self.input_y.shape[1])
 
     def create_cnnbigru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-        '''Creates CNN-BI-GRU hybrid model by defining all layers with activation functions, optimizer, loss function and evaluation metrics.
+        '''Creates CNN-BI-GRU hybrid model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
         '''
         self.set_model_id('CNN-BI-GRU')
         self.loss = loss
@@ -238,6 +301,8 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             Parameters:
                 epochs (int): Number of epochs to train the model.
                 show_progress (int): Prints training progress.
+                validation_split (float): Determines size of Validation data.
+                batch_size (int): Batch size of input data.
         '''
         self.details = self.model.fit(self.input_x, self.input_y, validation_split=validation_split, batch_size = batch_size, epochs = epochs, verbose=show_progress)
         return self.details
@@ -248,8 +313,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model.summary()
 
     def show_performance(self):
-        '''Plots:
-        1. Models mean squared error of trainings and validation data. (Model loss)
+        '''Plots model loss, validation loss over time.
         '''
         information = self.details
 
