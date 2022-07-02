@@ -17,6 +17,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Bidirectional, TimeDistributed, GRU, SimpleRNN
 
+
 class HybridMultStepMultVar(MultiVariateMultiStep):
     '''Implements neural network based multivariate multipstep hybrid predictors.
 
@@ -78,7 +79,15 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         load_model(self, location: str):
             Load model from location specified.
     '''
-    def __init__(self, sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), features:list = [], scale: str = '') -> object:
+
+    def __init__(
+            self,
+            sub_seq: int,
+            steps_past: int,
+            steps_future: int,
+            data=pd.DataFrame(),
+            features: list = [],
+            scale: str = '') -> object:
         '''
             Parameters:
                 sub_seq (int): Divide data into further subsequences.
@@ -100,10 +109,10 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.model_id = ''
         self.sub_seq = sub_seq
 
-
         if len(data) > 0:
             self.data = self._data_prep(data, features)
-            self.input_x, self.input_y, self.modified_back = self._multistep_prep(self.data, sub_seq, steps_past, steps_future)
+            self.input_x, self.input_y, self.modified_back = self._multistep_prep(
+                self.data, sub_seq, steps_past, steps_future)
         else:
             self.data = data
 
@@ -123,7 +132,8 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         elif method == 'maxabs':
             scaler = MaxAbsScaler()
         elif method == 'normalize':
-            scaler = FunctionTransformer(lambda x: (x - x.min()) / (x.max() - x.min()), validate= True)
+            scaler = FunctionTransformer(lambda x: (
+                x - x.min()) / (x.max() - x.min()), validate=True)
 
         return scaler
 
@@ -147,7 +157,13 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
 
         return scaled
 
-    def _sequence_prep(self, input_sequence: array, sub_seq: int, steps_past: int, steps_future: int) -> [(array, array, int)]:
+    def _sequence_prep(self,
+                       input_sequence: array,
+                       sub_seq: int,
+                       steps_past: int,
+                       steps_future: int) -> [(array,
+                                               array,
+                                               int)]:
         '''Prepares data input into X and y sequences. Lenght of the X sequence
            is dertermined by steps_past while the length of y is determined by
            steps_future. In detail, the predictor looks at sequence X and
@@ -168,7 +184,8 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         X = []
         y = []
         if length <= steps_past:
-            raise ValueError('Input sequence is equal to or shorter than steps to look backwards')
+            raise ValueError(
+                'Input sequence is equal to or shorter than steps to look backwards')
         if steps_future <= 0:
             raise ValueError('Steps in the future need to be bigger than 0')
 
@@ -176,17 +193,23 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
             last = i + steps_past
             if last > length - steps_future:
                 X.append(input_sequence[i:last])
-                y.append(input_sequence[last-1:last-1 + steps_future])
+                y.append(input_sequence[last - 1:last - 1 + steps_future])
                 break
             X.append(input_sequence[i:last])
-            y.append(input_sequence[last-1:last-1 + steps_future]) # modification to use correct target y sequence
+            # modification to use correct target y sequence
+            y.append(input_sequence[last - 1:last - 1 + steps_future])
         y = array(y)
         X = array(X)
-        modified_back = X.shape[1]//sub_seq
+        modified_back = X.shape[1] // sub_seq
         X = X.reshape((X.shape[0], sub_seq, modified_back, 1))
-        return X, y, modified_back # special treatment to account for sub sequence division
+        return X, y, modified_back  # special treatment to account for sub sequence division
 
-    def _multistep_prep(self, input_sequence: array, sub_seq: int, steps_past: int, steps_future: int) -> [(array, array)]:
+    def _multistep_prep(self,
+                        input_sequence: array,
+                        sub_seq: int,
+                        steps_past: int,
+                        steps_future: int) -> [(array,
+                                                array)]:
         '''This function prepares input sequences into a suitable input format
            for a multivariate multistep model. The first seqeunce in the array
            needs to be the target variable y.
@@ -203,14 +226,16 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         X = []
         Y = []
         for i in range(len(input_sequence)):
-            if i ==0: # target variable should be first sequence
-                _, y, _ = self._sequence_prep(input_sequence[0], sub_seq, steps_past, steps_future)
+            if i == 0:  # target variable should be first sequence
+                _, y, _ = self._sequence_prep(
+                    input_sequence[0], sub_seq, steps_past, steps_future)
                 Y.append(y)
-                continue # skip since target column not requiered in X array
-            x, _, mod = self._sequence_prep(input_sequence[i], sub_seq, steps_past, steps_future)
+                continue  # skip since target column not requiered in X array
+            x, _, mod = self._sequence_prep(
+                input_sequence[i], sub_seq, steps_past, steps_future)
             X.append(x)
         X = dstack(X)
-        Y = Y[0] # getting array out of list
+        Y = Y[0]  # getting array out of list
         return X, Y, mod
 
     def set_model_id(self, name: str):
@@ -256,7 +281,11 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         '''
         return self.metrics
 
-    def create_cnnrnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnnrnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN-RNN hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -267,9 +296,21 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnnrnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2], self.input_x.shape[3]), output_shape=self.input_y.shape[1])
+        self.model = cnnrnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2],
+                self.input_x.shape[3]),
+            output_shape=self.input_y.shape[1])
 
-    def create_cnnlstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnnlstm(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN-LSTM hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -280,9 +321,21 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnnlstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2], self.input_x.shape[3]), output_shape=self.input_y.shape[1])
+        self.model = cnnlstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2],
+                self.input_x.shape[3]),
+            output_shape=self.input_y.shape[1])
 
-    def create_cnngru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnngru(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN-GRU hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -293,9 +346,21 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnngru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2], self.input_x.shape[3]), output_shape=self.input_y.shape[1])
+        self.model = cnngru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2],
+                self.input_x.shape[3]),
+            output_shape=self.input_y.shape[1])
 
-    def create_cnnbirnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnnbirnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN-BI-RNN hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -306,9 +371,21 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnnbirnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2], self.input_x.shape[3]), output_shape=self.input_y.shape[1])
+        self.model = cnnbirnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2],
+                self.input_x.shape[3]),
+            output_shape=self.input_y.shape[1])
 
-    def create_cnnbilstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnnbilstm(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN-BI-LSTM hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -319,9 +396,21 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnnbilstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2], self.input_x.shape[3]), output_shape=self.input_y.shape[1])
+        self.model = cnnbilstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2],
+                self.input_x.shape[3]),
+            output_shape=self.input_y.shape[1])
 
-    def create_cnnbigru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnnbigru(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN-BI-GRU hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -332,9 +421,22 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnnbigru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2], self.input_x.shape[3]), output_shape=self.input_y.shape[1])
+        self.model = cnnbigru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2],
+                self.input_x.shape[3]),
+            output_shape=self.input_y.shape[1])
 
-    def fit_model(self, epochs: int, show_progress: int = 1, validation_split: float = 0.20, batch_size: int = 10):
+    def fit_model(
+            self,
+            epochs: int,
+            show_progress: int = 1,
+            validation_split: float = 0.20,
+            batch_size: int = 10):
         '''Trains the model on data provided. Perfroms validation.
             Parameters:
                 epochs (int): Number of epochs to train the model.
@@ -342,7 +444,13 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
                 validation_split (float): Determines size of Validation data.
                 batch_size (int): Batch size of input data.
         '''
-        self.details = self.model.fit(self.input_x, self.input_y, validation_split=0.20, batch_size = 10, epochs = epochs, verbose=show_progress)
+        self.details = self.model.fit(
+            self.input_x,
+            self.input_y,
+            validation_split=0.20,
+            batch_size=10,
+            epochs=epochs,
+            verbose=show_progress)
         return self.details
 
     def model_blueprint(self):
@@ -375,7 +483,7 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         data = self.scaler.transform(data)
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
-        data = data.reshape(1, self.sub_seq, shape_ , 1)
+        data = data.reshape(1, self.sub_seq, shape_, 1)
 
         y_pred = self.model.predict(data, verbose=0)
 

@@ -17,6 +17,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Bidirectional, GRU, SimpleRNN
 
+
 class BasicMultStepMultVar(MultiVariateMultiStep):
     '''Implements deep neural networks based on multivariate multipstep
        standard predictors.
@@ -84,7 +85,14 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         load_model(self, location: str):
             Load model from location specified.
     '''
-    def __init__(self, steps_past: int, steps_future: int, data = pd.DataFrame(), features = [], scale: str = '') -> object:
+
+    def __init__(
+            self,
+            steps_past: int,
+            steps_future: int,
+            data=pd.DataFrame(),
+            features=[],
+            scale: str = '') -> object:
         '''
             Parameters:
                 steps_past (int): Steps predictor will look backward.
@@ -100,10 +108,10 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = ''
         self.metrics = ''
 
-
         if len(data) > 0:
             self.data = self._data_prep(data, features)
-            self.input_x, self.input_y = self._multistep_prep(self.data, steps_past, steps_future)
+            self.input_x, self.input_y = self._multistep_prep(
+                self.data, steps_past, steps_future)
         else:
             self.data = data
 
@@ -123,7 +131,8 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         elif method == 'maxabs':
             scaler = MaxAbsScaler()
         elif method == 'normalize':
-            scaler = FunctionTransformer(lambda x: (x - x.min()) / (x.max() - x.min()), validate= True)
+            scaler = FunctionTransformer(lambda x: (
+                x - x.min()) / (x.max() - x.min()), validate=True)
 
         return scaler
 
@@ -148,7 +157,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
         return scaled
 
-    def _sequence_prep(self, input_sequence: array, steps_past: int, steps_future: int) -> [(array, array)]:
+    def _sequence_prep(self,
+                       input_sequence: array,
+                       steps_past: int,
+                       steps_future: int) -> [(array,
+                                               array)]:
         '''Prepares data input into X and y sequences. Lenght of the X sequence is dertermined by steps_past while the length of y is determined by steps_future. In detail, the predictor looks at sequence X and predicts sequence y.
                 Parameters:
                     input_sequence (array): Sequence that contains time series in array format
@@ -164,7 +177,8 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         X = []
         y = []
         if length <= steps_past:
-            raise ValueError('Input sequence is equal to or shorter than steps to look backwards')
+            raise ValueError(
+                'Input sequence is equal to or shorter than steps to look backwards')
         if steps_future <= 0:
             raise ValueError('Steps in the future need to be bigger than 0')
 
@@ -172,16 +186,21 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             last = i + steps_past
             if last > length - steps_future:
                 X.append(input_sequence[i:last])
-                y.append(input_sequence[last-1:last-1 + steps_future])
+                y.append(input_sequence[last - 1:last - 1 + steps_future])
                 break
             X.append(input_sequence[i:last])
-            y.append(input_sequence[last-1:last-1 + steps_future]) # modification to use correct target y sequence
+            # modification to use correct target y sequence
+            y.append(input_sequence[last - 1:last - 1 + steps_future])
         y = array(y)
         X = array(X)
         X = X.reshape((X.shape[0], X.shape[1], 1))
         return X, y
 
-    def _multistep_prep(self, input_sequence: array, steps_past: int, steps_future: int) -> [(array, array)]:
+    def _multistep_prep(self,
+                        input_sequence: array,
+                        steps_past: int,
+                        steps_future: int) -> [(array,
+                                                array)]:
         '''This function prepares input sequences into a suitable input format for a multivariate multistep model. The first seqeunce in the array needs to be the target variable y.
                 Parameters:
                     input_sequence (array): Sequence that contains time series in array format
@@ -194,14 +213,16 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         X = []
         Y = []
         for i in range(len(input_sequence)):
-            if i ==0: # target variable should be first sequence
-                _, y = self._sequence_prep(input_sequence[0], steps_past, steps_future)
+            if i == 0:  # target variable should be first sequence
+                _, y = self._sequence_prep(
+                    input_sequence[0], steps_past, steps_future)
                 Y.append(y)
-                continue # skip since target column not requiered in X array
-            x, _ = self._sequence_prep(input_sequence[i], steps_past, steps_future)
+                continue  # skip since target column not requiered in X array
+            x, _ = self._sequence_prep(
+                input_sequence[i], steps_past, steps_future)
             X.append(x)
         X = dstack(X)
-        Y = Y[0] # getting array out of list
+        Y = Y[0]  # getting array out of list
         return X, Y
 
     def set_model_id(self, name: str):
@@ -247,7 +268,11 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         '''
         return self.metrics
 
-    def create_mlp(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_mlp(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates MLP model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -260,11 +285,21 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
         self.dimension = (self.input_x.shape[1] * self.input_x.shape[2])
 
-        self.input_x = self.input_x.reshape((self.input_x.shape[0], self.dimension))
+        self.input_x = self.input_x.reshape(
+            (self.input_x.shape[0], self.dimension))
 
-        self.model = mlp(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=self.input_x.shape[1], output_shape=self.input_y.shape[1])
+        self.model = mlp(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=self.input_x.shape[1],
+            output_shape=self.input_y.shape[1])
 
-    def create_rnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_rnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates RNN model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -275,10 +310,20 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = rnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = rnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-
-    def create_lstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_lstm(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates LSTM model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -289,9 +334,20 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = lstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = lstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-    def create_cnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_cnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates CNN model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -302,9 +358,20 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = cnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = cnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-    def create_gru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_gru(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates GRU model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -315,9 +382,20 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = gru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = gru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-    def create_birnn(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_birnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates BI-RNN model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -328,10 +406,20 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = birnn(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = birnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-
-    def create_bilstm(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_bilstm(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates BI-LSTM model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -342,9 +430,20 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = bilstm(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = bilstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-    def create_bigru(self, optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+    def create_bigru(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
         '''Creates BI-GRU model.
             Parameters:
                 optimizer (str): Optimization algorithm.
@@ -355,15 +454,33 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.model = bigru(optimizer=optimizer, loss=loss, metrics=metrics, input_shape=(self.input_x.shape[1], self.input_x.shape[2]), output_shape=self.input_y.shape[1])
+        self.model = bigru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=self.input_y.shape[1])
 
-    def fit_model(self, epochs: int, show_progress: int = 1, validation_split: float = 0.20, batch_size: int = 10):
+    def fit_model(
+            self,
+            epochs: int,
+            show_progress: int = 1,
+            validation_split: float = 0.20,
+            batch_size: int = 10):
         '''Trains the model on data provided. Performs validation.
             Parameters:
                 epochs (int): Number of epochs to train the model.
                 show_progress (int): Prints training progress.
         '''
-        self.details = self.model.fit(self.input_x, self.input_y, validation_split=validation_split, batch_size = batch_size, epochs = epochs, verbose=show_progress)
+        self.details = self.model.fit(
+            self.input_x,
+            self.input_y,
+            validation_split=validation_split,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=show_progress)
         return self.details
 
     def model_blueprint(self):
@@ -395,14 +512,15 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.scaler.fit(data)
         data = self.scaler.transform(data)
 
-        dimension = (data.shape[0] * data.shape[1]) # MLP case
+        dimension = (data.shape[0] * data.shape[1])  # MLP case
 
         try:
-            data = data.reshape((1, data.shape[0], data.shape[1])) # All other models
+            data = data.reshape(
+                (1, data.shape[0], data.shape[1]))  # All other models
             y_pred = self.model.predict(data, verbose=0)
 
-        except:
-            data = data.reshape((1, dimension)) # MLP case
+        except BaseException:
+            data = data.reshape((1, dimension))  # MLP case
             y_pred = self.model.predict(data, verbose=0)
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
