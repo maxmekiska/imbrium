@@ -43,6 +43,7 @@ Standard supports the following architectures:
 
 Hybrid supports:
 
+- Convolutional neural network + recurrent neural network (CNN-RNN)
 - Convolutional neural network + Long short-term memory (CNN-LSTM)
 - Convolutional neural network + Gated recurrent unit (CNN-GRU)
 - Convolutional neural network + Bidirectional recurrent neural network (CNN-BI-RNN)
@@ -61,7 +62,7 @@ The following scikit-learn scaling procedures are supported:
 
 Trained models can furthermore be saved or loaded if the user wishes to do so.
 
-## How to use?
+## How to use Imbrium?
 
 Simplified workflows, more possible.
 
@@ -232,4 +233,21 @@ predictor.save_model()
 loading_predictor =  HybridMultStepMultVar(sub_seq: int, steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
+```
+## References
+Brwonlee, J., 2016. Display deep learning model training history in keras [Online]. Available from:
+https://machinelearningmastery.com/display-deep-
+learning-model-training-history-in-keras/.
+
+Brwonlee, J., 2018a. How to develop convolutional neural network models for time series forecasting [Online]. Available from:
+https://machinelearningmastery.com/how-to-develop-convolutional-
+neural-network-models-for-time-series-forecasting/.
+
+Brwonlee, J., 2018b. How to develop lstm models for time series forecasting [Online]. Available from:
+https://machinelearningmastery.com/how-to-develop-
+lstm-models-for-time-series-forecasting/.
+
+Brwonlee, J., 2018c. How to develop multilayer perceptron models for time series forecasting [Online]. Available from:
+https://machinelearningmastery.com/how-to-develop-multilayer-
+perceptron-models-for-time-series-forecasting/.
 ```
