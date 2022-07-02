@@ -17,8 +17,7 @@ setup(
     ],
     classifiers = [
         "Programming Language :: Python :: 3",
-        "License :: MIT License",
-        "Operating System :: Microsoft :: Windows 10",
+        "Operating System :: Microsoft :: Windows",
     ],
     keywords = ["machineleaning", "keras", "deeplearning", "timeseries", "forecasting"],
     python_rquieres=">=3.7"

@@ -10,5 +10,4 @@ Description: UNKNOWN
 Keywords: machineleaning,keras,deeplearning,timeseries,forecasting
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: MIT License
-Classifier: Operating System :: Microsoft :: Windows 10
+Classifier: Operating System :: Microsoft :: Windows
