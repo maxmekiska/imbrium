@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: Imbrium
+Version: 0.1.0
+Summary: Standard and Hybrid Deep Learning Multivariate-Multi-Step & Univariate-Multi-Step Time Series Forecasting.
+Home-page: https://github.com/maxmekiska/Imbrium
+Author: Maximilian Mekiska
+Author-email: maxmekiska@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: machineleaning,keras,deeplearning,timeseries,forecasting
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: MIT License
+Classifier: Operating System :: Microsoft :: Windows 10
