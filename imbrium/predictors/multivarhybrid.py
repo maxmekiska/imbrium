@@ -1,4 +1,4 @@
-from imbrium.predictors.blueprints_predictors.abstract_multivariate import MultiVariateMultiStep
+from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.architectures.models import *
 
 import matplotlib.pyplot as plt
@@ -56,7 +56,7 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
 
         self.scaler = self._scaling(scale)
 
-        self.model_id = '' # to identify model (example: name)
+        self.model_id = ''
         self.sub_seq = sub_seq
 
 

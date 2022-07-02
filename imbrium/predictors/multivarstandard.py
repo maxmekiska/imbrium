@@ -1,4 +1,4 @@
-from imbrium.predictors.blueprints_predictors.abstract_multivariate import MultiVariateMultiStep
+from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.architectures.models import *
 
 import matplotlib.pyplot as plt
