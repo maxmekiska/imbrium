@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 import os
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open('README.md', encoding="utf8") as file:
+    long_description = file.read()
 
 setup(
     author="Maximilian Mekiska",
