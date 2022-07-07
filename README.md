@@ -43,10 +43,10 @@ Standard supports the following architectures:
 - Bidirectional recurrent neural network (BI-RNN)
 - Bidirectional long-short term memory (BI-LSTM)
 - Bidirectional gated recurrent unit (BI-GRU)
-- Encoder-Decoder recurrent neural network (supported in Univariate-Multistep class)
-- Encoder-Decoder long-short term memory (supported in Univariate-Multistep class)
-- Encoder-Decoder convolutional neural network (supported in Univariate-Multistep class)
-- Encoder-Decoder gated recurrent unit (supported in Univariate-Multistep class)
+- Encoder-Decoder recurrent neural network
+- Encoder-Decoder long-short term memory
+- Encoder-Decoder convolutional neural network (Encoding via CNN, Decoding via GRU)
+- Encoder-Decoder gated recurrent unit
 
 Hybrid supports:
 

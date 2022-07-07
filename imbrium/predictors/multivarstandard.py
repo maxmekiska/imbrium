@@ -72,6 +72,18 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         create_bigru(self, optimizer: str = 'adam',
         loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
             Builds bidirectional GRU structure.
+        create_encdec_rnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds encoder decoder RNN structure.
+        create_encdec_lstm(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds encoder decoder LSTM structure.
+        create_encdec_gru(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds encoder decoder GRU structure.
+        create_encdec_cnn(self, optimizer: str = 'adam',
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+            Builds encoder decoder CNN structure.
         fit_model(self, epochs: int, show_progress: int = 1):
             Fitting model onto provided data.
         model_blueprint(self):
@@ -462,6 +474,107 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
+
+    def create_encdec_rnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
+        '''Creates Encoder-Decoder-RNN model model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
+        '''
+        self.set_model_id('Encoder-Decoder-RNN')
+        self.loss = loss
+        self.metrics = metrics
+
+        self.model = encdec_rnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=1,
+            repeat=self.input_y.shape[1])
+
+    def create_encdec_lstm(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
+        '''Creates Encoder-Decoder-LSTM model model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
+        '''
+        self.set_model_id('Encoder-Decoder-LSTM')
+        self.loss = loss
+        self.metrics = metrics
+
+        self.model = encdec_lstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=1,
+            repeat=self.input_y.shape[1])
+
+    def create_encdec_gru(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
+        '''Creates Encoder-Decoder-GRU model model.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
+        '''
+        self.set_model_id('Encoder-Decoder-GRU')
+        self.loss = loss
+        self.metrics = metrics
+
+        self.model = encdec_gru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=1,
+            repeat=self.input_y.shape[1])
+
+    def create_encdec_cnn(
+            self,
+            optimizer: str = 'adam',
+            loss: str = 'mean_squared_error',
+            metrics: str = 'mean_squared_error'):
+        '''Creates Encoder-Decoder-CNN model.
+            Encoding via CNN and Decoding via GRU.
+            Parameters:
+                optimizer (str): Optimization algorithm.
+                loss (str): Loss function.
+                metrics (str): Performance measurement.
+        '''
+        self.set_model_id('Encoder(CNN)-Decoder(GRU)')
+        self.loss = loss
+        self.metrics = metrics
+
+        self.model = encdec_cnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            input_shape=(
+                self.input_x.shape[1],
+                self.input_x.shape[2]),
+            output_shape=1,
+            repeat=self.input_y.shape[1])
 
     def fit_model(
             self,

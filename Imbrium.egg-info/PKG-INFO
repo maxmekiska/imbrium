@@ -1,12 +1,19 @@
 Metadata-Version: 2.1
 Name: Imbrium
-Version: 0.1.1
+Version: 0.1.2
 Summary: Standard and Hybrid Deep Learning Multivariate-Multi-Step & Univariate-Multi-Step Time Series Forecasting.
 Home-page: https://github.com/maxmekiska/Imbrium
 Author: Maximilian Mekiska
 Author-email: maxmekiska@gmail.com
 License: UNKNOWN
 Description: # Imbrium
+        
+        
+        ## Pip install
+        
+        ```shell
+        pip install imbrium
+        ```
         
         Standard and Hybrid Deep Learning Multivariate-Multi-Step
         (+ Univariate-Multi-Step, because why not?) Time Series Forecasting.
@@ -44,10 +51,10 @@ Description: # Imbrium
         - Bidirectional recurrent neural network (BI-RNN)
         - Bidirectional long-short term memory (BI-LSTM)
         - Bidirectional gated recurrent unit (BI-GRU)
-        - Encoder-Decoder recurrent neural network (supported in Univariate-Multistep class)
-        - Encoder-Decoder long-short term memory (supported in Univariate-Multistep class)
-        - Encoder-Decoder convolutional neural network (supported in Univariate-Multistep class)
-        - Encoder-Decoder gated recurrent unit (supported in Univariate-Multistep class)
+        - Encoder-Decoder recurrent neural network
+        - Encoder-Decoder long-short term memory
+        - Encoder-Decoder convolutional neural network (Encoding via CNN, Decoding via GRU)
+        - Encoder-Decoder gated recurrent unit
         
         Hybrid supports:
         

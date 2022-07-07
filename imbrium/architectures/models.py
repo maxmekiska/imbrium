@@ -328,6 +328,7 @@ def encdec_cnn(
         repeat: int) -> object:
     '''Creates Encoder-Decoder CNN model by defining all layers with activation
         functions, optimizer, loss function and evaluation metrics.
+        Encoding via CNN and decoding via GRU.
         Parameters:
             optimizer (str): Optimization algorithm.
             loss (str): Loss function.

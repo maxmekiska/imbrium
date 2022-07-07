@@ -512,12 +512,13 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss: str = 'mean_squared_error',
             metrics: str = 'mean_squared_error'):
         '''Creates Encoder-Decoder-CNN model.
+            Encoding via CNN and Decoding via GRU.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
         '''
-        self.set_model_id('Encoder-Decoder-CNN')
+        self.set_model_id('Encoder(CNN)-Decoder(GRU)')
         self.loss = loss
         self.metrics = metrics
 
