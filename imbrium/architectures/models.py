@@ -5,7 +5,7 @@ from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, 
 
 def mlp(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -32,7 +32,7 @@ def mlp(
 
 def rnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -64,7 +64,7 @@ def rnn(
 
 def lstm(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -96,7 +96,7 @@ def lstm(
 
 def gru(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -126,7 +126,7 @@ def gru(
 
 def cnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -160,7 +160,7 @@ def cnn(
 
 def birnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -192,7 +192,7 @@ def birnn(
 
 def bilstm(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -224,7 +224,7 @@ def bilstm(
 
 def bigru(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -251,7 +251,7 @@ def bigru(
 
 def encdec_rnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int,
@@ -286,7 +286,7 @@ def encdec_rnn(
 
 def encdec_lstm(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int,
@@ -321,7 +321,7 @@ def encdec_lstm(
 
 def encdec_cnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int,
@@ -359,7 +359,7 @@ def encdec_cnn(
 
 def encdec_gru(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int,
@@ -392,7 +392,7 @@ def encdec_gru(
 
 def cnnrnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -433,7 +433,7 @@ def cnnrnn(
 
 def cnnlstm(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -474,7 +474,7 @@ def cnnlstm(
 
 def cnngru(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -515,7 +515,7 @@ def cnngru(
 
 def cnnbirnn(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -561,7 +561,7 @@ def cnnbirnn(
 
 def cnnbilstm(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
@@ -607,7 +607,7 @@ def cnnbilstm(
 
 def cnnbigru(
         optimizer: str,
-        loss,
+        loss: str,
         metrics: str,
         input_shape: tuple,
         output_shape: int) -> object:
