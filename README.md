@@ -179,6 +179,10 @@ predictor = BasicMultStepMultVar(steps_past: int, steps_future: int, data = pd.D
 # predictor.create_birnn(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 # predictor.create_bilstm(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 # predictor.create_bigru(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
+# predictor.create_encdec_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
+# predictor.create_encdec_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
+# predictor.create_encdec_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
+# predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error')
 
 # Fit the predictor object
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20, batch_size: int = 10)
