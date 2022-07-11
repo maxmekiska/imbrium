@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 from numpy import array
 from numpy import reshape
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, FunctionTransformer
+from sklearn.preprocessing import (StandardScaler,
+                                   MinMaxScaler,
+                                   MaxAbsScaler,
+                                   FunctionTransformer)
 
 import pandas as pd
 from pandas import DataFrame
@@ -13,7 +16,16 @@ import os
 
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Bidirectional, TimeDistributed, GRU, SimpleRNN
+from tensorflow.keras.layers import (LSTM,
+                                     Dense,
+                                     Flatten,
+                                     Conv1D,
+                                     MaxPooling1D,
+                                     Dropout,
+                                     Bidirectional,
+                                     TimeDistributed,
+                                     GRU,
+                                     SimpleRNN)
 
 
 class HybridMultStepUniVar(UniVariateMultiStep):
@@ -44,22 +56,34 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         get_metrics(self) -> str:
             Getter method to retrieve model evaluation metrics used.
         create_cnnrnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Builds CNN-RNN structure.
         create_cnnlstm(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Builds CNN-LSTM structure.
         create_cnngru(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Builds CNN-GRU structure.
         create_cnnbirnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Buidls CNN bidirectional RNN structure.
         create_cnnbilstm(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Builds CNN bidirectional LSTM structure.
         create_cnnbigru(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Builds CNN bidirectional GRU structure.
         fit_model(self, epochs: int, show_progress: int = 1):
             Fitting selected model to data provided.
@@ -235,15 +259,32 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         return self.metrics
 
     def create_cnnrnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config={
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            25,
+            'relu')}):
         '''Creates CNN-RNN hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-RNN')
         self.loss = loss
@@ -253,6 +294,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 None,
                 self.modified_back,
@@ -260,15 +302,32 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             output_shape=self.input_y.shape[1])
 
     def create_cnnlstm(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config={
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            25,
+            'relu')}):
         '''Creates CNN-LSTM hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-LSTM')
         self.loss = loss
@@ -278,6 +337,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 None,
                 self.modified_back,
@@ -285,15 +345,32 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             output_shape=self.input_y.shape[1])
 
     def create_cnngru(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config={
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            25,
+            'relu')}):
         '''Creates CNN-GRU hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-GRU')
         self.loss = loss
@@ -303,6 +380,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 None,
                 self.modified_back,
@@ -310,15 +388,32 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             output_shape=self.input_y.shape[1])
 
     def create_cnnbirnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config={
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            25,
+            'relu')}):
         '''Creates CNN-BI-RNN hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-BI-RNN')
         self.loss = loss
@@ -328,6 +423,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 None,
                 self.modified_back,
@@ -335,15 +431,32 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             output_shape=self.input_y.shape[1])
 
     def create_cnnbilstm(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config={
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            25,
+            'relu')}):
         '''Creates CNN-BI-LSTM hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-BI-LSTM')
         self.loss = loss
@@ -353,6 +466,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 None,
                 self.modified_back,
@@ -360,15 +474,32 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             output_shape=self.input_y.shape[1])
 
     def create_cnnbigru(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config={
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            25,
+            'relu')}):
         '''Creates CNN-BI-GRU hybrid model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-BI-GRU')
         self.loss = loss
@@ -378,6 +509,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 None,
                 self.modified_back,
@@ -396,6 +528,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 show_progress (int): Prints training progress.
                 validation_split (float): Determines size of Validation data.
                 batch_size (int): Batch size of input data.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.details = self.model.fit(
             self.input_x,

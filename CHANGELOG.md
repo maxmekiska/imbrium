@@ -9,3 +9,10 @@
 ### 0.1.2
 
 - encoder-decoder predictor support for multistep multivariate time series
+
+### 0.1.3
+
+- added model loss variable type
+- architecture layers can now be adjusted by defining number of neurons and
+activation function type
+- improved docstrings

@@ -7,7 +7,10 @@ from numpy import reshape
 from numpy import empty
 from numpy import dstack, vstack
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, FunctionTransformer
+from sklearn.preprocessing import (StandardScaler,
+                                   MinMaxScaler,
+                                   MaxAbsScaler,
+                                   FunctionTransformer)
 
 import pandas as pd
 from pandas import DataFrame
@@ -15,7 +18,15 @@ import os
 
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Bidirectional, GRU, SimpleRNN
+from tensorflow.keras.layers import (LSTM,
+                                     Dense,
+                                     Flatten,
+                                     Conv1D,
+                                     MaxPooling1D,
+                                     Dropout,
+                                     Bidirectional,
+                                     GRU,
+                                     SimpleRNN)
 
 
 class BasicMultStepMultVar(MultiVariateMultiStep):
@@ -49,40 +60,61 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         get_metrics(self) -> str:
             Getter method to retrieve model evaluation metrics used.
         create_mlp(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
+        'layer2': (25, 'relu')}):
             Builds MLP structure.
         create_rnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
+        'layer2': (50, 'relu')}):
             Builds RNN structure.
         create_lstm(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
+        'layer2': (50, 'relu')}):
             Builds LSTM structure.
         create_cnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu')}):
             Builds CNN structure.
         create_gru(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
+        'layer2': (50, 'relu')}):
             Builds GRU structure.
         create_birnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
-            Builds bidirectional MLP structure.
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
+            Builds bidirectional RNN structure.
         create_bilstm(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
             Builds bidirectional LSTM structure.
         create_bigru(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
             Builds bidirectional GRU structure.
         create_encdec_rnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
+        'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
             Builds encoder decoder RNN structure.
         create_encdec_lstm(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
+        'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
             Builds encoder decoder LSTM structure.
         create_encdec_gru(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
+        'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
             Builds encoder decoder GRU structure.
         create_encdec_cnn(self, optimizer: str = 'adam',
-        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error'):
+        loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+        layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+        'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')}):
             Builds encoder decoder CNN structure.
         fit_model(self, epochs: int, show_progress: int = 1):
             Fitting model onto provided data.
@@ -281,15 +313,26 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         return self.metrics
 
     def create_mlp(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            50,
+            'relu'),
+            'layer1': (
+                25,
+                'relu'),
+            'layer2': (
+            25,
+            'relu')}):
         '''Creates MLP model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('MLP')
         self.loss = loss
@@ -304,19 +347,31 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=self.input_x.shape[1],
             output_shape=self.input_y.shape[1])
 
     def create_rnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            40,
+            'relu'),
+            'layer1': (
+                50,
+                'relu'),
+            'layer2': (
+            50,
+            'relu')}):
         '''Creates RNN model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('RNN')
         self.loss = loss
@@ -326,21 +381,33 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_lstm(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            40,
+            'relu'),
+            'layer1': (
+                50,
+                'relu'),
+            'layer2': (
+            50,
+            'relu')}):
         '''Creates LSTM model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('LSTM')
         self.loss = loss
@@ -350,21 +417,36 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_cnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+            'relu')}):
         '''Creates CNN model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN')
         self.loss = loss
@@ -374,21 +456,33 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_gru(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            40,
+            'relu'),
+            'layer1': (
+                50,
+                'relu'),
+            'layer2': (
+            50,
+            'relu')}):
         '''Creates GRU model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('GRU')
         self.loss = loss
@@ -398,21 +492,30 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_birnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            50,
+            'relu'),
+            'layer1': (
+                50,
+            'relu')}):
         '''Creates BI-RNN model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('BI-RNN')
         self.loss = loss
@@ -422,21 +525,30 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_bilstm(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            50,
+            'relu'),
+            'layer1': (
+                50,
+            'relu')}):
         '''Creates BI-LSTM model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('BI-LSTM')
         self.loss = loss
@@ -446,21 +558,30 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_bigru(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            50,
+            'relu'),
+            'layer1': (
+                50,
+            'relu')}):
         '''Creates BI-GRU model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('BI-GRU')
         self.loss = loss
@@ -470,21 +591,36 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
             output_shape=self.input_y.shape[1])
 
     def create_encdec_rnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            100,
+            'relu'),
+            'layer1': (
+                50,
+                'relu'),
+            'layer2': (
+            50,
+            'relu'),
+            'layer3': (
+            100,
+            'relu')}):
         '''Creates Encoder-Decoder-RNN model model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder-Decoder-RNN')
         self.loss = loss
@@ -494,6 +630,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
@@ -501,15 +638,29 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             repeat=self.input_y.shape[1])
 
     def create_encdec_lstm(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            100,
+            'relu'),
+            'layer1': (
+                50,
+                'relu'),
+            'layer2': (
+            50,
+            'relu'),
+            'layer3': (
+            100,
+            'relu')}):
         '''Creates Encoder-Decoder-LSTM model model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder-Decoder-LSTM')
         self.loss = loss
@@ -519,6 +670,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
@@ -526,15 +678,29 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             repeat=self.input_y.shape[1])
 
     def create_encdec_gru(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            100,
+            'relu'),
+            'layer1': (
+                50,
+                'relu'),
+            'layer2': (
+            50,
+            'relu'),
+            'layer3': (
+            100,
+            'relu')}):
         '''Creates Encoder-Decoder-GRU model model.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder-Decoder-GRU')
         self.loss = loss
@@ -544,6 +710,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
@@ -551,16 +718,33 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             repeat=self.input_y.shape[1])
 
     def create_encdec_cnn(
-            self,
-            optimizer: str = 'adam',
-            loss: str = 'mean_squared_error',
-            metrics: str = 'mean_squared_error'):
+        self,
+        optimizer: str = 'adam',
+        loss: str = 'mean_squared_error',
+        metrics: str = 'mean_squared_error',
+        layer_config: dict = {
+            'layer0': (
+            64,
+            1,
+            'relu'),
+            'layer1': (
+                32,
+                1,
+                'relu'),
+            'layer2': (2),
+            'layer3': (
+                50,
+                'relu'),
+            'layer4': (
+            100,
+            'relu')}):
         '''Creates Encoder-Decoder-CNN model.
             Encoding via CNN and Decoding via GRU.
             Parameters:
                 optimizer (str): Optimization algorithm.
                 loss (str): Loss function.
                 metrics (str): Performance measurement.
+                layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder(CNN)-Decoder(GRU)')
         self.loss = loss
@@ -570,6 +754,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
                 self.input_x.shape[2]),
