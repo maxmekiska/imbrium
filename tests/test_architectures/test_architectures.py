@@ -302,3 +302,6 @@ class TestModels(unittest.TestCase):
                             50, 'relu'), 'layer4': (
                                 25, 'relu')}, input_shape=(
                                     3, 3, 3), output_shape=3)), TestModels.keras_obj)
+
+if __name__ == '__main__':
+    unittest.main()
