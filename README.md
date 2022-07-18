@@ -82,7 +82,7 @@ Simplified workflows, more possible.
 1. Univariate-Multistep forecasting - Standard architectures
 
 ```python3
-from imbrium.predictors.univarstandard import *
+from imbrium.predictors.univarstandard import BasicMultStepUniVar
 
 predictor = BasicMultStepUniVar(steps_past: int, steps_future: int, data = pd.DataFrame(), scale: str = '')
 
@@ -127,7 +127,7 @@ loading_predictor.set_model_id(name: str)
 2. Univariate-Multistep forecasting - Hybrid architectures
 
 ```python3
-from imbrium.predictors.univarhybrid import *
+from imbrium.predictors.univarhybrid import HybridMultStepUniVar
 
 predictor = HybridMultStepUniVar(sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), scale: str = '')
 
@@ -168,7 +168,7 @@ loading_predictor.set_model_id(name: str)
 1. Multivariate-Multistep forecasting - Standard architectures
 
 ```python3
-from imbrium.predictors.multivarstandard import *
+from imbrium.predictors.multivarstandard import BasicMultStepMultVar
 
 # please make sure that the target feature is the first variable in the feature list
 predictor = BasicMultStepMultVar(steps_past: int, steps_future: int, data = pd.DataFrame(), features = [], scale: str = '')
@@ -213,7 +213,7 @@ loading_predictor.set_model_id(name: str)
 2. Multivariate-Multistep forecasting - Hybrid architectures
 
 ```python3
-from imbrium.predictors.multivarhybrid import *
+from imbrium.predictors.multivarhybrid import HybridMultStepMultVar
 
 # please make sure that the target feature is the first variable in the feature list
 predictor = HybridMultStepMultVar(sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), features:list = [], scale: str = '')
