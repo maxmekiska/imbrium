@@ -68,7 +68,8 @@ class UniVariateMultiStep(ABC):
             epochs: int,
             show_progress: int = 1,
             validation_split: float = 0.20,
-            batch_size: int = 10):
+            batch_size: int = 10,
+            **callback_setting: dict):
         pass
 
     @abstractmethod

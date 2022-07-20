@@ -16,6 +16,7 @@ import os
 
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import (LSTM,
                                      Dense,
                                      Flatten,
@@ -85,8 +86,10 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
         'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
             Builds CNN bidirectional GRU structure.
-        fit_model(self, epochs: int, show_progress: int = 1):
-            Fitting selected model to data provided.
+        fit_model(self, epochs: int, show_progress: int = 1,
+        validation_split: float = 0.20, batch_size: int = 10,
+        **callback_setting: dict):
+            Fitting model onto provided data.
         model_blueprint(self):
             Print blueprint of layer structure.
         show_performance(self):
@@ -520,23 +523,35 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             self,
             epochs: int,
             show_progress: int = 1,
-            validation_split=0.20,
-            batch_size=10):
+            validation_split: float = 0.20,
+            batch_size: int = 10,
+            **callback_setting: dict):
         '''Trains the model on data provided. Perfroms validation.
             Parameters:
                 epochs (int): Number of epochs to train the model.
                 show_progress (int): Prints training progress.
                 validation_split (float): Determines size of Validation data.
                 batch_size (int): Batch size of input data.
-                layer_config (dict): Adjust neurons and acitivation functions.
+                callback_settings (dict): Create a Keras EarlyStopping object.
         '''
-        self.details = self.model.fit(
-            self.input_x,
-            self.input_y,
-            validation_split=validation_split,
-            batch_size=batch_size,
-            epochs=epochs,
-            verbose=show_progress)
+        if callback_setting == {}:
+            self.details = self.model.fit(
+                self.input_x,
+                self.input_y,
+                validation_split=validation_split,
+                batch_size=batch_size,
+                epochs=epochs,
+                verbose=show_progress)
+        else:
+            callback = EarlyStopping(**callback_setting)
+            self.details = self.model.fit(
+                self.input_x,
+                self.input_y,
+                validation_split=validation_split,
+                batch_size=batch_size,
+                epochs=epochs,
+                verbose=show_progress,
+                callbacks=[callback])
         return self.details
 
     def model_blueprint(self):
