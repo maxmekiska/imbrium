@@ -12,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     name="Imbrium",
-    version="0.1.3",
+    version="0.1.4",
     packages = find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "tensorflow==2.9.1",
