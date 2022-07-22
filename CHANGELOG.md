@@ -16,3 +16,9 @@
 - architecture layers can now be adjusted by defining number of neurons and
 activation function type
 - improved docstrings
+
+### 0.1.4
+
+- added keras native call-back feature to fit_model method
+- minor docstring changes
+- minor default value issues in fit_model method solved
