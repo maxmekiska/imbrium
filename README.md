@@ -108,12 +108,12 @@ predictor.create_rnn(optimizer: str = 'adam',
                                            'layer1': (50,'relu'),
                                            'layer2': (50, 'relu')})
 
-# predictor.create_lstm(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
-                        metrics: str = 'mean_squared_error',
-                        layer_config: dict = {'layer0': (40, 'relu'),
-                                              'layer1': (50,'relu'),
-                                              'layer2': (50, 'relu')})
+predictor.create_lstm(optimizer: str = 'adam',
+                      loss: str = 'mean_squared_error',
+                      metrics: str = 'mean_squared_error',
+                      layer_config: dict = {'layer0': (40, 'relu'),
+                                            'layer1': (50,'relu'),
+                                            'layer2': (50, 'relu')})
 
 predictor.create_gru(optimizer: str = 'adam',
                      loss: str = 'mean_squared_error',
