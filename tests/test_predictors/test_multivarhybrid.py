@@ -23,6 +23,15 @@ test0 = HybridMultStepMultVar(
         'MedInc'],
         scale = 'standard')
 
+test0.create_cnnlstm(optimizer  = 'adam',
+                     loss  = 'mean_squared_error',
+                     metrics  = 'mean_squared_error',
+                     layer_config = {'layer0': (64, 1, 'relu'),
+                                     'layer1': (32, 1, 'relu'),
+                                     'layer2': (2),
+                                     'layer3': (50, 'relu'),
+                                     'layer4': (25, 'relu')})
+
 X = np.array([[[0.98214266],
                [-0.60701891],
                [1.85618152],
@@ -69,6 +78,8 @@ y = np.array([3.422, 2.697, 2.992, 2.414, 2.267])
 shape_x = (20632, 1, 40, 1)
 shape_y = (20632, 5)
 
+loss = 'mean_squared_error'
+metrics = 'mean_squared_error'
 
 class TestHybrid(unittest.TestCase):
 
@@ -84,6 +95,11 @@ class TestHybrid(unittest.TestCase):
     def test_get_y_input_shape(self):
         np.testing.assert_allclose(test0.get_y_input_shape, shape_y)
 
+    def test_get_loss(self):
+        self.assertEqual(test0.get_loss, loss)
+
+    def test_get_metrics(self):
+        self.assertEqual(test0.get_metrics, metrics)
 
 if __name__ == '__main__':
     unittest.main()

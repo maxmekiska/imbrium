@@ -13,6 +13,13 @@ test0 = BasicMultStepUniVar(
     data=data,
     scale = 'standard')
 
+test0.create_lstm(optimizer = 'adam',
+                  loss = 'mean_squared_error',
+                  metrics = 'mean_squared_error',
+                  layer_config = {'layer0': (40, 'relu'),
+                                  'layer1': (50,'relu'),
+                                  'layer2': (50, 'relu')})
+
 X = np.array([[1.17289952],
               [0.54461086]])
 
@@ -23,6 +30,8 @@ y = np.array([[1.17289952],
 shape_x = (20636, 2, 1)
 shape_y = (20636, 3, 1)
 
+loss = 'mean_squared_error'
+metrics = 'mean_squared_error'
 
 class TestUnivarstandard(unittest.TestCase):
 
@@ -38,6 +47,11 @@ class TestUnivarstandard(unittest.TestCase):
     def test_get_y_input_shape(self):
         np.testing.assert_allclose(test0.get_y_input_shape, shape_y)
 
+    def test_get_loss(self):
+        self.assertEqual(test0.get_loss, loss)
+
+    def test_get_metrics(self):
+        self.assertEqual(test0.get_metrics, metrics)
 
 if __name__ == '__main__':
     unittest.main()

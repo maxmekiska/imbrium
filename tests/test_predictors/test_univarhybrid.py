@@ -14,6 +14,15 @@ test0 = HybridMultStepUniVar(
     data=data,
     scale = 'standard')
 
+test0.create_cnnlstm(optimizer  = 'adam',
+                     loss  = 'mean_squared_error',
+                     metrics  = 'mean_squared_error',
+                     layer_config = {'layer0': (64, 1, 'relu'),
+                                     'layer1': (32, 1, 'relu'),
+                                     'layer2': (2),
+                                     'layer3': (50, 'relu'),
+                                     'layer4': (25, 'relu')})
+
 X = np.array([[[ 1.17289952],
                [ 0.54461086],
                [ 0.80025935],
@@ -33,6 +42,8 @@ y = np.array([[ 0.05757883],
 shape_x = (20628, 2, 5, 1)
 shape_y = (20628, 3, 1)
 
+loss = 'mean_squared_error'
+metrics = 'mean_squared_error'
 
 class TestUnivarhybrid(unittest.TestCase):
 
@@ -48,6 +59,11 @@ class TestUnivarhybrid(unittest.TestCase):
     def test_get_y_input_shape(self):
         np.testing.assert_allclose(test0.get_y_input_shape, shape_y)
 
+    def test_get_loss(self):
+        self.assertEqual(test0.get_loss, loss)
+
+    def test_get_metrics(self):
+        self.assertEqual(test0.get_metrics, metrics)
 
 if __name__ == '__main__':
     unittest.main()
