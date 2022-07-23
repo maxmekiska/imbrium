@@ -42,10 +42,15 @@ y = np.array([[ 0.05757883],
 shape_x = (20628, 2, 5, 1)
 shape_y = (20628, 3, 1)
 
+model_id = 'CNN-LSTM'
+optimizer = 'adam'
 loss = 'mean_squared_error'
 metrics = 'mean_squared_error'
 
 class TestUnivarhybrid(unittest.TestCase):
+
+    def test_get_model_id(self):
+        self.assertEqual(test0.get_model_id, model_id)
 
     def test_get_X_input(self):
         np.testing.assert_allclose(test0.get_X_input[4], X)
@@ -58,6 +63,9 @@ class TestUnivarhybrid(unittest.TestCase):
 
     def test_get_y_input_shape(self):
         np.testing.assert_allclose(test0.get_y_input_shape, shape_y)
+
+    def test_get_optimizer(self):
+        self.assertEqual(test0.get_optimizer, optimizer)
 
     def test_get_loss(self):
         self.assertEqual(test0.get_loss, loss)

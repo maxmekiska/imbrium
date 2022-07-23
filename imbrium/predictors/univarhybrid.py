@@ -44,6 +44,8 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             Private method to prepare data for predictor ingestion.
         set_model_id(self, name: str):
             Setter method to change model id name.
+        get_model_id(self) -> array:
+            Getter method to retrieve model id used.
         get_X_input(self) -> array:
             Getter method to retrieve transformed X input - training.
         get_X_input_shape(self) -> tuple:
@@ -52,6 +54,8 @@ class HybridMultStepUniVar(UniVariateMultiStep):
             Getter method to retrieve transformed y input - target.
         get_y_input_shape(self) -> array:
             Getter method to retrieve transformed y input shape.
+        get_optimizer(self) -> str:
+            Getter method to retrieve model optimizer used.
         get_loss(self) -> str:
             Getter method to retrieve used model loss.
         get_metrics(self) -> str:
@@ -122,6 +126,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.sub_seq = sub_seq
         self.steps_past = steps_past
         self.steps_future = steps_future
+        self.optimizer = ''
         self.loss = ''
         self.metrics = ''
 
@@ -226,6 +231,12 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.model_id = name
 
     @property
+    def get_model_id(self) -> str:
+        '''Get model id.
+        '''
+        return self.model_id
+
+    @property
     def get_X_input(self) -> array:
         '''Get transformed feature data.
         '''
@@ -248,6 +259,12 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         '''Get shape fo transformed target data.
         '''
         return self.input_y.shape
+
+    @property
+    def get_optimizer(self) -> str:
+        '''Get model optimizer.
+        '''
+        return self.optimizer
 
     @property
     def get_loss(self) -> str:
@@ -290,6 +307,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-RNN')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -333,6 +351,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-LSTM')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -376,6 +395,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-GRU')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -419,6 +439,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-BI-RNN')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -462,6 +483,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-BI-LSTM')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -505,6 +527,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN-BI-GRU')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
