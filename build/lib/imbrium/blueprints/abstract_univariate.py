@@ -34,6 +34,11 @@ class UniVariateMultiStep(ABC):
 
     @property
     @abstractmethod
+    def get_model_id(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
     def get_X_input(self) -> array:
         pass
 
@@ -50,6 +55,11 @@ class UniVariateMultiStep(ABC):
     @property
     @abstractmethod
     def get_y_input_shape(self) -> tuple:
+        pass
+
+    @property
+    @abstractmethod
+    def get_optimizer(self) -> str:
         pass
 
     @property
@@ -85,7 +95,7 @@ class UniVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def save_model(self):
+    def save_model(self, absolute_path: str):
         pass
 
     @abstractmethod

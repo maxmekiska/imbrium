@@ -48,6 +48,8 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             Private method to apply sequence_prep to every feature.
         set_model_id(self, name: str):
             Setter method to change model id name.
+        get_model_id(self) -> array:
+            Getter method to retrieve model id used.
         get_X_input(self) -> array:
             Getter method to retrieve transformed X input - training.
         get_X_input_shape(self) -> tuple:
@@ -56,6 +58,8 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             Getter method to retrieve transformed y input - target.
         get_y_input_shape(self) -> array:
             Getter method to retrieve transformed y input shape.
+        get_optimizer(self) -> str:
+            Getter method to retrieve model optimizer used.
         get_loss(self) -> str:
             Getter method to retrieve used model loss.
         get_metrics(self) -> str:
@@ -127,11 +131,13 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             Evaluate and plot model performance.
         predict(self, data: array):
             Takes in input data and outputs model forecasts.
-        save_model(self):
+        save_model(self, absolute_path: str = CURRENT_PATH):
             Saves current Keras model to current directory.
         load_model(self, location: str):
             Load model from location specified.
     '''
+
+    CURRENT_PATH = os.getcwd()
 
     def __init__(
             self,
@@ -150,8 +156,8 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 scale (str): How to scale the data before making predictions.
         '''
         self.scaler = self._scaling(scale)
-
         self.model_id = ''
+        self.optimizer = ''
         self.loss = ''
         self.metrics = ''
 
@@ -280,6 +286,12 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         self.model_id = name
 
     @property
+    def get_model_id(self) -> str:
+        '''Get model id.
+        '''
+        return self.model_id
+
+    @property
     def get_X_input(self) -> array:
         '''Get transformed feature data.
         '''
@@ -302,6 +314,12 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
         '''Get shape fo transformed target data.
         '''
         return self.input_y.shape
+
+    @property
+    def get_optimizer(self) -> str:
+        '''Get model optimizer.
+        '''
+        return self.optimizer
 
     @property
     def get_loss(self) -> str:
@@ -338,6 +356,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('MLP')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -377,6 +396,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('RNN')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -413,6 +433,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('LSTM')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -452,6 +473,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('CNN')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -488,6 +510,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('GRU')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -521,6 +544,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('BI-RNN')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -554,6 +578,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('BI-LSTM')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -587,6 +612,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('BI-GRU')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -626,6 +652,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder-Decoder-RNN')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -666,6 +693,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder-Decoder-LSTM')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -706,6 +734,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder-Decoder-GRU')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -750,6 +779,7 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
                 layer_config (dict): Adjust neurons and acitivation functions.
         '''
         self.set_model_id('Encoder(CNN)-Decoder(GRU)')
+        self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
 
@@ -843,14 +873,16 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
         return pd.DataFrame(y_pred, columns=[f'{self.model_id}'])
 
-    def save_model(self):
+    def save_model(self, absolute_path: str = CURRENT_PATH):
         '''Save the current model to the current directory.
+             Parameters:
+                absolute_path (str): Path to save model to.
         '''
-        self.model.save(os.path.abspath(os.getcwd()))
+        self.model.save(absolute_path)
 
     def load_model(self, location: str):
         '''Load a keras model from the path specified.
             Parameters:
-                location (str): Path of keras model location
+                location (str): Path of keras model location.
         '''
         self.model = keras.models.load_model(location)
