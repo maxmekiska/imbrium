@@ -128,11 +128,13 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             Evaluate and plot model performance.
         predict(self, data: array):
             Takes in input data and outputs model forecasts.
-        save_model(self):
+        save_model(self, absolute_path: str = CURRENT_PATH):
             Saves current Keras model to current directory.
         load_model(self, location: str):
             Load model from location specified.
     '''
+
+    CURRENT_PATH = os.getcwd()
 
     def __init__(
             self,
@@ -148,6 +150,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
                 scale (str): How to scale the data before making predictions.
         '''
         self.scaler = self._scaling(scale)
+        self.model_id = ''
         self.optimizer = ''
         self.loss = ''
         self.metrics = ''
@@ -159,8 +162,6 @@ class BasicMultStepUniVar(UniVariateMultiStep):
                 self.data, steps_past, steps_future)
         else:
             self.data = data
-
-        self.model_id = ''
 
     def _scaling(self, method: str) -> object:
         '''Scales data accordingly.
@@ -833,10 +834,12 @@ class BasicMultStepUniVar(UniVariateMultiStep):
 
         return pd.DataFrame(y_pred, columns=[f'{self.model_id}'])
 
-    def save_model(self):
+    def save_model(self, absolute_path: str = CURRENT_PATH):
         '''Save the current model to the current directory.
+             Parameters:
+                absolute_path (str): Path to save model to.
         '''
-        self.model.save(os.path.abspath(os.getcwd()))
+        self.model.save(absolute_path)
 
     def load_model(self, location: str):
         '''Load a keras model from the path specified.

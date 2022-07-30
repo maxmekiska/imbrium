@@ -22,3 +22,9 @@ activation function type
 - added keras native call-back feature to fit_model method
 - minor docstring changes
 - minor default value issues in fit_model method solved
+
+### 0.1.5
+
+- added getter methods for optimizer and model id
+- added more unit-tests
+- save_model method allows now to specify a customized path

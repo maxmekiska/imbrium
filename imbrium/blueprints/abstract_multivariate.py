@@ -103,7 +103,7 @@ class MultiVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def save_model(self):
+    def save_model(self, absolute_path: str):
         pass
 
     @abstractmethod

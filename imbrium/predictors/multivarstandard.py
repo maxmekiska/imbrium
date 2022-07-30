@@ -131,11 +131,13 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
             Evaluate and plot model performance.
         predict(self, data: array):
             Takes in input data and outputs model forecasts.
-        save_model(self):
+        save_model(self, absolute_path: str = CURRENT_PATH):
             Saves current Keras model to current directory.
         load_model(self, location: str):
             Load model from location specified.
     '''
+
+    CURRENT_PATH = os.getcwd()
 
     def __init__(
             self,
@@ -871,14 +873,16 @@ class BasicMultStepMultVar(MultiVariateMultiStep):
 
         return pd.DataFrame(y_pred, columns=[f'{self.model_id}'])
 
-    def save_model(self):
+    def save_model(self, absolute_path: str = CURRENT_PATH):
         '''Save the current model to the current directory.
+             Parameters:
+                absolute_path (str): Path to save model to.
         '''
-        self.model.save(os.path.abspath(os.getcwd()))
+        self.model.save(absolute_path)
 
     def load_model(self, location: str):
         '''Load a keras model from the path specified.
             Parameters:
-                location (str): Path of keras model location
+                location (str): Path of keras model location.
         '''
         self.model = keras.models.load_model(location)
