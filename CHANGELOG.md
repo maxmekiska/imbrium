@@ -28,3 +28,7 @@ activation function type
 - added getter methods for optimizer and model id
 - added more unit-tests
 - save_model method allows now to specify a customized path
+
+### 0.1.6
+
+- solved python version conflict by only allowing python 3.7.*

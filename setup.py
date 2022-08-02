@@ -12,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     name="Imbrium",
-    version="0.1.5",
+    version="0.1.6",
     packages = find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "tensorflow==2.9.1",
@@ -22,9 +22,10 @@ setup(
         "pandas==0.25.1",
     ],
     classifiers = [
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
         "Operating System :: Microsoft :: Windows",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence"
     ],
     keywords = ["machineleaning", "keras", "deeplearning", "timeseries", "forecasting"],
-    python_rquieres=">=3.7"
+    python_rquieres="== 3.7.*"
 )
