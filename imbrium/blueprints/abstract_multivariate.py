@@ -5,9 +5,10 @@ from numpy import array
 
 
 class MultiVariateMultiStep(ABC):
-    '''Abstract class that defines the general blueprint of a multivariate
-       multistep prediction object.
-    '''
+    """Abstract class that defines the general blueprint of a multivariate
+    multistep prediction object.
+    """
+
     @abstractmethod
     def __init__(self):
         pass
@@ -21,19 +22,15 @@ class MultiVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def _sequence_prep(self,
-                       input_sequence: array,
-                       steps_past: int,
-                       steps_future: int) -> [(array,
-                                               array)]:
+    def _sequence_prep(
+        self, input_sequence: array, steps_past: int, steps_future: int
+    ) -> [(array, array)]:
         pass
 
     @abstractmethod
-    def _multistep_prep(self,
-                        input_sequence: array,
-                        steps_past: int,
-                        steps_future: int) -> [(array,
-                                                array)]:
+    def _multistep_prep(
+        self, input_sequence: array, steps_past: int, steps_future: int
+    ) -> [(array, array)]:
         pass
 
     @abstractmethod
@@ -82,12 +79,13 @@ class MultiVariateMultiStep(ABC):
 
     @abstractmethod
     def fit_model(
-            self,
-            epochs: int,
-            show_progress: int = 1,
-            validation_split: float = 0.20,
-            batch_size: int = 10,
-            **callback_setting: dict):
+        self,
+        epochs: int,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        batch_size: int = 10,
+        **callback_setting: dict
+    ):
         pass
 
     @abstractmethod
