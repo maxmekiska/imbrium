@@ -32,3 +32,8 @@ activation function type
 ### 0.1.6
 
 - solved python version conflict by only allowing python 3.7.*
+
+### 0.1.7
+
+- improved source code format
+- improved scaling selector mechanism

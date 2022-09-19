@@ -1,16 +1,10 @@
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.architectures.models import *
+from imbrium.utils.scaler import SCALER
 
 import matplotlib.pyplot as plt
 from numpy import array
 from numpy import reshape
-
-from sklearn.preprocessing import (
-    StandardScaler,
-    MinMaxScaler,
-    MaxAbsScaler,
-    FunctionTransformer,
-)
 
 import pandas as pd
 from pandas import DataFrame
@@ -157,20 +151,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         Returns:
             scaler (object): Returns scikit learn scaler object.
         """
-        if method == "":
-            scaler = FunctionTransformer(lambda x: x, validate=True)
-        elif method == "standard":
-            scaler = StandardScaler()
-        elif method == "minmax":
-            scaler = MinMaxScaler()
-        elif method == "maxabs":
-            scaler = MaxAbsScaler()
-        elif method == "normalize":
-            scaler = FunctionTransformer(
-                lambda x: (x - x.min()) / (x.max() - x.min()), validate=True
-            )
-
-        return scaler
+        return SCALER[method]
 
     def _data_prep(self, data: DataFrame) -> array:
         """Prepares data input for model intake. Applies scaling to data.
