@@ -7,3 +7,6 @@ __pycache__/
 .tox/
 tox.ini
 tox_requierements.txt
+.egg-info/
+build/
+dist/

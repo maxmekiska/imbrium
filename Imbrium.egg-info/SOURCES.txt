@@ -19,3 +19,5 @@ imbrium/predictors/multivarhybrid.py
 imbrium/predictors/multivarstandard.py
 imbrium/predictors/univarhybrid.py
 imbrium/predictors/univarstandard.py
+imbrium/utils/__init__.py
+imbrium/utils/scaler.py
