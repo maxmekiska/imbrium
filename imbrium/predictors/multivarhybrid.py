@@ -1,12 +1,13 @@
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.architectures.models import *
 from imbrium.utils.scaler import SCALER
+from imbrium.utils.transformer import data_prep_multi, multistep_prep_hybrid
 
 import matplotlib.pyplot as plt
+
 from numpy import array
 from numpy import reshape
 from numpy import empty
-from numpy import dstack, vstack
 
 import pandas as pd
 from pandas import DataFrame
@@ -34,17 +35,6 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
 
     Methods
     -------
-    _scaling(self, method: str) -> object:
-        Private method to return scikit scaling object.
-    _data_prep(self, data: DataFrame, features: list) -> array:
-        Private method to extract features and convert DataFrame to an array.
-        IMPORTANT: First feature is set to the target variable.
-    _sequence_prep(input_sequence: array, steps_past: int, steps_future: int)
-    -> [(array, array, int)]:
-        Private method to prepare data for predictor ingestion.
-    _multistep_prep(self, input_sequence: array, sub_seq: int, steps_past: int,
-    steps_future: int) -> [(array, array)]:
-        Private method to account for multiple feature sequences.
     set_model_id(self, name: str):
         Setter method to change model id name.
     get_model_id(self) -> array:
@@ -137,128 +127,19 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         self.loss = ""
         self.metrics = ""
 
-        self.scaler = self._scaling(scale)
+        self.scaler = SCALER[scale]
 
         self.model_id = ""
         self.sub_seq = sub_seq
 
         if len(data) > 0:
-            self.data = self._data_prep(data, features)
-            self.input_x, self.input_y, self.modified_back = self._multistep_prep(
+            self.data = data_prep_multi(data, features, self.scaler)
+            self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
                 self.data, sub_seq, steps_past, steps_future
             )
+
         else:
             self.data = data
-
-    def _scaling(self, method: str) -> object:
-        """Scales data accordingly.
-        Parameters:
-            method (str): Scaling method.
-        Returns:
-            scaler (object): Returns scikit learn scaler object.
-        """
-        return SCALER[method]
-
-    def _data_prep(self, data: DataFrame, features: list) -> array:
-        """Private method to extract features and convert DataFrame to an array.
-        Parameters:
-            data (DataFrame): DataFrame containing multi-feature data.
-            features (list): All features that should be considered.
-        Returns:
-            data (array): Array containing sequences of selected features.
-        """
-        data = data[features]
-
-        target = array(data.iloc[:, 0])
-
-        self.scaler.fit(data.iloc[:, 1:])
-        scaled = self.scaler.transform(data.iloc[:, 1:])
-        scaled = scaled.transpose()
-
-        scaled = vstack((target, scaled))
-
-        return scaled
-
-    def _sequence_prep(
-        self, input_sequence: array, sub_seq: int, steps_past: int, steps_future: int
-    ) -> [(array, array, int)]:
-        """Prepares data input into X and y sequences. Lenght of the X sequence
-        is dertermined by steps_past while the length of y is determined by
-        steps_future. In detail, the predictor looks at sequence X and
-        predicts sequence y.
-             Parameters:
-                 input_sequence (array): Sequence that contains time series in
-                 array format
-                 sub_seq (int): Division into subsequences.
-                 steps_past (int): Steps the predictor will look backward
-                 steps_future (int): Steps the predictor will look forward
-             Returns:
-                 X (array): Array containing all looking back sequences
-                 y (array): Array containing all looking forward sequences
-        """
-        length = len(input_sequence)
-        if length == 0:
-            return (empty(shape=[steps_past, steps_past]), 0)
-        X = []
-        y = []
-        if length <= steps_past:
-            raise ValueError(
-                "Input sequence is equal to or shorter than steps to look backwards"
-            )
-        if steps_future <= 0:
-            raise ValueError("Steps in the future need to be bigger than 0")
-
-        for i in range(length):
-            last = i + steps_past
-            if last > length - steps_future:
-                X.append(input_sequence[i:last])
-                y.append(input_sequence[last - 1 : last - 1 + steps_future])
-                break
-            X.append(input_sequence[i:last])
-            # modification to use correct target y sequence
-            y.append(input_sequence[last - 1 : last - 1 + steps_future])
-        y = array(y)
-        X = array(X)
-        modified_back = X.shape[1] // sub_seq
-        X = X.reshape((X.shape[0], sub_seq, modified_back, 1))
-        return (
-            X,
-            y,
-            modified_back,
-        )  # special treatment to account for sub sequence division
-
-    def _multistep_prep(
-        self, input_sequence: array, sub_seq: int, steps_past: int, steps_future: int
-    ) -> [(array, array)]:
-        """This function prepares input sequences into a suitable input format
-        for a multivariate multistep model. The first seqeunce in the array
-        needs to be the target variable y.
-             Parameters:
-                 input_sequence (array): Sequence that contains time series
-                 in array format
-                 sub_seq (int): Devision into subsequences.
-                 steps_past (int): Steps the predictor will look backward
-                 steps_future (int): Steps the predictor will look forward
-             Returns:
-                 X (array): Array containing all looking back sequences
-                 y (array): Array containing all looking forward sequences
-        """
-        X = []
-        Y = []
-        for i in range(len(input_sequence)):
-            if i == 0:  # target variable should be first sequence
-                _, y, _ = self._sequence_prep(
-                    input_sequence[0], sub_seq, steps_past, steps_future
-                )
-                Y.append(y)
-                continue  # skip since target column not requiered in X array
-            x, _, mod = self._sequence_prep(
-                input_sequence[i], sub_seq, steps_past, steps_future
-            )
-            X.append(x)
-        X = dstack(X)
-        Y = Y[0]  # getting array out of list
-        return X, Y, mod
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.

@@ -37,3 +37,8 @@ activation function type
 
 - improved source code format
 - improved scaling selector mechanism
+
+### 0.1.8
+
+- major refactoring of cod base
+- minor name change from Imbrium to imbrium

@@ -1,6 +1,7 @@
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.architectures.models import *
 from imbrium.utils.scaler import SCALER
+from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
 
 import matplotlib.pyplot as plt
 from numpy import array
@@ -32,14 +33,6 @@ class HybridMultStepUniVar(UniVariateMultiStep):
 
     Methods
     -------
-    _scaling(self, method: str) -> object:
-        Private method to return scikit scaling object.
-    _data_prep(self, data: DataFrame, features: list) -> array:
-        Private method to extract features and convert DataFrame to an array.
-        IMPORTANT: First feature is set to the target variable.
-    _sequence_prep(input_sequence: array, steps_past: int, steps_future: int)
-    -> [(array, array, int)]:
-        Private method to prepare data for predictor ingestion.
     set_model_id(self, name: str):
         Setter method to change model id name.
     get_model_id(self) -> array:
@@ -131,84 +124,18 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         self.loss = ""
         self.metrics = ""
 
-        self.scaler = self._scaling(scale)
+        self.scaler = SCALER[scale]
 
         if len(data) > 0:
             self.data = array(data)
-            self.data = self._data_prep(data)
-            self.input_x, self.input_y, self.modified_back = self._sequence_prep(
+            self.data = data_prep_uni(data, self.scaler)
+            self.input_x, self.input_y, self.modified_back = sequence_prep_hybrid_uni(
                 self.data, sub_seq, steps_past, steps_future
             )
         else:
             self.data = data
 
         self.model_id = ""
-
-    def _scaling(self, method: str) -> object:
-        """Scales data accordingly.
-        Parameters:
-            method (str): Scaling method.
-        Returns:
-            scaler (object): Returns scikit learn scaler object.
-        """
-        return SCALER[method]
-
-    def _data_prep(self, data: DataFrame) -> array:
-        """Prepares data input for model intake. Applies scaling to data.
-        Parameters:
-            data (DataFrame): Input time series.
-        Returns:
-            scaled (array): Scaled input time series.
-        """
-        data = array(data).reshape(-1, 1)
-
-        self.scaler.fit(data)
-        scaled = self.scaler.transform(data)
-
-        return scaled
-
-    def _sequence_prep(
-        self, input_sequence: array, sub_seq: int, steps_past: int, steps_future: int
-    ) -> [(array, array, int)]:
-        """Prepares data input into X and y sequences. Length of the X sequence
-        is determined by steps_past while the length of y is determined by
-        steps_future. In detail, the predictor looks at sequence X and
-        predicts sequence y.
-         Parameters:
-             input_sequence (array): Sequence that contains time series in
-             array format.
-             sub_seq (int): Further division of given steps a predictor will
-             look backward.
-             steps_past (int): Steps the predictor will look backward.
-             steps_future (int): Steps the predictor will look forward.
-         Returns:
-             X (array): Array containing all looking back sequences.
-             y (array): Array containing all looking forward sequences.
-             modified_back (int): Modified looking back sequence length.
-        """
-        length = len(input_sequence)
-        if length == 0:
-            return (0, 0, steps_past // sub_seq)
-        X = []
-        y = []
-        if length <= steps_past:
-            raise ValueError(
-                "Input sequence is equal to or shorter than steps to look backwards"
-            )
-        if steps_future <= 0:
-            raise ValueError("Steps in the future need to be bigger than 0")
-
-        for i in range(length):
-            last = i + steps_past
-            if last > length - steps_future:
-                break
-            X.append(input_sequence[i:last])
-            y.append(input_sequence[last : last + steps_future])
-        y = array(y)
-        X = array(X)
-        modified_back = X.shape[1] // sub_seq
-        X = X.reshape((X.shape[0], sub_seq, modified_back, 1))
-        return X, y, modified_back
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.

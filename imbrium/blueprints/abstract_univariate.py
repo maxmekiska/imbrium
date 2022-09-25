@@ -14,20 +14,6 @@ class UniVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def _scaling(self, method: str) -> object:
-        pass
-
-    @abstractmethod
-    def _data_prep(self, data: DataFrame, features: list) -> array:
-        pass
-
-    @abstractmethod
-    def _sequence_prep(
-        self, input_sequence: array, steps_past: int, steps_future: int
-    ) -> [(array, array)]:
-        pass
-
-    @abstractmethod
     def set_model_id(self, name: str):
         pass
 

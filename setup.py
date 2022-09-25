@@ -11,7 +11,7 @@ setup(
     description="Standard and Hybrid Deep Learning Multivariate-Multi-Step & Univariate-Multi-Step Time Series Forecasting.",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    name="Imbrium",
+    name="imbrium",
     version="0.1.7",
     packages = find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
