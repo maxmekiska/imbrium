@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-with open('README.md', encoding="utf8") as file:
+with open("README.md", encoding="utf8") as file:
     long_description = file.read()
 
 setup(
@@ -10,10 +10,10 @@ setup(
     url="https://github.com/maxmekiska/Imbrium",
     description="Standard and Hybrid Deep Learning Multivariate-Multi-Step & Univariate-Multi-Step Time Series Forecasting.",
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     name="imbrium",
     version="0.1.8",
-    packages = find_packages(include=["imbrium", "imbrium.*"]),
+    packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "tensorflow==2.9.1",
         "scikit-learn==0.21.3",
@@ -21,11 +21,11 @@ setup(
         "numpy==1.21.6",
         "pandas==0.25.1",
     ],
-    classifiers = [
+    classifiers=[
         "Programming Language :: Python :: 3.7",
         "Operating System :: Microsoft :: Windows",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence"
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
-    keywords = ["machineleaning", "keras", "deeplearning", "timeseries", "forecasting"],
-    python_rquieres="== 3.7.*"
+    keywords=["machineleaning", "keras", "deeplearning", "timeseries", "forecasting"],
+    python_rquieres="== 3.7.*",
 )

@@ -1,0 +1,84 @@
+action: GLOB, msg: packaging
+cwd: C:\Users\Max\Documents\Research\Imbrium\Imbrium
+cmd: 'C:\Users\Max\Anaconda3\envs\imbriumtest\python.exe' setup.py sdist --formats=zip --dist-dir '.tox\dist'
+running sdist
+running egg_info
+writing imbrium.egg-info\PKG-INFO
+writing dependency_links to imbrium.egg-info\dependency_links.txt
+writing requirements to imbrium.egg-info\requires.txt
+writing top-level names to imbrium.egg-info\top_level.txt
+reading manifest file 'imbrium.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+writing manifest file 'imbrium.egg-info\SOURCES.txt'
+running check
+creating imbrium-0.1.8
+creating imbrium-0.1.8\imbrium
+creating imbrium-0.1.8\imbrium.egg-info
+creating imbrium-0.1.8\imbrium\architectures
+creating imbrium-0.1.8\imbrium\blueprints
+creating imbrium-0.1.8\imbrium\predictors
+creating imbrium-0.1.8\imbrium\utils
+copying files to imbrium-0.1.8...
+copying CHANGELOG.md -> imbrium-0.1.8
+copying LICENSE -> imbrium-0.1.8
+copying MANIFEST.in -> imbrium-0.1.8
+copying README.md -> imbrium-0.1.8
+copying setup.py -> imbrium-0.1.8
+copying imbrium\__init__.py -> imbrium-0.1.8\imbrium
+copying imbrium.egg-info\PKG-INFO -> imbrium-0.1.8\imbrium.egg-info
+copying imbrium.egg-info\SOURCES.txt -> imbrium-0.1.8\imbrium.egg-info
+copying imbrium.egg-info\dependency_links.txt -> imbrium-0.1.8\imbrium.egg-info
+copying imbrium.egg-info\requires.txt -> imbrium-0.1.8\imbrium.egg-info
+copying imbrium.egg-info\top_level.txt -> imbrium-0.1.8\imbrium.egg-info
+copying imbrium\architectures\__init__.py -> imbrium-0.1.8\imbrium\architectures
+copying imbrium\architectures\models.py -> imbrium-0.1.8\imbrium\architectures
+copying imbrium\blueprints\__init__.py -> imbrium-0.1.8\imbrium\blueprints
+copying imbrium\blueprints\abstract_multivariate.py -> imbrium-0.1.8\imbrium\blueprints
+copying imbrium\blueprints\abstract_univariate.py -> imbrium-0.1.8\imbrium\blueprints
+copying imbrium\predictors\__init__.py -> imbrium-0.1.8\imbrium\predictors
+copying imbrium\predictors\multivarhybrid.py -> imbrium-0.1.8\imbrium\predictors
+copying imbrium\predictors\multivarstandard.py -> imbrium-0.1.8\imbrium\predictors
+copying imbrium\predictors\univarhybrid.py -> imbrium-0.1.8\imbrium\predictors
+copying imbrium\predictors\univarstandard.py -> imbrium-0.1.8\imbrium\predictors
+copying imbrium\utils\__init__.py -> imbrium-0.1.8\imbrium\utils
+copying imbrium\utils\scaler.py -> imbrium-0.1.8\imbrium\utils
+copying imbrium\utils\transformer.py -> imbrium-0.1.8\imbrium\utils
+Writing imbrium-0.1.8\setup.cfg
+creating '.tox\dist\imbrium-0.1.8.zip' and adding 'imbrium-0.1.8' to it
+adding 'imbrium-0.1.8'
+adding 'imbrium-0.1.8\imbrium'
+adding 'imbrium-0.1.8\imbrium.egg-info'
+adding 'imbrium-0.1.8\CHANGELOG.md'
+adding 'imbrium-0.1.8\LICENSE'
+adding 'imbrium-0.1.8\MANIFEST.in'
+adding 'imbrium-0.1.8\PKG-INFO'
+adding 'imbrium-0.1.8\README.md'
+adding 'imbrium-0.1.8\setup.cfg'
+adding 'imbrium-0.1.8\setup.py'
+adding 'imbrium-0.1.8\imbrium\architectures'
+adding 'imbrium-0.1.8\imbrium\blueprints'
+adding 'imbrium-0.1.8\imbrium\predictors'
+adding 'imbrium-0.1.8\imbrium\utils'
+adding 'imbrium-0.1.8\imbrium\__init__.py'
+adding 'imbrium-0.1.8\imbrium\architectures\models.py'
+adding 'imbrium-0.1.8\imbrium\architectures\__init__.py'
+adding 'imbrium-0.1.8\imbrium\blueprints\abstract_multivariate.py'
+adding 'imbrium-0.1.8\imbrium\blueprints\abstract_univariate.py'
+adding 'imbrium-0.1.8\imbrium\blueprints\__init__.py'
+adding 'imbrium-0.1.8\imbrium\predictors\multivarhybrid.py'
+adding 'imbrium-0.1.8\imbrium\predictors\multivarstandard.py'
+adding 'imbrium-0.1.8\imbrium\predictors\univarhybrid.py'
+adding 'imbrium-0.1.8\imbrium\predictors\univarstandard.py'
+adding 'imbrium-0.1.8\imbrium\predictors\__init__.py'
+adding 'imbrium-0.1.8\imbrium\utils\scaler.py'
+adding 'imbrium-0.1.8\imbrium\utils\transformer.py'
+adding 'imbrium-0.1.8\imbrium\utils\__init__.py'
+adding 'imbrium-0.1.8\imbrium.egg-info\dependency_links.txt'
+adding 'imbrium-0.1.8\imbrium.egg-info\PKG-INFO'
+adding 'imbrium-0.1.8\imbrium.egg-info\requires.txt'
+adding 'imbrium-0.1.8\imbrium.egg-info\SOURCES.txt'
+adding 'imbrium-0.1.8\imbrium.egg-info\top_level.txt'
+removing 'imbrium-0.1.8' (and everything under it)
+C:\Users\Max\Anaconda3\envs\imbriumtest\lib\site-packages\setuptools\_distutils\dist.py:275: UserWarning: Unknown distribution option: 'python_rquieres'
+  warnings.warn(msg)

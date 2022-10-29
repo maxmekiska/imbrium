@@ -3,10 +3,6 @@
 *.swo
 __pycache__/
 *.ipynb_checkpoints
-*.tox.*
-.tox/
-tox.ini
-tox_requierements.txt
 .Python
 build/
 develop-eggs/
