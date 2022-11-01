@@ -1,18 +1,8 @@
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.layers import (
-    LSTM,
-    Dense,
-    Flatten,
-    Conv1D,
-    MaxPooling1D,
-    Dropout,
-    Bidirectional,
-    TimeDistributed,
-    GRU,
-    SimpleRNN,
-    RepeatVector,
-)
+from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
+                                     Dropout, Flatten, MaxPooling1D,
+                                     RepeatVector, SimpleRNN, TimeDistributed)
 
 
 def mlp(

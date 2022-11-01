@@ -1,9 +1,5 @@
-from sklearn.preprocessing import (
-    StandardScaler,
-    MinMaxScaler,
-    MaxAbsScaler,
-    FunctionTransformer,
-)
+from sklearn.preprocessing import (FunctionTransformer, MaxAbsScaler,
+                                   MinMaxScaler, StandardScaler)
 
 SCALER = {
     "": FunctionTransformer(lambda x: x, validate=True),

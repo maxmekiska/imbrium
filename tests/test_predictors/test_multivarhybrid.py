@@ -1,12 +1,13 @@
-import numpy as np
 import unittest
+
+import numpy as np
 import pandas as pd
 
 from imbrium.predictors.multivarhybrid import *
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
 
-test0 = HybridMultStepMultVar(
+test0 = HybridMulti(
     1,
     5,
     5,

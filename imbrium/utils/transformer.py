@@ -1,9 +1,5 @@
+from numpy import array, dstack, empty, reshape, vstack
 from pandas import DataFrame
-
-from numpy import array
-from numpy import reshape
-from numpy import empty
-from numpy import dstack, vstack
 
 
 def data_prep_uni(data: DataFrame, scaler: object) -> array:

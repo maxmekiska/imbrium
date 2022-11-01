@@ -1,28 +1,14 @@
-import numpy as np
 import unittest
+
+import numpy as np
 import pandas as pd
 
-from imbrium.predictors.multivarstandard import *
+from imbrium.predictors.univarpure import *
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+data = data["target"]
 
-test0 = BasicMultStepMultVar(
-    2,
-    10,
-    data=data,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
-)
+test0 = PureUni(2, 3, data=data, scale="standard")
 
 test0.create_lstm(
     optimizer="adam",
@@ -35,35 +21,12 @@ test0.create_lstm(
     },
 )
 
-X = np.array(
-    [
-        [
-            0.98214266,
-            0.62855945,
-            -0.15375759,
-            -0.9744286,
-            -0.04959654,
-            1.05254828,
-            -1.32783522,
-            2.34476576,
-        ],
-        [
-            -0.60701891,
-            0.32704136,
-            -0.26333577,
-            0.86143887,
-            -0.09251223,
-            1.04318455,
-            -1.32284391,
-            2.33223796,
-        ],
-    ]
-)
+X = np.array([[1.17289952], [0.54461086]])
 
-y = np.array([3.585, 3.521, 3.413, 3.422, 2.697, 2.992, 2.414, 2.267, 2.611, 2.815])
+y = np.array([[1.17289952], [0.54461086], [0.80025935]])
 
-shape_x = (20630, 2, 8)
-shape_y = (20630, 10)
+shape_x = (20636, 2, 1)
+shape_y = (20636, 3, 1)
 
 model_id = "LSTM"
 optimizer = "adam"
@@ -71,15 +34,15 @@ loss = "mean_squared_error"
 metrics = "mean_squared_error"
 
 
-class TestStandard(unittest.TestCase):
+class Testunivarpure(unittest.TestCase):
     def test_get_model_id(self):
         self.assertEqual(test0.get_model_id, model_id)
 
     def test_get_X_input(self):
-        np.testing.assert_allclose(test0.get_X_input[0], X)
+        np.testing.assert_allclose(test0.get_X_input[4], X)
 
     def test_get_y_input(self):
-        np.testing.assert_allclose(test0.get_y_input[0], y)
+        np.testing.assert_allclose(test0.get_y_input[2], y)
 
     def test_get_X_input_shape(self):
         np.testing.assert_allclose(test0.get_X_input_shape, shape_x)

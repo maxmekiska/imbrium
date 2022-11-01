@@ -1,34 +1,22 @@
-from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
+import os
+
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from numpy import array, reshape
+from pandas import DataFrame
+from tensorflow import keras
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
+                                     Dropout, Flatten, MaxPooling1D, SimpleRNN,
+                                     TimeDistributed)
+
 from imbrium.architectures.models import *
+from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
 
-import matplotlib.pyplot as plt
-from numpy import array
-from numpy import reshape
 
-import pandas as pd
-from pandas import DataFrame
-import os
-
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (
-    LSTM,
-    Dense,
-    Flatten,
-    Conv1D,
-    MaxPooling1D,
-    Dropout,
-    Bidirectional,
-    TimeDistributed,
-    GRU,
-    SimpleRNN,
-)
-
-
-class HybridMultStepUniVar(UniVariateMultiStep):
+class HybridUni(UniVariateMultiStep):
     """Implements neural network based univariate multipstep hybrid predictors.
 
     Methods
@@ -104,7 +92,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
         sub_seq: int,
         steps_past: int,
         steps_future: int,
-        data=pd.DataFrame(),
+        data=DataFrame(),
         scale: str = "",
     ) -> object:
         """
@@ -463,7 +451,7 @@ class HybridMultStepUniVar(UniVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        return pd.DataFrame(y_pred, columns=[f"{self.model_id}"])
+        return DataFrame(y_pred, columns=[f"{self.model_id}"])
 
     def save_model(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.

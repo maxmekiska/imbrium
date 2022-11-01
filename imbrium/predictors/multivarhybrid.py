@@ -1,36 +1,22 @@
-from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
+import os
+
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from numpy import array, empty, reshape
+from pandas import DataFrame
+from tensorflow import keras
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
+                                     Dropout, Flatten, MaxPooling1D, SimpleRNN,
+                                     TimeDistributed)
+
 from imbrium.architectures.models import *
+from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_hybrid
 
-import matplotlib.pyplot as plt
 
-from numpy import array
-from numpy import reshape
-from numpy import empty
-
-import pandas as pd
-from pandas import DataFrame
-import os
-
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (
-    LSTM,
-    Dense,
-    Flatten,
-    Conv1D,
-    MaxPooling1D,
-    Dropout,
-    Bidirectional,
-    TimeDistributed,
-    GRU,
-    SimpleRNN,
-)
-
-
-class HybridMultStepMultVar(MultiVariateMultiStep):
+class HybridMulti(MultiVariateMultiStep):
     """Implements neural network based multivariate multipstep hybrid predictors.
 
     Methods
@@ -106,7 +92,7 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
         sub_seq: int,
         steps_past: int,
         steps_future: int,
-        data=pd.DataFrame(),
+        data=DataFrame(),
         features: list = [],
         scale: str = "",
     ) -> object:
@@ -488,7 +474,7 @@ class HybridMultStepMultVar(MultiVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        return pd.DataFrame(y_pred, columns=[f"{self.model_id}"])
+        return DataFrame(y_pred, columns=[f"{self.model_id}"])
 
     def save_model(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.

@@ -1,5 +1,6 @@
-import numpy as np
 import unittest
+
+import numpy as np
 import pandas as pd
 
 from imbrium.predictors.univarhybrid import *
@@ -7,7 +8,7 @@ from imbrium.predictors.univarhybrid import *
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
 data = data["target"]
 
-test0 = HybridMultStepUniVar(2, 10, 3, data=data, scale="standard")
+test0 = HybridUni(2, 10, 3, data=data, scale="standard")
 
 test0.create_cnnlstm(
     optimizer="adam",

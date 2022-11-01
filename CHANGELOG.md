@@ -40,5 +40,21 @@ activation function type
 
 ### 0.1.8
 
-- major refactoring of cod base
+- major refactoring of code base
 - minor name change from Imbrium to imbrium
+
+### 1.0.0
+
+- added tests for new utils module
+- name changes of predictor classes:
+  - univarstandard => univarpure
+  - BasicMultStepUniVar => PureUni
+  - univarhybrid => univarhybrid (unchanged)
+  - HybridMultStepUniVar => HybridUni
+  - multivarstandard => multivarpure
+  - BasicMultSTepMultVar => PureMulti
+  - multivarhybrid => multivarhybrid (unchanged)
+  - HybridMultStepMultVar => HybridMulti
+- tox added
+- outsourced Binder demo notebook to https://github.com/maxmekiska/ImbriumTesting-Demo
+- new README.md

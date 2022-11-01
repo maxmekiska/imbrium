@@ -1,4 +1,4 @@
-# Imbrium
+# imbrium
 
 
 ## Pip install
@@ -19,6 +19,40 @@ Time Series Forecasting.
                       ╚═╝╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝╚═╝░╚═════╝░╚═╝░░░░░╚═╝
 
 
+
+## About imbrium
+
+The objective of this library is to become a repository of deep learning architectures
+which specialize in time series forecasting. The main focus lies on making the process of creating and applying deep
+learning architectures user friendly. Ideally, complex architectures can be created without the user needing to
+build any part of the architecture from scratch. From a user perspective the focus will shift from architecture building to
+solely high level, low-code architecture configuration.
+
+## Contribute
+
+Feel free to contribute to imbrium. Any contributions are most welcome. Especially new contributed architectures will
+help imbrium to achieve its objectives more quickly. Imbrium does not only need to be based on Keras but could
+further be extended to Pytorch or any other machine learning framework.
+
+Recently, graph based neural networks have shown great promise when applied to time series forecasting tasks.
+If you are familiar with graph based neural network time series forecasting, please feel free to contribute such architectures to imbrium.
+
+
+## imbrium 1.0.0 changes
+
+The follwoing important name changes have been performed:
+
+```
+- univarstandard => univarpure
+- BasicMultStepUniVar => PureUni
+- univarhybrid => univarhybrid (unchanged)
+- HybridMultStepUniVar => HybridUni
+- multivarstandard => multivarpure
+- BasicMultSTepMultVar => PureMulti
+- multivarhybrid => multivarhybrid (unchanged)
+- HybridMultStepMultVar => HybridMulti
+```
+
 ## Try imbrium
 
 Please ignore all cudart dlerror/warnings, since no GPU is setup in this jupyter binder environment:
@@ -35,6 +69,8 @@ series forecasting. Multiple architectures are offered with a fixed
 number of layers however the user has full control over the number of neurons
 per layer, activation function type, loss function type, optimizer type and
 metrics applied.
+
+
 The library differentiates between two
 modes:
 
@@ -43,10 +79,10 @@ modes:
 
 These two main modes are further divided based on the complexity of the underlying model architectures:
 
-1. Standard
+1. Pure
 2. Hybrid
 
-Standard supports the following architectures:
+Pure supports the following architectures:
 
 - Multilayer perceptron (MLP)
 - Recurrent neural network (RNN)
@@ -87,116 +123,78 @@ Trained models can furthermore be saved or loaded if the user wishes to do so.
 
 ## How to use imbrium?
 
-Simplified workflows, more possible.
+Attention: Typing has been left in the below examples to ease the configuration readability.
 
 ### Univariate Models:
 
-1. Univariate-Multistep forecasting - Standard architectures
+1. Univariate-Multistep forecasting - Pure architectures
 
 ```python3
-from imbrium.predictors.univarstandard import BasicMultStepUniVar
+from imbrium.predictors.univarpure import PureUni
 
-predictor = BasicMultStepUniVar(steps_past: int,
-                                steps_future: int,
-                                data = pd.DataFrame(),
-                                scale: str = '')
+predictor = PureUni(steps_past: int, steps_future: int, data = DataFrame(),
+                    scale: str = '')
 
 # Choose between one of the architectures:
 
-predictor.create_mlp(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_mlp(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (50, 'relu'),
-                                          'layer1': (25,'relu'),
+                     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
                                           'layer2': (25, 'relu')})
 
-predictor.create_rnn(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (40, 'relu'),
-                                           'layer1': (50,'relu'),
+                     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
                                            'layer2': (50, 'relu')})
 
-predictor.create_lstm(optimizer: str = 'adam',
-                      loss: str = 'mean_squared_error',
+predictor.create_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                       metrics: str = 'mean_squared_error',
-                      layer_config: dict = {'layer0': (40, 'relu'),
-                                            'layer1': (50,'relu'),
+                      layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
                                             'layer2': (50, 'relu')})
 
-predictor.create_gru(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (40, 'relu'),
-                                           'layer1': (50,'relu'),
+                     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
                                            'layer2': (50, 'relu')})
 
-predictor.create_cnn(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (64, 1, 'relu'),
-                                           'layer1': (32, 1, 'relu'),
-                                           'layer2': (2),
-                                           'layer3': (50, 'relu')})
+                     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu')})
 
-predictor.create_birnn(optimizer: str = 'adam',
-                       loss: str = 'mean_squared_error',
+predictor.create_birnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
-                       layer_config: dict = {'layer0': (50, 'relu'),
-                                             'layer1': (50, 'relu')})
+                       layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
 
-predictor.create_bilstm(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
+predictor.create_bilstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config: dict = {'layer0': (50, 'relu'),
-                                              'layer1': (50, 'relu')})
+                        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
 
-predictor.create_bigru(optimizer: str = 'adam',
-                       loss: str = 'mean_squared_error',
+predictor.create_bigru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
-                       layer_config: dict = {'layer0': (50, 'relu'),
-                                             'layer1': (50, 'relu')})
+                       layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
 
-predictor.create_encdec_rnn(optimizer: str = 'adam',
-                            loss: str = 'mean_squared_error',
+predictor.create_encdec_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (100, 'relu'),
-                                                  'layer1': (50, 'relu'),
-                                                  'layer2': (50, 'relu'),
-                                                  'layer3': (100, 'relu')})
+                            layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
 
-predictor.create_encdec_lstm(optimizer: str = 'adam',
-                             loss: str = 'mean_squared_error',
+predictor.create_encdec_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                              metrics: str = 'mean_squared_error',
-                             layer_config: dict = {'layer0': (100, 'relu'),
-                                                   'layer1': (50, 'relu'),
-                                                   'layer2': (50, 'relu'),
-                                                   'layer3': (100, 'relu')})
+                             layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
 
-predictor.create_encdec_cnn(optimizer: str = 'adam',
-                            loss: str = 'mean_squared_error',
+predictor.create_encdec_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (64, 1, 'relu'),
-                                                  'layer1': (32, 1, 'relu'),
-                                                  'layer2': (2),
-                                                  'layer3': (50, 'relu'),
-                                                  'layer4': (100, 'relu')})
+                            layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')})
 
-predictor.create_encdec_gru(optimizer: str = 'adam',
-                            loss: str = 'mean_squared_error',
+predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (100, 'relu'),
-                                                  'layer1': (50, 'relu'),
-                                                  'layer2': (50, 'relu'),
-                                                  'layer3': (100, 'relu')})
+                            layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
 
-# Fit the predictor object - more callback settings at: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
-predictor.fit_model(epochs: int,
-                    show_progress: int = 1,
-                    validation_split: float = 0.20,
-                    batch_size: int = 10,
-                    monitor='loss',
-                    patience=3)
+# Fit the predictor object - more callback settings at:
+
+https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
+
+predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
+                    batch_size: int = 10, monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -213,7 +211,7 @@ predictor.save_model()
 # Step 3: Invoke the method load_model()
 # optional Step 4: Use the setter method set_model_id(name: str) to give model a name
 
-loading_predictor = BasicMultStepUniVar(steps_past: int, steps_future: int)
+loading_predictor = PureUni(steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
@@ -221,73 +219,42 @@ loading_predictor.set_model_id(name: str)
 2. Univariate-Multistep forecasting - Hybrid architectures
 
 ```python3
-from imbrium.predictors.univarhybrid import HybridMultStepUniVar
+from imbrium.predictors.univarhybrid import HybridUni
 
-predictor = HybridMultStepUniVar(sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), scale: str = '')
+predictor = HybridUni(sub_seq: int, steps_past: int, steps_future: int, data =          DataFrame(), scale: str = '')
 
 # Choose between one of the architectures:
 
-predictor.create_cnnrnn(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
+predictor.create_cnnrnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config = {'layer0': (64, 1, 'relu'),
-                                        'layer1': (32, 1, 'relu'),
-                                        'layer2': (2),
-                                        'layer3': (50, 'relu'),
-                                        'layer4': (25, 'relu')})
+                        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnlstm(optimizer: str = 'adam',
-                         loss: str = 'mean_squared_error',
+predictor.create_cnnlstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                          metrics: str = 'mean_squared_error',
-                         layer_config = {'layer0': (64, 1, 'relu'),
-                                         'layer1': (32, 1, 'relu'),
-                                         'layer2': (2),
-                                         'layer3': (50, 'relu'),
-                                         'layer4': (25, 'relu')})
+                         layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnngru(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
+predictor.create_cnngru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config = {'layer0': (64, 1, 'relu'),
-                                        'layer1': (32, 1, 'relu'),
-                                        'layer2': (2),
-                                        'layer3': (50, 'relu'),
-                                        'layer4': (25, 'relu')})
+                        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnbirnn(optimizer: str = 'adam',
-                          loss: str = 'mean_squared_error',
+predictor.create_cnnbirnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                           metrics: str = 'mean_squared_error',
-                          layer_config = {'layer0': (64, 1, 'relu'),
-                                          'layer1': (32, 1, 'relu'),
-                                          'layer2': (2),
-                                          'layer3': (50, 'relu'),
-                                          'layer4': (25, 'relu')})
+                          layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnbilstm(optimizer: str = 'adam',
-                           loss: str = 'mean_squared_error',
+predictor.create_cnnbilstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                            metrics: str = 'mean_squared_error',
-                           layer_config = {'layer0': (64, 1, 'relu'),
-                                           'layer1': (32, 1, 'relu'),
-                                           'layer2': (2),
-                                           'layer3': (50, 'relu'),
-                                           'layer4': (25, 'relu')})
+                           layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnbigru(optimizer: str = 'adam',
-                          loss: str = 'mean_squared_error',
+predictor.create_cnnbigru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                           metrics: str = 'mean_squared_error',
-                          layer_config = {'layer0': (64, 1, 'relu'),
-                                          'layer1': (32, 1, 'relu'),
-                                          'layer2': (2),
-                                          'layer3': (50, 'relu'),
-                                          'layer4': (25, 'relu')})
+                          layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-# Fit the predictor object - more callback settings at: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
-predictor.fit_model(epochs: int,
-                    show_progress: int = 1,
-                    validation_split: float = 0.20,
-                    batch_size: int = 10,
-                    monitor='loss',
-                    patience=3)
+# Fit the predictor object - more callback settings at:
+
+https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
+
+predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
+                    batch_size: int = 10, monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -304,121 +271,81 @@ predictor.save_model()
 # Step 3: Invoke the method load_model()
 # optional Step 4: Use the setter method set_model_id(name: str) to give model a name
 
-loading_predictor =  HybridMultStepUniVar(sub_seq: int, steps_past: int, steps_future: int)
+loading_predictor =  HybridUni(sub_seq: int, steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
 
 ### Multivariate Models:
 
-1. Multivariate-Multistep forecasting - Standard architectures
+1. Multivariate-Multistep forecasting - Pure architectures
 
 ```python3
-from imbrium.predictors.multivarstandard import BasicMultStepMultVar
+from imbrium.predictors.multivarpure import PureMulti
 
 # please make sure that the target feature is the first variable in the feature list
-predictor = BasicMultStepMultVar(steps_past: int,
-                                 steps_future: int,
-                                 data = pd.DataFrame(),
-                                 features = [],
-                                 scale: str = '')
+predictor = PureMulti(steps_past: int, steps_future: int, data = DataFrame(), features = [], scale: str = '')
 
 # Choose between one of the architectures:
 
-predictor.create_mlp(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_mlp(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (50, 'relu'),
-                                           'layer1': (25,'relu'),
+                     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
                                            'layer2': (25, 'relu')})
 
-predictor.create_rnn(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (40, 'relu'),
-                                           'layer1': (50,'relu'),
+                     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
                                            'layer2': (50, 'relu')})
 
-predictor.create_lstm(optimizer: str = 'adam',
-                      loss: str = 'mean_squared_error',
+predictor.create_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                       metrics: str = 'mean_squared_error',
-                      layer_config: dict = {'layer0': (40, 'relu'),
-                                            'layer1': (50,'relu'),
+                      layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
                                             'layer2': (50, 'relu')})
 
-predictor.create_gru(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (40, 'relu'),
-                                           'layer1': (50,'relu'),
+                     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
                                            'layer2': (50, 'relu')})
 
-predictor.create_cnn(optimizer: str = 'adam',
-                     loss: str = 'mean_squared_error',
+predictor.create_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (64, 1, 'relu'),
-                                           'layer1': (32, 1, 'relu'),
-                                           'layer2': (2),
-                                           'layer3': (50, 'relu')})
+                     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu')})
 
-predictor.create_birnn(optimizer: str = 'adam',
-                       loss: str = 'mean_squared_error',
+predictor.create_birnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
-                       layer_config: dict = {'layer0': (50, 'relu'),
-                                             'layer1': (50, 'relu')})
+                       layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
 
-predictor.create_bilstm(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
+predictor.create_bilstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config: dict = {'layer0': (50, 'relu'),
-                                              'layer1': (50, 'relu')})
+                        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
 
-predictor.create_bigru(optimizer: str = 'adam',
-                       loss: str = 'mean_squared_error',
+predictor.create_bigru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
-                       layer_config: dict = {'layer0': (50, 'relu'),
-                                             'layer1': (50, 'relu')})
+                       layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
 
-predictor.create_encdec_rnn(optimizer: str = 'adam',
-                            loss: str = 'mean_squared_error',
+predictor.create_encdec_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (100, 'relu'),
-                                                  'layer1': (50, 'relu'),
-                                                  'layer2': (50, 'relu'),
-                                                  'layer3': (100, 'relu')})
+                            layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
 
-predictor.create_encdec_lstm(optimizer: str = 'adam',
-                             loss: str = 'mean_squared_error',
+predictor.create_encdec_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                              metrics: str = 'mean_squared_error',
-                             layer_config: dict = {'layer0': (100, 'relu'),
-                                                   'layer1': (50, 'relu'),
-                                                   'layer2': (50, 'relu'),
-                                                   'layer3': (100, 'relu')})
+                             layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
 
-predictor.create_encdec_cnn(optimizer: str = 'adam',
-                            loss: str = 'mean_squared_error',
+predictor.create_encdec_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (64, 1, 'relu'),
-                                                  'layer1': (32, 1, 'relu'),
-                                                  'layer2': (2),
-                                                  'layer3': (50, 'relu'),
-                                                  'layer4': (100, 'relu')})
+                            layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')})
 
-predictor.create_encdec_gru(optimizer: str = 'adam',
-                            loss: str = 'mean_squared_error',
+predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (100, 'relu'),
-                                                  'layer1': (50, 'relu'),
-                                                  'layer2': (50, 'relu'),
-                                                  'layer3': (100, 'relu')})
+                            layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
 
-# Fit the predictor object - more callback settings at: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
-predictor.fit_model(epochs: int,
-                    show_progress: int = 1,
-                    validation_split: float = 0.20,
-                    batch_size: int = 10,
-                    monitor='loss',
-                    patience=3)
+# Fit the predictor object - more callback settings at:
+
+https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
+
+predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
+                    batch_size: int = 10, monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -435,81 +362,50 @@ predictor.save_model()
 # Step 3: Invoke the method load_model()
 # optional Step 4: Use the setter method set_model_id(name: str) to give model a name
 
-loading_predictor = BasicMultStepMultVar(steps_past: int, steps_future: int)
+loading_predictor = PureMulti(steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
 2. Multivariate-Multistep forecasting - Hybrid architectures
 
 ```python3
-from imbrium.predictors.multivarhybrid import HybridMultStepMultVar
+from imbrium.predictors.multivarhybrid import HybridMulti
 
 # please make sure that the target feature is the first variable in the feature list
-predictor = HybridMultStepMultVar(sub_seq: int, steps_past: int, steps_future: int, data = pd.DataFrame(), features:list = [], scale: str = '')
+predictor = HybridMulti(sub_seq: int, steps_past: int, steps_future: int, data = DataFrame(), features:list = [], scale: str = '')
 
 # Choose between one of the architectures:
 
-predictor.create_cnnrnn(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
+predictor.create_cnnrnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config = {'layer0': (64, 1, 'relu'),
-                                        'layer1': (32, 1, 'relu'),
-                                        'layer2': (2),
-                                        'layer3': (50, 'relu'),
-                                        'layer4': (25, 'relu')})
+                        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnlstm(optimizer: str = 'adam',
-                         loss: str = 'mean_squared_error',
+predictor.create_cnnlstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                          metrics: str = 'mean_squared_error',
-                         layer_config = {'layer0': (64, 1, 'relu'),
-                                         'layer1': (32, 1, 'relu'),
-                                         'layer2': (2),
-                                         'layer3': (50, 'relu'),
-                                         'layer4': (25, 'relu')})
+                         layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnngru(optimizer: str = 'adam',
-                        loss: str = 'mean_squared_error',
+predictor.create_cnngru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config = {'layer0': (64, 1, 'relu'),
-                                        'layer1': (32, 1, 'relu'),
-                                        'layer2': (2),
-                                        'layer3': (50, 'relu'),
-                                        'layer4': (25, 'relu')})
+                        layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnbirnn(optimizer: str = 'adam',
-                          loss: str = 'mean_squared_error',
+predictor.create_cnnbirnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                           metrics: str = 'mean_squared_error',
-                          layer_config = {'layer0': (64, 1, 'relu'),
-                                          'layer1': (32, 1, 'relu'),
-                                          'layer2': (2),
-                                          'layer3': (50, 'relu'),
-                                          'layer4': (25, 'relu')})
+                          layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnbilstm(optimizer: str = 'adam',
-                           loss: str = 'mean_squared_error',
+predictor.create_cnnbilstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                            metrics: str = 'mean_squared_error',
-                           layer_config = {'layer0': (64, 1, 'relu'),
-                                           'layer1': (32, 1, 'relu'),
-                                           'layer2': (2),
-                                           'layer3': (50, 'relu'),
-                                           'layer4': (25, 'relu')})
+                           layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-predictor.create_cnnbigru(optimizer: str = 'adam',
-                          loss: str = 'mean_squared_error',
+predictor.create_cnnbigru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                           metrics: str = 'mean_squared_error',
-                          layer_config = {'layer0': (64, 1, 'relu'),
-                                          'layer1': (32, 1, 'relu'),
-                                          'layer2': (2),
-                                          'layer3': (50, 'relu'),
-                                          'layer4': (25, 'relu')})
+                          layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')})
 
-# Fit the predictor object - more callback settings at: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
-predictor.fit_model(epochs: int,
-                    show_progress: int = 1,
-                    validation_split: float = 0.20,
-                    batch_size: int = 10,
-                    monitor='loss',
-                    patience=3)
+# Fit the predictor object - more callback settings at:
+
+https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
+
+predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
+                    batch_size: int = 10, monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -526,10 +422,12 @@ predictor.save_model()
 # Step 3: Invoke the method load_model()
 # optional Step 4: Use the setter method set_model_id(name: str) to give model a name
 
-loading_predictor =  HybridMultStepMultVar(sub_seq: int, steps_past: int, steps_future: int)
+loading_predictor =  HybridMulti(sub_seq: int, steps_past: int, steps_future: int)
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
+
+
 ## References
 Brwonlee, J., 2016. Display deep learning model training history in keras [Online]. Available from:
 https://machinelearningmastery.com/display-deep-

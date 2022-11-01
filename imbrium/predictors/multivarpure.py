@@ -1,141 +1,134 @@
-from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
-from imbrium.architectures.models import *
-from imbrium.utils.scaler import SCALER
-from imbrium.utils.transformer import data_prep_uni, sequence_prep_standard_uni
-
-import matplotlib.pyplot as plt
-from numpy import array
-from numpy import reshape
-from numpy import empty
-
-import pandas as pd
-from pandas import DataFrame
 import os
 
+import matplotlib.pyplot as plt
 import tensorflow as tf
+from numpy import array, empty, reshape
+from pandas import DataFrame
 from tensorflow import keras
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (
-    LSTM,
-    Dense,
-    Flatten,
-    Conv1D,
-    MaxPooling1D,
-    Dropout,
-    Bidirectional,
-    RepeatVector,
-    TimeDistributed,
-    GRU,
-    SimpleRNN,
-)
+from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
+                                     Dropout, Flatten, MaxPooling1D, SimpleRNN)
+
+from imbrium.architectures.models import *
+from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
+from imbrium.utils.scaler import SCALER
+from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
 
 
-class BasicMultStepUniVar(UniVariateMultiStep):
-    """Implements neural network based univariate multipstep predictors.
+class PureMulti(MultiVariateMultiStep):
+    """Implements deep neural networks based on multivariate multipstep
+    standard predictors.
 
-    Methods
-    -------
-    set_model_id(self, name: str):
-        Setter method to change model id name.
-    get_model_id(self) -> array:
-        Getter method to retrieve model id used.
-    get_X_input(self) -> array:
-        Getter method to retrieve transformed X input - training.
-    get_X_input_shape(self) -> tuple:
-        Getter method to retrieve transformed X shape.
-    get_y_input(self) -> array:
-        Getter method to retrieve transformed y input - target.
-    get_y_input_shape(self) -> array:
-        Getter method to retrieve transformed y input shape.
-    get_optimizer(self) -> str:
-        Getter method to retrieve model optimizer used.
-    get_loss(self) -> str:
-        Getter method to retrieve used model loss.
-    get_metrics(self) -> str:
-        Getter method to retrieve model evaluation metrics used.
-    create_mlp(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
-    'layer2': (25, 'relu')}):
-        Builds MLP structure.
-    create_rnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-    'layer2': (50, 'relu')}):
-        Builds RNN structure.
-    create_lstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-    'layer2': (50, 'relu')}):
-        Builds LSTM structure.
-    create_cnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu')}):
-        Builds CNN structure.
-    create_gru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-    'layer2': (50, 'relu')}):
-        Builds GRU structure.
-    create_birnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-        Builds bidirectional RNN structure.
-    create_bilstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-        Builds bidirectional LSTM structure.
-    create_bigru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-        Builds bidirectional GRU structure.
-    create_encdec_rnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-    'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-        Builds encoder decoder RNN structure.
-    create_encdec_lstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-    'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-        Builds encoder decoder LSTM structure.
-    create_encdec_gru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-    'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-        Builds encoder decoder GRU structure.
-    create_encdec_cnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')}):
-        Builds encoder decoder CNN structure.
-    fit_model(self, epochs: int, show_progress: int = 1,
-    validation_split: float = 0.20, batch_size: int = 10,
-    **callback_setting: dict):
-        Fitting model onto provided data.
-    model_blueprint(self):
-        Print blueprint of layer structure.
-    show_performance(self):
-        Evaluate and plot model performance.
-    predict(self, data: array):
-        Takes in input data and outputs model forecasts.
-    save_model(self, absolute_path: str = CURRENT_PATH):
-        Saves current Keras model to current directory.
-    load_model(self, location: str):
-        Load model from location specified.
+     Methods
+     -------
+     set_model_id(self, name: str):
+         Setter method to change model id name.
+     get_model_id(self) -> array:
+         Getter method to retrieve model id used.
+     get_X_input(self) -> array:
+         Getter method to retrieve transformed X input - training.
+     get_X_input_shape(self) -> tuple:
+         Getter method to retrieve transformed X shape.
+     get_y_input(self) -> array:
+         Getter method to retrieve transformed y input - target.
+     get_y_input_shape(self) -> array:
+         Getter method to retrieve transformed y input shape.
+     get_optimizer(self) -> str:
+         Getter method to retrieve model optimizer used.
+     get_loss(self) -> str:
+         Getter method to retrieve used model loss.
+     get_metrics(self) -> str:
+         Getter method to retrieve model evaluation metrics used.
+     create_mlp(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
+     'layer2': (25, 'relu')}):
+         Builds MLP structure.
+     create_rnn(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
+     'layer2': (50, 'relu')}):
+         Builds RNN structure.
+     create_lstm(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
+     'layer2': (50, 'relu')}):
+         Builds LSTM structure.
+     create_cnn(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+     'layer2': (2), 'layer3': (50, 'relu')}):
+         Builds CNN structure.
+     create_gru(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
+     'layer2': (50, 'relu')}):
+         Builds GRU structure.
+     create_birnn(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
+         Builds bidirectional RNN structure.
+     create_bilstm(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
+         Builds bidirectional LSTM structure.
+     create_bigru(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
+         Builds bidirectional GRU structure.
+     create_encdec_rnn(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
+     'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
+         Builds encoder decoder RNN structure.
+     create_encdec_lstm(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
+     'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
+         Builds encoder decoder LSTM structure.
+     create_encdec_gru(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
+     'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
+         Builds encoder decoder GRU structure.
+     create_encdec_cnn(self, optimizer: str = 'adam',
+     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
+     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
+     'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')}):
+         Builds encoder decoder CNN structure.
+     fit_model(self, epochs: int, show_progress: int = 1,
+     validation_split: float = 0.20, batch_size: int = 10,
+     **callback_setting: dict):
+         Fitting model onto provided data.
+     model_blueprint(self):
+         Print blueprint of layer structure.
+     show_performance(self):
+         Evaluate and plot model performance.
+     predict(self, data: array):
+         Takes in input data and outputs model forecasts.
+     save_model(self, absolute_path: str = CURRENT_PATH):
+         Saves current Keras model to current directory.
+     load_model(self, location: str):
+         Load model from location specified.
     """
 
     CURRENT_PATH = os.getcwd()
 
     def __init__(
-        self, steps_past: int, steps_future: int, data=pd.DataFrame(), scale: str = ""
+        self,
+        steps_past: int,
+        steps_future: int,
+        data=DataFrame(),
+        features=[],
+        scale: str = "",
     ) -> object:
         """
         Parameters:
             steps_past (int): Steps predictor will look backward.
             steps_future (int): Steps predictor will look forward.
             data (DataFrame): Input data for model training.
+            features (list): List of features. First feature in list will be
+            set to the target variable.
             scale (str): How to scale the data before making predictions.
         """
         self.scaler = SCALER[scale]
@@ -145,9 +138,8 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.metrics = ""
 
         if len(data) > 0:
-            self.data = array(data)
-            self.data = data_prep_uni(data, self.scaler)
-            self.input_x, self.input_y = sequence_prep_standard_uni(
+            self.data = data_prep_multi(data, features, self.scaler)
+            self.input_x, self.input_y = multistep_prep_standard(
                 self.data, steps_past, steps_future
             )
         else:
@@ -223,9 +215,9 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        self.input_x = self.input_x.reshape(
-            (self.input_x.shape[0], self.input_x.shape[1])
-        )
+        self.dimension = self.input_x.shape[1] * self.input_x.shape[2]
+
+        self.input_x = self.input_x.reshape((self.input_x.shape[0], self.dimension))
 
         self.model = mlp(
             optimizer=optimizer,
@@ -264,7 +256,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -296,7 +288,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -329,7 +321,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -361,7 +353,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -389,7 +381,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -417,7 +409,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -445,7 +437,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             loss=loss,
             metrics=metrics,
             layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], 1),
+            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
         )
 
@@ -461,7 +453,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             "layer3": (100, "relu"),
         },
     ):
-        """Creates Encoder-Decoder-RNN model.
+        """Creates Encoder-Decoder-RNN model model.
         Parameters:
             optimizer (str): Optimization algorithm.
             loss (str): Loss function.
@@ -479,7 +471,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             metrics=metrics,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
+            output_shape=1,
             repeat=self.input_y.shape[1],
         )
 
@@ -495,7 +487,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             "layer3": (100, "relu"),
         },
     ):
-        """Creates Encoder-Decoder-LSTM model.
+        """Creates Encoder-Decoder-LSTM model model.
         Parameters:
             optimizer (str): Optimization algorithm.
             loss (str): Loss function.
@@ -513,7 +505,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             metrics=metrics,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
+            output_shape=1,
             repeat=self.input_y.shape[1],
         )
 
@@ -529,7 +521,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             "layer3": (100, "relu"),
         },
     ):
-        """Creates Encoder-Decoder-GRU model.
+        """Creates Encoder-Decoder-GRU model model.
         Parameters:
             optimizer (str): Optimization algorithm.
             loss (str): Loss function.
@@ -547,7 +539,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             metrics=metrics,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
+            output_shape=1,
             repeat=self.input_y.shape[1],
         )
 
@@ -583,7 +575,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
             metrics=metrics,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
+            output_shape=1,
             repeat=self.input_y.shape[1],
         )
 
@@ -649,9 +641,6 @@ class BasicMultStepUniVar(UniVariateMultiStep):
         Returns:
             (DataFrame): Forecast for sequence provided.
         """
-        data = array(data)
-        data = data.reshape(-1, 1)
-
         self.scaler.fit(data)
         data = self.scaler.transform(data)
 
@@ -667,7 +656,7 @@ class BasicMultStepUniVar(UniVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        return pd.DataFrame(y_pred, columns=[f"{self.model_id}"])
+        return DataFrame(y_pred, columns=[f"{self.model_id}"])
 
     def save_model(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.
@@ -679,6 +668,6 @@ class BasicMultStepUniVar(UniVariateMultiStep):
     def load_model(self, location: str):
         """Load a keras model from the path specified.
         Parameters:
-            location (str): Path of keras model location
+            location (str): Path of keras model location.
         """
         self.model = keras.models.load_model(location)

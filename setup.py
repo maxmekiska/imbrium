@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages
 import os
+
+from setuptools import find_packages, setup
 
 with open("README.md", encoding="utf8") as file:
     long_description = file.read()
@@ -12,7 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     name="imbrium",
-    version="0.1.8",
+    version="1.0.0",
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "tensorflow==2.9.1",

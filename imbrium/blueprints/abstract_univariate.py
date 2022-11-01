@@ -1,7 +1,7 @@
-from abc import ABC
-from abc import abstractmethod
-from pandas import DataFrame
+from abc import ABC, abstractmethod
+
 from numpy import array
+from pandas import DataFrame
 
 
 class UniVariateMultiStep(ABC):
