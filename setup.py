@@ -16,6 +16,7 @@ setup(
     version="1.0.0",
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
+        "setuptools>=41.0.0",
         "tensorflow==2.9.1",
         "scikit-learn==0.21.3",
         "matplotlib==3.5.2",
