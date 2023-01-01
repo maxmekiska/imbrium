@@ -1,7 +1,6 @@
-import unittest
-
 import numpy as np
 import pandas as pd
+import pytest
 
 from imbrium.predictors.multivarhybrid import *
 
@@ -97,31 +96,33 @@ loss = "mean_squared_error"
 metrics = "mean_squared_error"
 
 
-class TestHybrid(unittest.TestCase):
-    def test_get_model_id(self):
-        self.assertEqual(test0.get_model_id, model_id)
-
-    def test_get_X_input(self):
-        np.testing.assert_allclose(test0.get_X_input[0], X, rtol=1e-05, atol=0)
-
-    def test_get_y_input(self):
-        np.testing.assert_allclose(test0.get_y_input[0], y)
-
-    def test_get_X_input_shape(self):
-        np.testing.assert_allclose(test0.get_X_input_shape, shape_x)
-
-    def test_get_y_input_shape(self):
-        np.testing.assert_allclose(test0.get_y_input_shape, shape_y)
-
-    def test_get_optimizer(self):
-        self.assertEqual(test0.get_optimizer, optimizer)
-
-    def test_get_loss(self):
-        self.assertEqual(test0.get_loss, loss)
-
-    def test_get_metrics(self):
-        self.assertEqual(test0.get_metrics, metrics)
+def test_get_model_id():
+    assert test0.get_model_id == model_id
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_get_X_input():
+    np.testing.assert_allclose(test0.get_X_input[0], X, rtol=1e-05, atol=0)
+
+
+def test_get_y_input():
+    np.testing.assert_allclose(test0.get_y_input[0], y)
+
+
+def test_get_X_input_shape():
+    np.testing.assert_allclose(test0.get_X_input_shape, shape_x)
+
+
+def test_get_y_input_shape():
+    np.testing.assert_allclose(test0.get_y_input_shape, shape_y)
+
+
+def test_get_optimizer():
+    assert test0.get_optimizer == optimizer
+
+
+def test_get_loss():
+    assert test0.get_loss == loss
+
+
+def test_get_metrics():
+    assert test0.get_metrics == metrics

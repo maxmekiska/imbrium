@@ -1,7 +1,5 @@
-import unittest
-
 import numpy as np
-import pandas as pd
+import pytest
 
 from imbrium.utils.scaler import SCALER
 
@@ -100,37 +98,28 @@ normalize_ = np.array(
 )
 
 
-class TestScaler(unittest.TestCase):
-
-    none = SCALER[""].fit(data)
-    standard = SCALER["standard"].fit(data)
-    minmax = SCALER["minmax"].fit(data)
-    maxabs = SCALER["maxabs"].fit(data)
-    normalize = SCALER["normalize"].fit(data)
-
-    def test_none(self):
-        np.testing.assert_allclose(TestScaler.none.transform(data), none_, rtol=1e-04)
-
-    def test_standard(self):
-        np.testing.assert_allclose(
-            TestScaler.standard.transform(data), standard_, rtol=1e-04
-        )
-
-    def test_minmax(self):
-        np.testing.assert_allclose(
-            TestScaler.minmax.transform(data), minmax_, rtol=1e-04
-        )
-
-    def test_maxabs(self):
-        np.testing.assert_allclose(
-            TestScaler.maxabs.transform(data), maxabs_, rtol=1e-04
-        )
-
-    def test_normalize(self):
-        np.testing.assert_allclose(
-            TestScaler.normalize.transform(data), normalize_, rtol=1e-04
-        )
+none = SCALER[""].fit(data)
+standard = SCALER["standard"].fit(data)
+minmax = SCALER["minmax"].fit(data)
+maxabs = SCALER["maxabs"].fit(data)
+normalize = SCALER["normalize"].fit(data)
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_none():
+    np.testing.assert_allclose(none.transform(data), none_, rtol=1e-04)
+
+
+def test_standard():
+    np.testing.assert_allclose(standard.transform(data), standard_, rtol=1e-04)
+
+
+def test_minmax():
+    np.testing.assert_allclose(minmax.transform(data), minmax_, rtol=1e-04)
+
+
+def test_maxabs():
+    np.testing.assert_allclose(maxabs.transform(data), maxabs_, rtol=1e-04)
+
+
+def test_normalize():
+    np.testing.assert_allclose(normalize.transform(data), normalize_, rtol=1e-04)
