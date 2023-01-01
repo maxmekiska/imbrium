@@ -1,15 +1,8 @@
 from warnings import filterwarnings
 
-filterwarnings(
-    action="ignore",
-    category=DeprecationWarning,
-    message=" `np.bool` is a deprecated alias for the builtin `bool`.",
-)
-
-import unittest
-
 import numpy as np
 import pandas as pd
+import pytest
 
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import *
@@ -206,127 +199,136 @@ multistep_prep_hybrid_y = np.array(
 )
 
 
-class TestTransformer(unittest.TestCase):
-
-    scaler = SCALER["standard"]
-
-    def test_data_prep_uni(self):
-        np.testing.assert_allclose(
-            data_prep_uni(df_uni, TestTransformer.scaler), df_uni_output, rtol=1e-07
-        )
-
-    def test_data_prep_multi(self):
-        np.testing.assert_allclose(
-            data_prep_multi(df_multi, ["test1", "test2"], TestTransformer.scaler),
-            df_multi_output,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_standard_uni_X(self):
-        np.testing.assert_allclose(
-            sequence_prep_standard_uni(df_uni_output, 5, 5)[0],
-            df_sequence_prep_standard_uni_X,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_standard_uni_y(self):
-        np.testing.assert_allclose(
-            sequence_prep_standard_uni(df_uni_output, 5, 5)[1],
-            df_sequence_prep_standard_uni_y,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_standard_multi_X(self):
-        np.testing.assert_allclose(
-            sequence_prep_standard_multi(df_uni_output, 2, 5)[0],
-            df_sequence_prep_standard_multi_X,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_standard_multi_y(self):
-        np.testing.assert_allclose(
-            sequence_prep_standard_multi(df_uni_output, 2, 5)[1],
-            df_sequence_prep_standard_multi_y,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_hybrid_uni_X(self):
-        np.testing.assert_allclose(
-            sequence_prep_hybrid_uni(df_uni_output, 2, 2, 2)[0],
-            sequence_prep_hybrid_uni_X,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_hybrid_uni_y(self):
-        np.testing.assert_allclose(
-            sequence_prep_hybrid_uni(df_uni_output, 2, 2, 2)[1],
-            sequence_prep_hybrid_uni_y,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_hybrid_uni_mod(self):
-        np.testing.assert_allclose(
-            sequence_prep_hybrid_uni(df_uni_output, 2, 2, 2)[2],
-            sequence_prep_hybrid_mod,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_hybrid_multi_X(self):
-        np.testing.assert_allclose(
-            sequence_prep_hybrid_multi(df_uni_output, 2, 2, 2)[0],
-            sequence_prep_hybrid_multi_X,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_hybrid_multi_y(self):
-        np.testing.assert_allclose(
-            sequence_prep_hybrid_multi(df_uni_output, 2, 2, 2)[1],
-            sequence_prep_hybrid_multi_y,
-            rtol=1e-07,
-        )
-
-    def test_sequence_prep_hybrid_multi_mod(self):
-        np.testing.assert_allclose(
-            sequence_prep_hybrid_multi(df_uni_output, 2, 2, 2)[2],
-            sequence_prep_hybrid_mod,
-            rtol=1e-07,
-        )
-
-    def test_multistep_prep_standard_X(self):
-        np.testing.assert_allclose(
-            multistep_prep_standard(df_multi_output, 1, 2)[0],
-            multistep_prep_standard_X,
-            rtol=1e-07,
-        )
-
-    def test_multistep_prep_standard_y(self):
-        np.testing.assert_allclose(
-            multistep_prep_standard(df_multi_output, 1, 2)[1],
-            multistep_prep_standard_y,
-            rtol=1e-07,
-        )
-
-    def test_multistep_prep_hybrid_X(self):
-        np.testing.assert_allclose(
-            multistep_prep_hybrid(df_multi_output, 2, 2, 2)[0],
-            multistep_prep_hybrid_X,
-            rtol=1e-07,
-        )
-
-    def test_multistep_prep_hybrid_y(self):
-        np.testing.assert_allclose(
-            multistep_prep_hybrid(df_multi_output, 2, 2, 2)[1],
-            multistep_prep_hybrid_y,
-            rtol=1e-07,
-        )
-
-    def test_multistep_prep_hybrid_mod(self):
-        np.testing.assert_allclose(
-            multistep_prep_hybrid(df_multi_output, 2, 2, 2)[2],
-            sequence_prep_hybrid_mod,
-            rtol=1e-07,
-        )
+scaler = SCALER["standard"]
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_data_prep_uni():
+    np.testing.assert_allclose(data_prep_uni(df_uni, scaler), df_uni_output, rtol=1e-07)
+
+
+def test_data_prep_multi():
+    np.testing.assert_allclose(
+        data_prep_multi(df_multi, ["test1", "test2"], scaler),
+        df_multi_output,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_standard_uni_X():
+    np.testing.assert_allclose(
+        sequence_prep_standard_uni(df_uni_output, 5, 5)[0],
+        df_sequence_prep_standard_uni_X,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_standard_uni_y():
+    np.testing.assert_allclose(
+        sequence_prep_standard_uni(df_uni_output, 5, 5)[1],
+        df_sequence_prep_standard_uni_y,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_standard_multi_X():
+    np.testing.assert_allclose(
+        sequence_prep_standard_multi(df_uni_output, 2, 5)[0],
+        df_sequence_prep_standard_multi_X,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_standard_multi_y():
+    np.testing.assert_allclose(
+        sequence_prep_standard_multi(df_uni_output, 2, 5)[1],
+        df_sequence_prep_standard_multi_y,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_hybrid_uni_X():
+    np.testing.assert_allclose(
+        sequence_prep_hybrid_uni(df_uni_output, 2, 2, 2)[0],
+        sequence_prep_hybrid_uni_X,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_hybrid_uni_y():
+    np.testing.assert_allclose(
+        sequence_prep_hybrid_uni(df_uni_output, 2, 2, 2)[1],
+        sequence_prep_hybrid_uni_y,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_hybrid_uni_mod():
+    np.testing.assert_allclose(
+        sequence_prep_hybrid_uni(df_uni_output, 2, 2, 2)[2],
+        sequence_prep_hybrid_mod,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_hybrid_multi_X():
+    np.testing.assert_allclose(
+        sequence_prep_hybrid_multi(df_uni_output, 2, 2, 2)[0],
+        sequence_prep_hybrid_multi_X,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_hybrid_multi_y():
+    np.testing.assert_allclose(
+        sequence_prep_hybrid_multi(df_uni_output, 2, 2, 2)[1],
+        sequence_prep_hybrid_multi_y,
+        rtol=1e-07,
+    )
+
+
+def test_sequence_prep_hybrid_multi_mod():
+    np.testing.assert_allclose(
+        sequence_prep_hybrid_multi(df_uni_output, 2, 2, 2)[2],
+        sequence_prep_hybrid_mod,
+        rtol=1e-07,
+    )
+
+
+def test_multistep_prep_standard_X():
+    np.testing.assert_allclose(
+        multistep_prep_standard(df_multi_output, 1, 2)[0],
+        multistep_prep_standard_X,
+        rtol=1e-07,
+    )
+
+
+def test_multistep_prep_standard_y():
+    np.testing.assert_allclose(
+        multistep_prep_standard(df_multi_output, 1, 2)[1],
+        multistep_prep_standard_y,
+        rtol=1e-07,
+    )
+
+
+def test_multistep_prep_hybrid_X():
+    np.testing.assert_allclose(
+        multistep_prep_hybrid(df_multi_output, 2, 2, 2)[0],
+        multistep_prep_hybrid_X,
+        rtol=1e-07,
+    )
+
+
+def test_multistep_prep_hybrid_y():
+    np.testing.assert_allclose(
+        multistep_prep_hybrid(df_multi_output, 2, 2, 2)[1],
+        multistep_prep_hybrid_y,
+        rtol=1e-07,
+    )
+
+
+def test_multistep_prep_hybrid_mod():
+    np.testing.assert_allclose(
+        multistep_prep_hybrid(df_multi_output, 2, 2, 2)[2],
+        sequence_prep_hybrid_mod,
+        rtol=1e-07,
+    )
