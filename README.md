@@ -1,4 +1,5 @@
-# imbrium [![Downloads](https://pepy.tech/badge/imbrium)](https://pepy.tech/project/imbrium) [![PyPi](https://img.shields.io/pypi/v/imbrium.svg?color=blue)](https://pypi.org/project/imbrium/) [![GitHub license](https://img.shields.io/github/license/maxmekiska/Imbrium?color=black)](https://github.com/maxmekiska/Imbrium/blob/main/LICENSE)
+# imbrium [![Downloads](https://pepy.tech/badge/imbrium)](https://pepy.tech/project/imbrium) [![PyPi](https://img.shields.io/pypi/v/imbrium.svg?color=blue)](https://pypi.org/project/imbrium/) [![GitHub license](https://img.shields.io/github/license/maxmekiska/Imbrium?color=black)](https://github.com/maxmekiska/Imbrium/blob/main/LICENSE) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/imbrium.svg)](https://pypi.python.org/project/imbrium/)
+ 
 ## Status
 
 | Build | Status|
@@ -24,28 +25,20 @@ Time Series Forecasting.
                       ╚═╝╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝╚═╝░╚═════╝░╚═╝░░░░░╚═╝
 
 
+## Introduction to Imbrium
 
-## About imbrium
+Imbrium is a deep learning library that specializes in time series forecasting. Its primary objective is to provide a user-friendly repository of deep learning architectures for this purpose. The focus is on simplifying the process of creating and applying these architectures, with the goal of allowing users to create complex architectures without having to build them from scratch. Instead, the emphasis shifts to high-level configuration of the architectures.
 
-The objective of this library is to become a repository of deep learning architectures
-which specialize in time series forecasting. The main focus lies on making the process of creating and applying deep
-learning architectures user friendly. Ideally, complex architectures can be created without the user needing to
-build any part of the architecture from scratch. From a user perspective the focus will shift from architecture building to
-solely high level, low-code architecture configuration.
+## Contributions
 
-## Contribute
+The development and improvement of Imbrium is an ongoing process, and contributions from the community are greatly appreciated. New architectures, in particular, can help Imbrium achieve its goals more quickly. While Imbrium is currently based on Keras, it is open to being extended to other machine learning frameworks such as Pytorch.
 
-Feel free to contribute to imbrium. Any contributions are most welcome. Especially new contributed architectures will
-help imbrium to achieve its objectives more quickly. Imbrium does not only need to be based on Keras but could
-further be extended to Pytorch or any other machine learning framework.
-
-Recently, graph based neural networks have shown great promise when applied to time series forecasting tasks.
-If you are familiar with graph based neural network time series forecasting, please feel free to contribute such architectures to imbrium.
+Recent research in the field of time series forecasting has shown the potential of graph-based neural networks. If you have experience in this area and would like to contribute architectures to Imbrium, your contributions would be most welcomed.
 
 
 ## imbrium 1.0.0 changes
 
-The follwoing important name changes have been performed:
+The following important name changes have been performed:
 
 ```
 - univarstandard => univarpure
@@ -67,13 +60,10 @@ Please ignore all cudart dlerror/warnings, since no GPU is setup in this jupyter
 
 For more testing, please visit the dedicated Demo & Testing repository at: https://github.com/maxmekiska/ImbriumTesting-Demo
 
-## Basics
 
-This library aims to ease the application of deep learning models for time
-series forecasting. Multiple architectures are offered with a fixed
-number of layers however the user has full control over the number of neurons
-per layer, activation function type, loss function type, optimizer type and
-metrics applied.
+## Overview of Imbrium's Functionality
+
+Imbrium is designed to simplify the application of deep learning models for time series forecasting. The library offers a variety of pre-built architectures, each with a fixed number of layers. However, the user retains full control over the configuration of each layer, including the number of neurons, the type of activation function, loss function, optimizer, and metrics applied. This allows for the flexibility to adapt the architecture to the specific needs of the forecast task at hand. Imbrium also offers a user-friendly interface for training and evaluating these models, making it easy to quickly iterate and test different configurations.
 
 
 The library differentiates between two
