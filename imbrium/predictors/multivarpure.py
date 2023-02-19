@@ -97,7 +97,7 @@ class PureMulti(MultiVariateMultiStep):
      'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')}):
          Builds encoder decoder CNN structure.
      fit_model(self, epochs: int, show_progress: int = 1,
-     validation_split: float = 0.20, batch_size: int = 10,
+     validation_split: float = 0.20,
      **callback_setting: dict):
          Fitting model onto provided data.
      model_blueprint(self):
@@ -584,7 +584,6 @@ class PureMulti(MultiVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         validation_split: float = 0.20,
-        batch_size: int = 10,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -592,7 +591,6 @@ class PureMulti(MultiVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             validation_split (float): Determines size of Validation data.
-            batch_size (int): Batch size of input data.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
@@ -600,7 +598,6 @@ class PureMulti(MultiVariateMultiStep):
                 self.input_x,
                 self.input_y,
                 validation_split=validation_split,
-                batch_size=batch_size,
                 epochs=epochs,
                 verbose=show_progress,
             )
@@ -610,7 +607,6 @@ class PureMulti(MultiVariateMultiStep):
                 self.input_x,
                 self.input_y,
                 validation_split=validation_split,
-                batch_size=batch_size,
                 epochs=epochs,
                 verbose=show_progress,
                 callbacks=[callback],

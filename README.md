@@ -189,7 +189,7 @@ predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_e
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -249,7 +249,7 @@ predictor.create_cnnbigru(optimizer: str = 'adam', loss: str = 'mean_squared_err
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -340,7 +340,7 @@ predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_e
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -400,7 +400,7 @@ predictor.create_cnnbigru(optimizer: str = 'adam', loss: str = 'mean_squared_err
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
