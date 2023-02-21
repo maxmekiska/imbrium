@@ -13,7 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     name="imbrium",
-    version="1.0.2",
+    version="1.1.0",
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "setuptools >= 41.0.0",
@@ -21,6 +21,7 @@ setup(
         "matplotlib >= 3.5.0, < 3.7.0",
         "pandas >= 1.3.3, < 1.6.0",
         "scikit-learn >= 1.0, < 1.3.0",
+        "optuna >= 3.1.0, < 3.2.0"
     ],
     classifiers=[
         "Programming Language :: Python :: 3.7",

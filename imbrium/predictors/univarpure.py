@@ -573,6 +573,68 @@ class PureUni(UniVariateMultiStep):
             repeat=self.input_y.shape[1],
         )
 
+    def create_fit_ml(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (100, "relu"),
+            "layer1": (50, "relu"),
+            "layer2": (50, "relu"),
+            "layer3": (100, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a Multi-Layer-Perceptron model."""
+        self.create_mlp(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_lstm(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (100, "relu"),
+            "layer1": (50, "relu"),
+            "layer2": (50, "relu"),
+            "layer3": (100, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a LSTM model."""
+        self.create_lstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
     def fit_model(
         self,
         epochs: int,
