@@ -215,6 +215,12 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        # necessary to account for hyperparameter optimization
+        try:
+            self.input_x = self.backup_input_x
+        except:
+            self.backup_input_x = self.input_x.copy()
+
         self.dimension = self.input_x.shape[1] * self.input_x.shape[2]
 
         self.input_x = self.input_x.reshape((self.input_x.shape[0], self.dimension))
@@ -667,3 +673,156 @@ class PureMulti(MultiVariateMultiStep):
             location (str): Path of keras model location.
         """
         self.model = keras.models.load_model(location)
+
+
+class OptimizePureMulti(PureMulti):
+    def create_fit_mlp(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (50, "relu"),
+            "layer1": (25, "relu"),
+            "layer2": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a Multi-Layer-Perceptron model."""
+        self.create_mlp(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_rnn(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (40, "relu"),
+            "layer1": (50, "relu"),
+            "layer2": (50, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a RNN model."""
+        self.create_rnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_lstm(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (40, "relu"),
+            "layer1": (50, "relu"),
+            "layer2": (50, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a LSTM model."""
+        self.create_lstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_cnn(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a CNN model."""
+        self.create_cnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_gru(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config: dict = {
+            "layer0": (40, "relu"),
+            "layer1": (50, "relu"),
+            "layer2": (50, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates and trains a GRU model."""
+        self.create_gru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
