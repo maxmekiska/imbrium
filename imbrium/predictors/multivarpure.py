@@ -838,7 +838,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains a BI-RNN model."""
         self.create_birnn(
             optimizer=optimizer,
             loss=loss,
@@ -864,7 +864,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains a BI-LSTM model."""
         self.create_bilstm(
             optimizer=optimizer,
             loss=loss,
@@ -890,7 +890,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains a BI-GRU model."""
         self.create_bigru(
             optimizer=optimizer,
             loss=loss,
@@ -921,7 +921,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains an encoder-decoder RNN model."""
         self.create_encdec_rnn(
             optimizer=optimizer,
             loss=loss,
@@ -952,7 +952,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains an encoder-decoder LSTM model."""
         self.create_encdec_lstm(
             optimizer=optimizer,
             loss=loss,
@@ -983,7 +983,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains an encoder-decoder GRU model."""
         self.create_encdec_gru(
             optimizer=optimizer,
             loss=loss,
@@ -1014,7 +1014,7 @@ class OptimizePureMulti(PureMulti):
         validation_split: float = 0.20,
         **callback_setting: dict,
     ):
-        """Creates and trains a GRU model."""
+        """Creates and trains an encoder-decoder CNN model."""
         self.create_encdec_cnn(
             optimizer=optimizer,
             loss=loss,

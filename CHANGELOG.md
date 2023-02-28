@@ -58,3 +58,10 @@ activation function type
 - tox added
 - outsourced Binder demo notebook to https://github.com/maxmekiska/ImbriumTesting-Demo
 - new README.md
+
+
+
+### 1.1.0
+
+- removed ...
+- added Optimization classess ...
