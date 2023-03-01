@@ -38,11 +38,35 @@ Recent research in the field of time series forecasting has shown the potential 
 ## Hyperparameter Optimization imbrium 1.1.0
 <details>
   <summary>Expand</summary>
-Starting from version 1.1.0, imbrium will support hyperparamerter optimization for the model layer config and optimizer arguments. The optimization process uses the Optuna library(https://optuna.org/).
+Starting from version 1.1.0, imbrium will support hyperparamerter optimization for the model layer config and optimizer arguments. The optimization process uses the Optuna library (https://optuna.org/).
 
 ### Optimization via the seeker decorator
 
-To leverage Optimization, use the new classes `OptimizePureUni`, `OptimizeHybridUni`, `OptimizePureMulti` and `OptimizeHybridMulti`. These classes implement optimizable model architecture methods.
+To leverage Optimization, use the new classes `OptimizePureUni`, `OptimizeHybridUni`, `OptimizePureMulti` and `OptimizeHybridMulti`. These classes implement optimizable model architecture methods:
+
+`OptimizePureUni` & `OptimizePureMulti`:
+
+  - create_fit_mlp
+  - create_fit_rnn
+  - create_fit_lstm
+  - create_fit_cnn
+  - create_fit_gru
+  - create_fit_birnn
+  - create_fit_bilstm
+  - create_fit_bigru
+  - create_fit_encdec_rnn
+  - create_fit_encdec_lstm
+  - create_fit_encdec_gru
+  - create_fit_encdec_cnn
+
+`OptimizeHybridUni` & `OptimizeHybridMulti`:
+
+  - create_fit_cnnrnn
+  - create_fit_cnnlstm
+  - create_fit_cnngru
+  - create_fit_cnnbirnn
+  - create_fit_cnnbilstm
+  - create_fit_cnnbigru
 
 #### Example `OptimizePureUni`
 
