@@ -38,7 +38,7 @@ Recent research in the field of time series forecasting has shown the potential 
 ## Hyperparameter Optimization imbrium 1.1.0
 <details>
   <summary>Expand</summary>
-Starting from version 1.1.0, imbrium will support hyperparamerter optimization for the model layer config and optimizer arguments. The optimization process uses the Optuna library (https://optuna.org/).
+Starting from version 1.1.0, imbrium will support experimental hyperparamerter optimization for the model layer config and optimizer arguments. The optimization process uses the Optuna library (https://optuna.org/).
 
 ### Optimization via the seeker decorator
 
@@ -178,6 +178,30 @@ predictor.show_performance()
 predictor.predict(data[['target', 'HouseAge', 'AveRooms', 'AveBedrms']].tail(10))
 predictor.model_blueprint()
 ```
+#### The shell of the seeker harness
+  
+```python
+predictor = OptimizePureMulti(...)
+
+@seeker(optimizer_range=[...], 
+        layer_config_range= [
+            {...},
+            {...},
+            {...}
+        ], 
+        ...)
+def create_fit_model(predictor: object, *args, **kwargs): # seeker harness
+    return predictor.create_fit_xxx(*args, **kwargs)
+
+create_fit_model(...) # execute seeker harness
+
+
+predictor.show_performance()
+predictor.predict(...)
+predictor.model_blueprint()
+```
+
+
 </details>
 
 

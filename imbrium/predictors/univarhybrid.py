@@ -418,8 +418,8 @@ class HybridUni(UniVariateMultiStep):
         """Plots model loss, validation loss over time."""
         information = self.details
 
-        plt.plot(information.history["loss"])
-        plt.plot(information.history["val_loss"])
+        plt.plot(information.history["loss"], color="black")
+        plt.plot(information.history["val_loss"], color="blue")
         plt.title(self.model_id + " Model Loss")
         plt.ylabel(self.loss)
         plt.xlabel("Epoch")
