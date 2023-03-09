@@ -35,8 +35,179 @@ The development and improvement of Imbrium is an ongoing process, and contributi
 
 Recent research in the field of time series forecasting has shown the potential of graph-based neural networks. If you have experience in this area and would like to contribute architectures to Imbrium, your contributions would be most welcomed.
 
+## Hyperparameter Optimization imbrium 1.1.0
+<details>
+  <summary>Expand</summary>
+Starting from version 1.1.0, imbrium will support experimental hyperparamerter optimization for the model layer config and optimizer arguments. The optimization process uses the Optuna library (https://optuna.org/).
+
+### Optimization via the seeker decorator
+
+To leverage Optimization, use the new classes `OptimizePureUni`, `OptimizeHybridUni`, `OptimizePureMulti` and `OptimizeHybridMulti`. These classes implement optimizable model architecture methods:
+
+`OptimizePureUni` & `OptimizePureMulti`:
+
+  - create_fit_mlp
+  - create_fit_rnn
+  - create_fit_lstm
+  - create_fit_cnn
+  - create_fit_gru
+  - create_fit_birnn
+  - create_fit_bilstm
+  - create_fit_bigru
+  - create_fit_encdec_rnn
+  - create_fit_encdec_lstm
+  - create_fit_encdec_gru
+  - create_fit_encdec_cnn
+
+`OptimizeHybridUni` & `OptimizeHybridMulti`:
+
+  - create_fit_cnnrnn
+  - create_fit_cnnlstm
+  - create_fit_cnngru
+  - create_fit_cnnbirnn
+  - create_fit_cnnbilstm
+  - create_fit_cnnbigru
+
+#### Example `OptimizePureUni`
+
+```python
+from imbrium.predictors.univarpure import OptimizePureUni
+from imbrium.utils.optimization import seeker
+
+# initialize optimizable predictor object
+predictor = OptimizePureUni(steps_past=5, steps_future=10, data=data, scale='standard')
+
+
+# use seeker decorator on optimization harness
+@seeker(optimizer_range=["adam", "sgd"], 
+        layer_config_range= [
+            {'layer0': (5, 'relu'), 'layer1': (10,'relu'), 'layer2': (5, 'relu')},
+            {'layer0': (2, 'relu'), 'layer1': (5, 'relu'), 'layer2': (2, 'relu')}
+        ], 
+        optimization_target='minimize', n_trials = 2)
+def create_fit_model(predictor: object, *args, **kwargs):
+    # use optimizable create_fit_xxx method
+    return predictor.create_fit_lstm(*args, **kwargs)
+
+
+create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
+                 show_progress=0, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+                )
+
+predictor.show_performance()
+predictor.predict(data.tail(5))
+predictor.model_blueprint()
+```
+
+#### Example `OptimizeHybridUni`
+
+```python
+from imbrium.predictors.univarhybrid import OptimizeHybridUni
+from imbrium.utils.optimization import seeker
+
+predictor = OptimizeHybridUni(sub_seq = 2, steps_past = 10, steps_future = 5, data = data, scale = 'maxabs')
+
+@seeker(optimizer_range=["adam", "sgd"], 
+        layer_config_range= [
+            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2),'layer3': (25, 'relu'), 'layer4': (10, 'relu')},
+            {'layer0': (16, 1, 'relu'), 'layer1': (8, 1, 'relu'), 'layer2': (2),'layer3': (55, 'relu'), 'layer4': (10, 'relu')},
+            {'layer0': (32, 1, 'relu'), 'layer1': (16, 1, 'relu'), 'layer2': (2),'layer3': (25, 'relu'), 'layer4': (10, 'relu')}
+        ], 
+        optimization_target='minimize', n_trials = 2)
+def create_fit_model(predictor: object, *args, **kwargs):
+    return predictor.create_fit_cnnlstm(*args, **kwargs)
+
+create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
+                 show_progress=0, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+                )
+
+predictor.show_performance()
+predictor.predict(data.tail(10))
+predictor.model_blueprint()
+```
+
+#### Example `OptimizePureMulti`
+
+```python
+predictor = OptimizePureMulti(steps_past =  5, steps_future = 10, data = data, features = ['target', 'target', 'HouseAge', 'AveRooms', 'AveBedrms'], scale = 'normalize')
+
+
+@seeker(optimizer_range=["adam", "sgd"], 
+        layer_config_range= [
+            {'layer0': (5, 'relu'), 'layer1': (10,'relu'), 'layer2': (5, 'relu')},
+            {'layer0': (2, 'relu'), 'layer1': (5, 'relu'), 'layer2': (2, 'relu')},
+            {'layer0': (20, 'relu'), 'layer1': (50, 'relu'), 'layer2': (20, 'sigmoid')}
+        ], 
+        optimization_target='minimize', n_trials = 3)
+def create_fit_model(predictor: object, *args, **kwargs):
+    return predictor.create_fit_lstm(*args, **kwargs)
+
+create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
+                 show_progress=1, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+                )
+
+
+predictor.show_performance()
+predictor.predict(data[['target', 'HouseAge', 'AveRooms', 'AveBedrms']].tail(5))
+predictor.model_blueprint()
+```
+
+
+#### Example `OptimizeHybridMulti`
+
+```python
+predictor = OptimizeHybridMulti(sub_seq = 2, steps_past = 10, steps_future = 5, data = data,features = ['target', 'target', 'HouseAge', 'AveRooms', 'AveBedrms'], scale = 'normalize')
+
+
+@seeker(optimizer_range=["adam", "sgd"], 
+        layer_config_range= [
+            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2), 'layer3': (5, 'relu'), 'layer4': (5, 'relu')},
+            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2), 'layer3': (5, 'relu'), 'layer4': (5, 'relu')},
+            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2), 'layer3': (5, 'relu'), 'layer4': (5, 'relu')}
+        ], 
+        optimization_target='minimize', n_trials = 3)
+def create_fit_model(predictor: object, *args, **kwargs):
+    return predictor.create_fit_cnnlstm(*args, **kwargs)
+
+create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
+                 show_progress=1, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+                )
+
+
+predictor.show_performance()
+predictor.predict(data[['target', 'HouseAge', 'AveRooms', 'AveBedrms']].tail(10))
+predictor.model_blueprint()
+```
+#### The shell of the seeker harness
+  
+```python
+predictor = OptimizePureMulti(...)
+
+@seeker(optimizer_range=[...], 
+        layer_config_range= [
+            {...},
+            {...},
+            {...}
+        ], 
+        ...)
+def create_fit_model(predictor: object, *args, **kwargs): # seeker harness
+    return predictor.create_fit_xxx(*args, **kwargs)
+
+create_fit_model(...) # execute seeker harness
+
+
+predictor.show_performance()
+predictor.predict(...)
+predictor.model_blueprint()
+```
+
+
+</details>
+
 
 ## imbrium 1.0.0 changes
+<details>
+  <summary>Expand</summary>
 
 The following important name changes have been performed:
 
@@ -50,9 +221,11 @@ The following important name changes have been performed:
 - multivarhybrid => multivarhybrid (unchanged)
 - HybridMultStepMultVar => HybridMulti
 ```
+</details>
 
 ## Try imbrium
-
+<details>
+  <summary>Expand</summary>
 Please ignore all cudart dlerror/warnings, since no GPU is setup in this jupyter binder environment:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/maxmekiska/ImbriumTesting-Demo/main?labpath=TestImbrium.ipynb) <br>
@@ -60,8 +233,12 @@ Please ignore all cudart dlerror/warnings, since no GPU is setup in this jupyter
 
 For more testing, please visit the dedicated Demo & Testing repository at: https://github.com/maxmekiska/ImbriumTesting-Demo
 
+</details>
 
 ## Overview of Imbrium's Functionality
+
+<details>
+  <summary>Expand</summary>
 
 Imbrium is designed to simplify the application of deep learning models for time series forecasting. The library offers a variety of pre-built architectures, each with a fixed number of layers. However, the user retains full control over the configuration of each layer, including the number of neurons, the type of activation function, loss function, optimizer, and metrics applied. This allows for the flexibility to adapt the architecture to the specific needs of the forecast task at hand. Imbrium also offers a user-friendly interface for training and evaluating these models, making it easy to quickly iterate and test different configurations.
 
@@ -116,7 +293,12 @@ overfitting.
 
 Trained models can furthermore be saved or loaded if the user wishes to do so.
 
+</details>
+
 ## How to use imbrium?
+
+<details>
+  <summary>Expand</summary>
 
 Attention: Typing has been left in the below examples to ease the configuration readability.
 
@@ -189,7 +371,7 @@ predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_e
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -249,7 +431,7 @@ predictor.create_cnnbigru(optimizer: str = 'adam', loss: str = 'mean_squared_err
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -340,7 +522,7 @@ predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_e
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -400,7 +582,7 @@ predictor.create_cnnbigru(optimizer: str = 'adam', loss: str = 'mean_squared_err
 # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
 
 predictor.fit_model(epochs: int, show_progress: int = 1, validation_split: float = 0.20,
-                    batch_size: int = 10, monitor='loss', patience=3)
+                      monitor='loss', patience=3)
 
 # Have a look at the model performance
 predictor.show_performance()
@@ -421,9 +603,13 @@ loading_predictor =  HybridMulti(sub_seq: int, steps_past: int, steps_future: in
 loading_predictor.load_model(location: str)
 loading_predictor.set_model_id(name: str)
 ```
-
+</details>
 
 ## References
+
+<details>
+  <summary>Expand</summary>
+
 Brwonlee, J., 2016. Display deep learning model training history in keras [Online]. Available from:
 https://machinelearningmastery.com/display-deep-
 learning-model-training-history-in-keras/.
@@ -439,3 +625,5 @@ lstm-models-for-time-series-forecasting/.
 Brwonlee, J., 2018c. How to develop multilayer perceptron models for time series forecasting [Online]. Available from:
 https://machinelearningmastery.com/how-to-develop-multilayer-
 perceptron-models-for-time-series-forecasting/.
+
+</details>

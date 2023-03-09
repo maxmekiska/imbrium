@@ -58,3 +58,13 @@ activation function type
 - tox added
 - outsourced Binder demo notebook to https://github.com/maxmekiska/ImbriumTesting-Demo
 - new README.md
+
+### 1.0.1
+
+- imbrium supports now:
+  - python 3.7, 3.8, 3.9, 3.10
+
+### 1.1.0
+
+- removed batch_size parameter from fit_model method
+- hyperparameter optimization added via the Optuna library

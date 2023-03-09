@@ -70,7 +70,7 @@ class HybridMulti(MultiVariateMultiStep):
     'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
         Builds CNN bidirectional GRU structure.
     fit_model(self, epochs: int, show_progress: int = 1,
-    validation_split: float = 0.20, batch_size: int = 10,
+    validation_split: float = 0.20,
     **callback_setting: dict):
         Fitting model onto provided data.
     model_blueprint(self):
@@ -407,7 +407,6 @@ class HybridMulti(MultiVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         validation_split: float = 0.20,
-        batch_size: int = 10,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -415,7 +414,6 @@ class HybridMulti(MultiVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             validation_split (float): Determines size of Validation data.
-            batch_size (int): Batch size of input data.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
@@ -423,7 +421,6 @@ class HybridMulti(MultiVariateMultiStep):
                 self.input_x,
                 self.input_y,
                 validation_split=validation_split,
-                batch_size=batch_size,
                 epochs=epochs,
                 verbose=show_progress,
             )
@@ -433,7 +430,6 @@ class HybridMulti(MultiVariateMultiStep):
                 self.input_x,
                 self.input_y,
                 validation_split=validation_split,
-                batch_size=batch_size,
                 epochs=epochs,
                 verbose=show_progress,
                 callbacks=[callback],
@@ -448,8 +444,8 @@ class HybridMulti(MultiVariateMultiStep):
         """Plots model loss, validation loss over time."""
         information = self.details
 
-        plt.plot(information.history["loss"])
-        plt.plot(information.history["val_loss"])
+        plt.plot(information.history["loss"], color="black")
+        plt.plot(information.history["val_loss"], color="gold")
         plt.title(self.model_id + " Model Loss")
         plt.ylabel(self.loss)
         plt.xlabel("Epoch")
@@ -489,3 +485,197 @@ class HybridMulti(MultiVariateMultiStep):
             location (str): Path of keras model location.
         """
         self.model = keras.models.load_model(location)
+
+
+class OptimizeHybridMulti(HybridMulti):
+    def create_fit_cnnrnn(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+            "layer4": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates CNN-RNN hybrid model."""
+        self.create_cnnrnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_cnnlstm(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+            "layer4": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates CNN-LSTM hybrid model."""
+        self.create_cnnlstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_cnngru(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+            "layer4": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates CNN-GRU hybrid model."""
+        self.create_cnngru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_cnnbirnn(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+            "layer4": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates CNN-BiRNN hybrid model."""
+        self.create_cnnbirnn(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_cnnbilstm(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+            "layer4": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates CNN-BiLSTM hybrid model."""
+        self.create_cnnbilstm(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
+
+    def create_fit_cnnbigru(
+        self,
+        optimizer: str = "adam",
+        loss: str = "mean_squared_error",
+        metrics: str = "mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu"),
+            "layer1": (32, 1, "relu"),
+            "layer2": (2),
+            "layer3": (50, "relu"),
+            "layer4": (25, "relu"),
+        },
+        epochs: int = 100,
+        show_progress: int = 1,
+        validation_split: float = 0.20,
+        **callback_setting: dict,
+    ):
+        """Creates CNN-BiGRU hybrid model."""
+        self.create_cnnbigru(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics,
+            layer_config=layer_config,
+        )
+        self.fit_model(
+            epochs=epochs,
+            show_progress=show_progress,
+            validation_split=validation_split,
+            **callback_setting,
+        )
+        return self.details.history[metrics][-1]
