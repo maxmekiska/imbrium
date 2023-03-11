@@ -192,9 +192,19 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (50, "relu"),
-            "layer1": (25, "relu"),
-            "layer2": (25, "relu"),
+            "layer0": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                25,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates MLP model.
@@ -673,9 +683,19 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (50, "relu"),
-            "layer1": (25, "relu"),
-            "layer2": (25, "relu"),
+            "layer0": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                25,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -703,9 +723,19 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,

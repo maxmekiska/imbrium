@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras import regularizers
 from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
                                      Dropout, Flatten, MaxPooling1D,
                                      RepeatVector, SimpleRNN, TimeDistributed)
@@ -30,11 +31,26 @@ def mlp(
         Dense(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_dim=input_shape,
         )
     )
-    model.add(Dense(layer_config["layer1"][0], activation=layer_config["layer1"][1]))
-    model.add(Dense(layer_config["layer2"][0], activation=layer_config["layer2"][1]))
+    model.add(Dropout(layer_config["layer0"][3]))
+    model.add(
+        Dense(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
+    )
+    model.add(Dropout(layer_config["layer1"][3]))
+    model.add(
+        Dense(
+            layer_config["layer2"][0],
+            activation=layer_config["layer2"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -67,18 +83,26 @@ def rnn(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][3]))
     model.add(
         SimpleRNN(
             layer_config["layer1"][0],
             activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
             return_sequences=True,
         )
     )
+    model.add(Dropout(layer_config["layer1"][3]))
     model.add(
-        SimpleRNN(layer_config["layer2"][0], activation=layer_config["layer2"][1])
+        SimpleRNN(
+            layer_config["layer2"][0],
+            activation=layer_config["layer2"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
+        )
     )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)

@@ -316,13 +316,13 @@ predictor = PureUni(steps_past: int, steps_future: int, data = DataFrame(),
 
 predictor.create_mlp(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
-                                          'layer2': (25, 'relu')})
+                     layer_config: dict = {'layer0': (50, 'relu', 0.0, 0.0), 'layer1': (25,'relu', 0.0, 0.0),
+                                          'layer2': (25, 'relu', 0.0)})
 
 predictor.create_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-                                           'layer2': (50, 'relu')})
+                     layer_config: dict = {'layer0': (40, 'relu', 0.0, 0.0), 'layer1': (50,'relu', 0.0, 0.0),
+                                           'layer2': (50, 'relu', 0.0)})
 
 predictor.create_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                       metrics: str = 'mean_squared_error',
