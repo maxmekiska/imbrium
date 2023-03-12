@@ -326,45 +326,45 @@ predictor.create_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
 
 predictor.create_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                       metrics: str = 'mean_squared_error',
-                      layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-                                            'layer2': (50, 'relu')})
+                      layer_config: dict = {'layer0': (40, 'relu', 0.0, 0.0), 'layer1': (50,'relu', 0.0, 0.0),
+                                            'layer2': (50, 'relu', 0.0)})
 
 predictor.create_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-                                           'layer2': (50, 'relu')})
+                     layer_config: dict = {'layer0': (40, 'relu', 0.0, 0.0), 'layer1': (50,'relu', 0.0, 0.0),
+                                           'layer2': (50, 'relu', 0.0)})
 
 predictor.create_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
-                     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu')})
+                     layer_config: dict = {'layer0': (64, 1, 'relu', 0.0, 0.0), 'layer1': (32, 1, 'relu', 0.0, 0.0), 'layer2': (2), 'layer3': (50, 'relu', 0.0)})
 
 predictor.create_birnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
-                       layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
+                       layer_config: dict = {'layer0': (50, 'relu', 0.0, 0.0), 'layer1': (50, 'relu', 0.0)})
 
 predictor.create_bilstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
-                        layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
+                        layer_config: dict = {'layer0': (50, 'relu', 0.0, 0.0), 'layer1': (50, 'relu', 0.0)})
 
 predictor.create_bigru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
-                       layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')})
+                       layer_config: dict = {'layer0': (50, 'relu', 0.0, 0.0), 'layer1': (50, 'relu', 0.0)})
 
 predictor.create_encdec_rnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
+                            layer_config: dict = {'layer0': (100, 'relu', 0.0, 0.0), 'layer1': (50, 'relu', 0.0, 0.0), 'layer2': (50, 'relu', 0.0, 0.0), 'layer3': (100, 'relu', 0.0)})
 
 predictor.create_encdec_lstm(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                              metrics: str = 'mean_squared_error',
-                             layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
+                             layer_config: dict = {'layer0': (100, 'relu', 0.0, 0.0), 'layer1': (50, 'relu', 0.0, 0.0), 'layer2': (50, 'relu', 0.0, 0.0), 'layer3': (100, 'relu', 0.0)})
 
 predictor.create_encdec_cnn(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'), 'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')})
+                            layer_config: dict = {'layer0': (64, 1, 'relu', 0.0, 0.0), 'layer1': (32, 1, 'relu', 0.0, 0.0), 'layer2': (2), 'layer3': (50, 'relu', 0.0, 0.0), 'layer4': (100, 'relu', 0.0)})
 
 predictor.create_encdec_gru(optimizer: str = 'adam', loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
-                            layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'), 'layer2': (50, 'relu'), 'layer3': (100, 'relu')})
+                            layer_config: dict = {'layer0': (100, 'relu', 0.0, 0.0), 'layer1': (50, 'relu', 0.0, 0.0), 'layer2': (50, 'relu', 0.0, 0.0), 'layer3': (100, 'relu', 0.0)})
 
 # Fit the predictor object - more callback settings at:
 

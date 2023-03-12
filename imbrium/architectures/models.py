@@ -136,17 +136,27 @@ def lstm(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][3]))
     model.add(
         LSTM(
             layer_config["layer1"][0],
             activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
             return_sequences=True,
         )
     )
-    model.add(LSTM(layer_config["layer2"][0], activation=layer_config["layer2"][1]))
+    model.add(Dropout(layer_config["layer1"][3]))
+    model.add(
+        LSTM(
+            layer_config["layer2"][0],
+            activation=layer_config["layer2"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -180,18 +190,28 @@ def cnn(
             kernel_size=layer_config["layer0"][1],
             activation=layer_config["layer0"][2],
             input_shape=input_shape,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
         )
     )
+    model.add(Dropout(layer_config["layer0"][4]))
     model.add(
         Conv1D(
             filters=layer_config["layer1"][0],
             kernel_size=layer_config["layer1"][1],
             activation=layer_config["layer1"][2],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
         )
     )
+    model.add(Dropout(layer_config["layer1"][4]))
     model.add(MaxPooling1D(pool_size=layer_config["layer2"]))
     model.add(Flatten())
-    model.add(Dense(layer_config["layer3"][0], activation=layer_config["layer3"][1]))
+    model.add(
+        Dense(
+            layer_config["layer3"][0],
+            activation=layer_config["layer3"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -224,17 +244,27 @@ def gru(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][3]))
     model.add(
         GRU(
             layer_config["layer1"][0],
             activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
             return_sequences=True,
         )
     )
-    model.add(GRU(layer_config["layer2"][0], activation=layer_config["layer2"][1]))
+    model.add(Dropout(layer_config["layer1"][3]))
+    model.add(
+        GRU(
+            layer_config["layer2"][0],
+            activation=layer_config["layer2"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -268,12 +298,18 @@ def birnn(
                 layer_config["layer0"][0],
                 activation=layer_config["layer0"][1],
                 return_sequences=True,
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             ),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][3]))
     model.add(
-        SimpleRNN(layer_config["layer1"][0], activation=layer_config["layer1"][1])
+        SimpleRNN(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
     )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
@@ -308,11 +344,19 @@ def bilstm(
                 layer_config["layer0"][0],
                 activation=layer_config["layer0"][1],
                 return_sequences=True,
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             ),
             input_shape=input_shape,
         )
     )
-    model.add(LSTM(layer_config["layer1"][0], activation=layer_config["layer1"][1]))
+    model.add(Dropout(layer_config["layer0"][3]))
+    model.add(
+        LSTM(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
+    ),
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -345,12 +389,20 @@ def bigru(
             GRU(
                 layer_config["layer0"][0],
                 activation=layer_config["layer0"][1],
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
                 return_sequences=True,
             ),
             input_shape=input_shape,
         )
     )
-    model.add(GRU(layer_config["layer1"][0], activation=layer_config["layer1"][1]))
+    model.add(Dropout(layer_config["layer0"][3]))
+    model.add(
+        GRU(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -384,25 +436,35 @@ def encdec_rnn(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][3]))
     model.add(
-        SimpleRNN(layer_config["layer1"][0], activation=layer_config["layer1"][1])
+        SimpleRNN(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
     )
+    model.add(Dropout(layer_config["layer1"][3]))
     model.add(RepeatVector(repeat))
     model.add(
         SimpleRNN(
             layer_config["layer2"][0],
             activation=layer_config["layer2"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
         )
     )
+    model.add(Dropout(layer_config["layer2"][3]))
     model.add(
         SimpleRNN(
             layer_config["layer3"][0],
             activation=layer_config["layer3"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
         )
     )
     model.add(TimeDistributed(Dense(output_shape)))
@@ -438,23 +500,35 @@ def encdec_lstm(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_shape=input_shape,
         )
     )
-    model.add(LSTM(layer_config["layer1"][0], activation=layer_config["layer1"][1]))
+    model.add(Dropout(layer_config["layer0"][3]))
+    model.add(
+        LSTM(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
+    )
+    model.add(Dropout(layer_config["layer1"][3]))
     model.add(RepeatVector(repeat))
     model.add(
         LSTM(
             layer_config["layer2"][0],
             activation=layer_config["layer2"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
         )
     )
+    model.add(Dropout(layer_config["layer2"][3]))
     model.add(
         LSTM(
             layer_config["layer3"][0],
             activation=layer_config["layer3"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
         )
     )
     model.add(TimeDistributed(Dense(output_shape)))
@@ -491,16 +565,20 @@ def encdec_cnn(
             layer_config["layer0"][0],
             kernel_size=layer_config["layer0"][1],
             activation=layer_config["layer0"][2],
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][4]))
     model.add(
         Conv1D(
             filters=layer_config["layer1"][0],
             kernel_size=layer_config["layer1"][1],
-            activation=layer_config["layer0"][2],
+            activation=layer_config["layer1"][2],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
         )
     )
+    model.add(Dropout(layer_config["layer1"][4]))
     model.add(MaxPooling1D(pool_size=layer_config["layer2"]))
     model.add(Flatten())
     model.add(RepeatVector(repeat))
@@ -508,13 +586,16 @@ def encdec_cnn(
         GRU(
             layer_config["layer3"][0],
             activation=layer_config["layer3"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
             return_sequences=True,
         )
     )
+    model.add(Dropout(layer_config["layer3"][3]))
     model.add(
         GRU(
             layer_config["layer4"][0],
             activation=layer_config["layer4"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
             return_sequences=True,
         )
     )
@@ -551,22 +632,34 @@ def encdec_gru(
             layer_config["layer0"][0],
             activation=layer_config["layer0"][1],
             return_sequences=True,
+            kernel_regularizer=regularizers.L2(layer_config["layer0"][2]),
             input_shape=input_shape,
         )
     )
-    model.add(GRU(layer_config["layer1"][0], activation=layer_config["layer1"][1]))
+    model.add(Dropout(layer_config["layer0"][3]))
+    model.add(
+        GRU(
+            layer_config["layer1"][0],
+            activation=layer_config["layer1"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer1"][2]),
+        )
+    )
+    model.add(Dropout(layer_config["layer1"][3]))
     model.add(RepeatVector(repeat))
     model.add(
         GRU(
             layer_config["layer2"][0],
             activation=layer_config["layer2"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer2"][2]),
             return_sequences=True,
         )
     )
+    model.add(Dropout(layer_config["layer2"][3]))
     model.add(
         GRU(
             layer_config["layer3"][0],
             activation=layer_config["layer3"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
             return_sequences=True,
         )
     )

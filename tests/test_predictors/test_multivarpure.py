@@ -29,9 +29,9 @@ test0.create_lstm(
     loss="mean_squared_error",
     metrics="mean_squared_error",
     layer_config={
-        "layer0": (40, "relu"),
-        "layer1": (50, "relu"),
-        "layer2": (50, "relu"),
+        "layer0": (40, "relu", 0.0, 0.0),
+        "layer1": (50, "relu", 0.0, 0.0),
+        "layer2": (50, "relu", 0.0),
     },
 )
 

@@ -238,9 +238,19 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates RNN model.
@@ -270,9 +280,19 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates LSTM model.
@@ -302,10 +322,22 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
-            "layer2": (2),
-            "layer3": (50, "relu"),
+            "layer0": (
+                64,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer1": (
+                32,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer2": (2),  # pooling
+            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates CNN model.
@@ -335,9 +367,19 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates GRU model.
@@ -366,7 +408,10 @@ class PureUni(UniVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },  # (neurons, activation, regularization, dropout)
     ):
         """Creates BI-RNN model.
         Parameters:
@@ -394,7 +439,10 @@ class PureUni(UniVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
     ):
         """Creates BI-LSTM model.
         Parameters:
@@ -422,7 +470,10 @@ class PureUni(UniVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
     ):
         """Creates BI-GRU model.
         Parameters:
@@ -451,10 +502,25 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates Encoder-Decoder-RNN model.
@@ -485,10 +551,25 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates Encoder-Decoder-LSTM model.
@@ -519,10 +600,10 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (100, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0, 0.0),
+            "layer2": (50, "relu", 0.0, 0.0),
+            "layer3": (100, "relu", 0.0),
         },
     ):
         """Creates Encoder-Decoder-GRU model.
@@ -553,11 +634,11 @@ class PureUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (100, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (100, "relu", 0.0),
         },
     ):
         """Creates Encoder-Decoder-CNN model.
@@ -763,9 +844,19 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -793,10 +884,22 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
-            "layer2": (2),
-            "layer3": (50, "relu"),
+            "layer0": (
+                64,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer1": (
+                32,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer2": (2),  # pooling
+            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -824,9 +927,19 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -853,7 +966,10 @@ class OptimizePureUni(PureUni):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },  # (neurons, activation, regularization, dropout)
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
@@ -879,7 +995,10 @@ class OptimizePureUni(PureUni):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
@@ -905,7 +1024,10 @@ class OptimizePureUni(PureUni):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
@@ -932,10 +1054,25 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -963,10 +1100,25 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -994,10 +1146,10 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (100, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0, 0.0),
+            "layer2": (50, "relu", 0.0, 0.0),
+            "layer3": (100, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1025,11 +1177,11 @@ class OptimizePureUni(PureUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (100, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (100, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
