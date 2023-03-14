@@ -14,11 +14,11 @@ test0.create_cnnlstm(
     loss="mean_squared_error",
     metrics="mean_squared_error",
     layer_config={
-        "layer0": (64, 1, "relu"),
-        "layer1": (32, 1, "relu"),
+        "layer0": (64, 1, "relu", 0.0, 0.0),
+        "layer1": (32, 1, "relu", 0.0, 0.0),
         "layer2": (2),
-        "layer3": (50, "relu"),
-        "layer4": (25, "relu"),
+        "layer3": (50, "relu", 0.0, 0.0),
+        "layer4": (25, "relu", 0.0),
     },
 )
 
