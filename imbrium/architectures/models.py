@@ -832,29 +832,41 @@ def cnngru(
                 filters=layer_config["layer0"][0],
                 kernel_size=layer_config["layer0"][1],
                 activation=layer_config["layer0"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
             ),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][4]))
     model.add(
         TimeDistributed(
             Conv1D(
                 filters=layer_config["layer1"][0],
                 kernel_size=layer_config["layer1"][1],
                 activation=layer_config["layer1"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
             )
         )
     )
+    model.add(Dropout(layer_config["layer1"][4]))
     model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
     model.add(TimeDistributed(Flatten()))
     model.add(
         GRU(
             layer_config["layer3"][0],
             activation=layer_config["layer3"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
             return_sequences=True,
         )
     )
-    model.add(GRU(layer_config["layer4"][0], activation=layer_config["layer4"][1]))
+    model.add(Dropout(layer_config["layer3"][3]))
+    model.add(
+        GRU(
+            layer_config["layer4"][0],
+            activation=layer_config["layer4"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -888,19 +900,23 @@ def cnnbirnn(
                 filters=layer_config["layer0"][0],
                 kernel_size=layer_config["layer0"][1],
                 activation=layer_config["layer0"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
             ),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][4]))
     model.add(
         TimeDistributed(
             Conv1D(
                 filters=layer_config["layer1"][0],
                 kernel_size=layer_config["layer1"][1],
                 activation=layer_config["layer1"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
             )
         )
     )
+    model.add(Dropout(layer_config["layer1"][4]))
     model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
     model.add(TimeDistributed(Flatten()))
     model.add(
@@ -908,12 +924,18 @@ def cnnbirnn(
             SimpleRNN(
                 layer_config["layer3"][0],
                 activation=layer_config["layer3"][1],
+                kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
                 return_sequences=True,
             )
         )
     )
+    model.add(Dropout(layer_config["layer3"][3]))
     model.add(
-        SimpleRNN(layer_config["layer4"][0], activation=layer_config["layer4"][1])
+        SimpleRNN(
+            layer_config["layer4"][0],
+            activation=layer_config["layer4"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+        )
     )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
@@ -948,19 +970,23 @@ def cnnbilstm(
                 filters=layer_config["layer0"][0],
                 kernel_size=layer_config["layer0"][1],
                 activation=layer_config["layer0"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
             ),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][4]))
     model.add(
         TimeDistributed(
             Conv1D(
                 filters=layer_config["layer1"][0],
                 kernel_size=layer_config["layer1"][1],
                 activation=layer_config["layer1"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
             )
         )
     )
+    model.add(Dropout(layer_config["layer1"][4]))
     model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
     model.add(TimeDistributed(Flatten()))
     model.add(
@@ -968,11 +994,19 @@ def cnnbilstm(
             LSTM(
                 layer_config["layer3"][0],
                 activation=layer_config["layer3"][1],
+                kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
                 return_sequences=True,
             )
         )
     )
-    model.add(LSTM(layer_config["layer4"][0], activation=layer_config["layer4"][1]))
+    model.add(Dropout(layer_config["layer3"][3]))
+    model.add(
+        LSTM(
+            layer_config["layer4"][0],
+            activation=layer_config["layer4"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -1006,19 +1040,23 @@ def cnnbigru(
                 filters=layer_config["layer0"][0],
                 kernel_size=layer_config["layer0"][1],
                 activation=layer_config["layer0"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
             ),
             input_shape=input_shape,
         )
     )
+    model.add(Dropout(layer_config["layer0"][4]))
     model.add(
         TimeDistributed(
             Conv1D(
                 filters=layer_config["layer1"][0],
                 kernel_size=layer_config["layer1"][1],
                 activation=layer_config["layer1"][2],
+                kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
             )
         )
     )
+    model.add(Dropout(layer_config["layer1"][4]))
     model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
     model.add(TimeDistributed(Flatten()))
     model.add(
@@ -1026,11 +1064,19 @@ def cnnbigru(
             GRU(
                 layer_config["layer3"][0],
                 activation=layer_config["layer3"][1],
+                kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
                 return_sequences=True,
             )
         )
     )
-    model.add(GRU(layer_config["layer4"][0], activation=layer_config["layer4"][1]))
+    model.add(Dropout(layer_config["layer3"][3]))
+    model.add(
+        GRU(
+            layer_config["layer4"][0],
+            activation=layer_config["layer4"][1],
+            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+        )
+    )
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
