@@ -702,18 +702,43 @@ class PureUni(UniVariateMultiStep):
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self):
-        """Plots model loss, validation loss over time."""
+    def show_performance(self, metric_name: str = ""):
+        """Plots model loss and a given metric over time."""
         information = self.details
 
-        plt.plot(information.history["loss"], color="black")
-        plt.plot(information.history["val_loss"], color="teal")
-        plt.title(self.model_id + " Model Loss")
-        plt.ylabel(self.loss)
-        plt.xlabel("Epoch")
-        plt.legend(["Train", "Test"], loc="upper right")
-        plt.tight_layout()
-        plt.show()
+        plt.style.use("dark_background")
+
+        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+        if metric_name == "":
+
+            plt.plot(information.history["loss"], color=colors[0])
+            plt.plot(information.history["val_loss"], color=colors[1])
+            plt.title(self.model_id + " Model Loss")
+            plt.ylabel(self.loss)
+            plt.xlabel("Epoch")
+            plt.legend(["Train", "Test"], loc="upper right")
+            plt.tight_layout()
+            plt.show()
+        else:
+            plt.plot(information.history["loss"], color=colors[0])
+            plt.plot(information.history["val_loss"], color=colors[1])
+            plt.plot(information.history[metric_name], color=colors[2])
+            plt.plot(information.history["val_" + metric_name], color=colors[3])
+            plt.title(self.model_id + " Model Performance")
+            plt.ylabel(metric_name)
+            plt.xlabel("Epoch")
+            plt.legend(
+                [
+                    "Train Loss",
+                    "Test Loss",
+                    "Train " + metric_name,
+                    "Test " + metric_name,
+                ],
+                loc="upper right",
+            )
+            plt.tight_layout()
+            plt.show()
 
     def predict(self, data: array) -> DataFrame:
         """Takes in a sequence of values and outputs a forecast.
