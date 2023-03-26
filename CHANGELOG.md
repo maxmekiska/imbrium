@@ -68,3 +68,9 @@ activation function type
 
 - removed batch_size parameter from fit_model method
 - hyperparameter optimization added via the Optuna library
+
+
+### 1.2.0
+
+- added Tensorboard support
+- changed show_performance plot to show loss and metric values

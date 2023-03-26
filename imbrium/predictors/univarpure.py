@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import matplotlib.pyplot as plt
@@ -669,6 +670,7 @@ class PureUni(UniVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -676,26 +678,67 @@ class PureUni(UniVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             validation_split (float): Determines size of Validation data.
+            board (bool): Creates TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
-            self.details = self.model.fit(
-                self.input_x,
-                self.input_y,
-                validation_split=validation_split,
-                epochs=epochs,
-                verbose=show_progress,
-            )
+            if board == True:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback_board],
+                )
+            else:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                )
+
         else:
-            callback = EarlyStopping(**callback_setting)
-            self.details = self.model.fit(
-                self.input_x,
-                self.input_y,
-                validation_split=validation_split,
-                epochs=epochs,
-                verbose=show_progress,
-                callbacks=[callback],
-            )
+            if board == True:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                callback = EarlyStopping(**callback_setting)
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback, callback_board],
+                )
+            else:
+                callback = EarlyStopping(**callback_setting)
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback],
+                )
         return self.details
 
     def model_blueprint(self):
@@ -806,6 +849,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
@@ -819,6 +863,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -846,6 +891,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Recurrent Neural Network model."""
@@ -859,6 +905,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -886,6 +933,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a LSTM model."""
@@ -899,6 +947,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -929,6 +978,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Convolutional Neural Network model."""
@@ -942,6 +992,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -969,6 +1020,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a GRU model."""
@@ -982,6 +1034,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -998,6 +1051,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Bidirectional RNN model."""
@@ -1011,6 +1065,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1027,6 +1082,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Bidirectional LSTM model."""
@@ -1040,6 +1096,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1056,6 +1113,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Bidirectional GRU model."""
@@ -1069,6 +1127,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1102,6 +1161,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Encoder-Decoder RNN model."""
@@ -1115,6 +1175,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1148,6 +1209,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Encoder-Decoder LSTM model."""
@@ -1161,6 +1223,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1179,6 +1242,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Encoder-Decoder GRU model."""
@@ -1192,6 +1256,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1211,6 +1276,7 @@ class OptimizePureUni(PureUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Encoder-Decoder CNN model."""
@@ -1224,6 +1290,7 @@ class OptimizePureUni(PureUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
