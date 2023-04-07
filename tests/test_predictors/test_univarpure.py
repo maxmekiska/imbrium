@@ -81,6 +81,9 @@ def test_create_mlp():
         },
     )
     assert test0.get_model_id == "MLP"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_rnn():
@@ -95,6 +98,9 @@ def test_create_rnn():
         },
     )
     assert test0.get_model_id == "RNN"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_cnn():
@@ -110,6 +116,9 @@ def test_create_cnn():
         },
     )
     assert test0.get_model_id == "CNN"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_gru():
@@ -124,6 +133,9 @@ def test_create_gru():
         },
     )
     assert test0.get_model_id == "GRU"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_birnn():
@@ -138,6 +150,9 @@ def test_create_birnn():
         },
     )
     assert test0.get_model_id == "BI-RNN"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_bilstm():
@@ -152,6 +167,9 @@ def test_create_bilstm():
         },
     )
     assert test0.get_model_id == "BI-LSTM"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_bigru():
@@ -166,6 +184,9 @@ def test_create_bigru():
         },
     )
     assert test0.get_model_id == "BI-GRU"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
 
 
 def test_create_encdec_rnn():
@@ -181,6 +202,9 @@ def test_create_encdec_rnn():
         },
     )
     assert test1.get_model_id == "Encoder-Decoder-RNN"
+    assert test1.get_optimizer == "adam"
+    assert test1.get_loss == "mean_squared_error"
+    assert test1.get_metrics == "mean_squared_error"
 
 
 def test_create_encdec_lstm():
@@ -196,6 +220,9 @@ def test_create_encdec_lstm():
         },
     )
     assert test1.get_model_id == "Encoder-Decoder-LSTM"
+    assert test1.get_optimizer == "adam"
+    assert test1.get_loss == "mean_squared_error"
+    assert test1.get_metrics == "mean_squared_error"
 
 
 def test_create_encdec_gru():
@@ -211,6 +238,9 @@ def test_create_encdec_gru():
         },
     )
     assert test1.get_model_id == "Encoder-Decoder-GRU"
+    assert test1.get_optimizer == "adam"
+    assert test1.get_loss == "mean_squared_error"
+    assert test1.get_metrics == "mean_squared_error"
 
 
 def test_create_encdec_cnn():
@@ -229,6 +259,9 @@ def test_create_encdec_cnn():
         },
     )
     assert test1.get_model_id == "Encoder(CNN)-Decoder(GRU)"
+    assert test1.get_optimizer == "adam"
+    assert test1.get_loss == "mean_squared_error"
+    assert test1.get_metrics == "mean_squared_error"
 
 
 def test_create_fit_mlp():
