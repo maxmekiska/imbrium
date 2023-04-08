@@ -858,6 +858,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
@@ -871,6 +872,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -898,6 +900,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a RNN model."""
@@ -911,6 +914,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -938,6 +942,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a LSTM model."""
@@ -951,6 +956,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -981,6 +987,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a CNN model."""
@@ -994,6 +1001,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1021,6 +1029,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a GRU model."""
@@ -1034,6 +1043,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1050,6 +1060,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-RNN model."""
@@ -1063,6 +1074,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1079,6 +1091,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-LSTM model."""
@@ -1092,6 +1105,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1108,6 +1122,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-GRU model."""
@@ -1121,6 +1136,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1154,6 +1170,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder RNN model."""
@@ -1167,6 +1184,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1200,6 +1218,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder LSTM model."""
@@ -1213,6 +1232,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1231,6 +1251,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder GRU model."""
@@ -1244,6 +1265,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1263,6 +1285,7 @@ class OptimizePureMulti(PureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder CNN model."""
@@ -1276,6 +1299,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]

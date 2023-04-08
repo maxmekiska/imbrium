@@ -548,6 +548,7 @@ class OptimizeHybridUni(HybridUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-RNN hybrid model."""
@@ -561,6 +562,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -580,6 +582,7 @@ class OptimizeHybridUni(HybridUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-LSTM hybrid model."""
@@ -593,6 +596,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -612,6 +616,7 @@ class OptimizeHybridUni(HybridUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-GRU hybrid model."""
@@ -625,6 +630,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -644,6 +650,7 @@ class OptimizeHybridUni(HybridUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-BiRNN hybrid model."""
@@ -657,6 +664,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -676,6 +684,7 @@ class OptimizeHybridUni(HybridUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-BiLSTM hybrid model."""
@@ -689,6 +698,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -708,6 +718,7 @@ class OptimizeHybridUni(HybridUni):
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-BiGRU hybrid model."""
@@ -721,6 +732,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
