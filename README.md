@@ -1,4 +1,4 @@
-# imbrium [![Downloads](https://pepy.tech/badge/imbrium)](https://pepy.tech/project/imbrium) [![PyPi](https://img.shields.io/pypi/v/imbrium.svg?color=blue)](https://pypi.org/project/imbrium/) [![GitHub license](https://img.shields.io/github/license/maxmekiska/Imbrium?color=black)](https://github.com/maxmekiska/Imbrium/blob/main/LICENSE) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/imbrium.svg)](https://pypi.python.org/project/imbrium/)
+# imbrium [![Downloads](https://pepy.tech/badge/imbrium)](https://pepy.tech/project/imbrium) [![PyPi](https://img.shields.io/pypi/v/imbrium.svg?color=blue)](https://pypi.org/project/imbrium/) [![GitHub license](https://img.shields.io/github/license/maxmekiska/Imbrium?color=black)](https://github.com/maxmekiska/Imbrium/blob/main/LICENSE) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/imbrium.svg)](https://pypi.python.org/project/imbrium/) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/maxmekiska/ImbriumTesting-Demo/main?labpath=TestImbrium.ipynb)
  
 ## Status
 
@@ -89,20 +89,6 @@ During training/fitting, callback conditions can be defined to guard against
 overfitting.
 
 Trained models can furthermore be saved or loaded if the user wishes to do so.
-
-
-## Try imbrium
-<details>
-  <summary>Expand</summary>
-  <br>
-Please ignore all cudart dlerror/warnings, since no GPU is setup in this jupyter binder environment:
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/maxmekiska/ImbriumTesting-Demo/main?labpath=TestImbrium.ipynb) <br>
-
-
-For more testing, please visit the dedicated Demo & Testing repository at: https://github.com/maxmekiska/ImbriumTesting-Demo
-
-</details>
 
 ## How to use imbrium?
 
@@ -283,6 +269,7 @@ predictor.fit_model(
                     epochs: int,
                     show_progress: int = 1,
                     validation_split: float = 0.20,
+                    board: bool = True, # record training progress in tensorboard
                     monitor='loss', 
                     patience=3
                    )
@@ -413,6 +400,7 @@ predictor.fit_model(
                     epochs: int,
                     show_progress: int = 1,
                     validation_split: float = 0.20,
+                    board: bool = True, # record training progress in tensorboard
                     monitor='loss',
                     patience=3
                     )
@@ -604,6 +592,7 @@ predictor.fit_model(
                     epochs: int,
                     show_progress: int = 1,
                     validation_split: float = 0.20,
+                    board: bool = True, # record training progress in tensorboard
                     monitor='loss',
                     patience=3
                   )
@@ -729,6 +718,7 @@ predictor.fit_model(
                     epochs: int,
                     show_progress: int = 1,
                     validation_split: float = 0.20,
+                    board: bool = True, # record training progress in tensorboard
                     monitor='loss',
                     patience=3
                   )
@@ -802,8 +792,16 @@ predictor = OptimizePureUni(steps_past=5, steps_future=10, data=data, scale='sta
 # use seeker decorator on optimization harness
 @seeker(optimizer_range=["adam", "sgd"], 
         layer_config_range= [
-            {'layer0': (5, 'relu'), 'layer1': (10,'relu'), 'layer2': (5, 'relu')},
-            {'layer0': (2, 'relu'), 'layer1': (5, 'relu'), 'layer2': (2, 'relu')}
+            {
+              'layer0': (5, 'relu'),
+              'layer1': (10,'relu'),
+              'layer2': (5, 'relu')
+            },
+            {
+              'layer0': (2, 'relu'),
+              'layer1': (5, 'relu'),
+              'layer2': (2, 'relu')
+            }
         ], 
         optimization_target='minimize', n_trials = 2)
 def create_fit_model(predictor: object, *args, **kwargs):
@@ -811,8 +809,18 @@ def create_fit_model(predictor: object, *args, **kwargs):
     return predictor.create_fit_lstm(*args, **kwargs)
 
 
-create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
-                 show_progress=0, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+create_fit_model(
+                 predictor,
+                 loss='mean_squared_error',
+                 metrics='mean_squared_error',
+                 epochs=2,
+                 show_progress=0,
+                 validation_split=0.20,
+                 board=True,
+                 monitor='val_loss',
+                 patience=2,
+                 min_delta=0,
+                 verbose=1
                 )
 
 predictor.show_performance()
@@ -830,16 +838,44 @@ predictor = OptimizeHybridUni(sub_seq = 2, steps_past = 10, steps_future = 5, da
 
 @seeker(optimizer_range=["adam", "sgd"], 
         layer_config_range= [
-            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2),'layer3': (25, 'relu'), 'layer4': (10, 'relu')},
-            {'layer0': (16, 1, 'relu'), 'layer1': (8, 1, 'relu'), 'layer2': (2),'layer3': (55, 'relu'), 'layer4': (10, 'relu')},
-            {'layer0': (32, 1, 'relu'), 'layer1': (16, 1, 'relu'), 'layer2': (2),'layer3': (25, 'relu'), 'layer4': (10, 'relu')}
+            {
+              'layer0': (8, 1, 'relu'),
+              'layer1': (4, 1, 'relu'),
+              'layer2': (2),
+              'layer3': (25, 'relu'),
+              'layer4': (10, 'relu')
+            },
+            {
+              'layer0': (16, 1, 'relu'),
+              'layer1': (8, 1, 'relu'),
+              'layer2': (2)
+              'layer3': (55, 'relu'),
+              'layer4': (10, 'relu')
+            },
+            {
+              'layer0': (32, 1, 'relu'),
+              'layer1': (16, 1, 'relu'),
+              'layer2': (2),
+              'layer3': (25, 'relu'),
+              'layer4': (10, 'relu')
+            }
         ], 
         optimization_target='minimize', n_trials = 2)
 def create_fit_model(predictor: object, *args, **kwargs):
     return predictor.create_fit_cnnlstm(*args, **kwargs)
 
-create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
-                 show_progress=0, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+create_fit_model(
+                 predictor,
+                 loss='mean_squared_error',
+                 metrics='mean_squared_error',
+                 epochs=2,
+                 show_progress=0,
+                 validation_split=0.20,
+                 board=True,
+                 monitor='val_loss',
+                 patience=2,
+                 min_delta=0,
+                 verbose=1
                 )
 
 predictor.show_performance()
@@ -850,21 +886,49 @@ predictor.model_blueprint()
 #### Example `OptimizePureMulti`
 
 ```python
-predictor = OptimizePureMulti(steps_past =  5, steps_future = 10, data = data, features = ['target', 'target', 'HouseAge', 'AveRooms', 'AveBedrms'], scale = 'normalize')
+predictor = OptimizePureMulti(
+                              steps_past =  5,
+                              steps_future = 10,
+                              data = data,
+                              features = ['target', 'target', 'HouseAge', 'AveRooms', 'AveBedrms'],
+                              scale = 'normalize'
+                            )
 
 
 @seeker(optimizer_range=["adam", "sgd"], 
         layer_config_range= [
-            {'layer0': (5, 'relu'), 'layer1': (10,'relu'), 'layer2': (5, 'relu')},
-            {'layer0': (2, 'relu'), 'layer1': (5, 'relu'), 'layer2': (2, 'relu')},
-            {'layer0': (20, 'relu'), 'layer1': (50, 'relu'), 'layer2': (20, 'sigmoid')}
+            {
+              'layer0': (5, 'relu'),
+              'layer1': (10,'relu'),
+              'layer2': (5, 'relu')
+            },
+            {
+              'layer0': (2, 'relu'),
+              'layer1': (5, 'relu'),
+              'layer2': (2, 'relu')
+            },
+            {
+              'layer0': (20, 'relu'),
+              'layer1': (50, 'relu'),
+              'layer2': (20, 'sigmoid')
+            }
         ], 
         optimization_target='minimize', n_trials = 3)
 def create_fit_model(predictor: object, *args, **kwargs):
     return predictor.create_fit_lstm(*args, **kwargs)
 
-create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
-                 show_progress=1, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+create_fit_model(
+                 predictor,
+                 loss='mean_squared_error',
+                 metrics='mean_squared_error',
+                 epochs=2,
+                 show_progress=1, 
+                 validation_split=0.20,
+                 board=True,
+                 monitor='val_loss',
+                 patience=2,
+                 min_delta=0,
+                 verbose=1
                 )
 
 
@@ -877,21 +941,56 @@ predictor.model_blueprint()
 #### Example `OptimizeHybridMulti`
 
 ```python
-predictor = OptimizeHybridMulti(sub_seq = 2, steps_past = 10, steps_future = 5, data = data,features = ['target', 'target', 'HouseAge', 'AveRooms', 'AveBedrms'], scale = 'normalize')
+predictor = OptimizeHybridMulti(
+                                sub_seq = 2, 
+                                steps_past = 10,
+                                steps_future = 5,
+                                data = data,
+                                features = ['target', 'target', 'HouseAge', 'AveRooms', 'AveBedrms'],
+                                scale = 'normalize'
+                              )
 
 
 @seeker(optimizer_range=["adam", "sgd"], 
         layer_config_range= [
-            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2), 'layer3': (5, 'relu'), 'layer4': (5, 'relu')},
-            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2), 'layer3': (5, 'relu'), 'layer4': (5, 'relu')},
-            {'layer0': (8, 1, 'relu'), 'layer1': (4, 1, 'relu'), 'layer2': (2), 'layer3': (5, 'relu'), 'layer4': (5, 'relu')}
+            {
+              'layer0': (8, 1, 'relu'),
+              'layer1': (4, 1, 'relu'),
+              'layer2': (2),
+              'layer3': (5, 'relu'),
+              'layer4': (5, 'relu')
+            },
+            {
+              'layer0': (8, 1, 'relu'),
+              'layer1': (4, 1, 'relu'),
+              'layer2': (2),
+              'layer3': (5, 'relu'),
+              'layer4': (5, 'relu')
+            },
+            {
+              'layer0': (8, 1, 'relu'),
+              'layer1': (4, 1, 'relu'),
+              'layer2': (2),
+              'layer3': (5, 'relu'),
+              'layer4': (5, 'relu')
+            }
         ], 
         optimization_target='minimize', n_trials = 3)
 def create_fit_model(predictor: object, *args, **kwargs):
     return predictor.create_fit_cnnlstm(*args, **kwargs)
 
-create_fit_model(predictor, loss='mean_squared_error', metrics='mean_squared_error', epochs=2,
-                 show_progress=1, validation_split=0.20, monitor='val_loss', patience=2, min_delta=0, verbose=1
+create_fit_model(
+                 predictor,
+                 loss='mean_squared_error',
+                 metrics='mean_squared_error',
+                 epochs=2,
+                 show_progress=1,
+                 validation_split=0.20,
+                 board=True,
+                 monitor='val_loss',
+                 patience=2,
+                 min_delta=0,
+                 verbose=1
                 )
 
 
