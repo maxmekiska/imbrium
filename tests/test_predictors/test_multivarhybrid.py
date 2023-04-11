@@ -5,6 +5,7 @@ import pytest
 from imbrium.predictors.multivarhybrid import *
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+data_small = data[:20]
 
 test0 = HybridMulti(
     1,
@@ -25,16 +26,56 @@ test0 = HybridMulti(
     scale="standard",
 )
 
+
+test1 = HybridMulti(
+    1,
+    5,
+    5,
+    data=data_small,
+    features=[
+        "target",
+        "HouseAge",
+        "AveRooms",
+        "AveBedrms",
+        "Population",
+        "AveOccup",
+        "Latitude",
+        "Longitude",
+        "MedInc",
+    ],
+    scale="standard",
+)
+
+
+test1 = OptimizeHybridMulti(
+    1,
+    5,
+    5,
+    data=data_small,
+    features=[
+        "target",
+        "HouseAge",
+        "AveRooms",
+        "AveBedrms",
+        "Population",
+        "AveOccup",
+        "Latitude",
+        "Longitude",
+        "MedInc",
+    ],
+    scale="standard",
+)
+
 test0.create_cnnlstm(
     optimizer="adam",
     loss="mean_squared_error",
     metrics="mean_squared_error",
     layer_config={
-        "layer0": (64, 1, "relu"),
-        "layer1": (32, 1, "relu"),
+        "layer0": (64, 1, "relu", 0.0, 0.0),
+        "layer1": (32, 1, "relu", 0.0, 0.0),
         "layer2": (2),
-        "layer3": (50, "relu"),
-        "layer4": (25, "relu"),
+        "layer3": (50, "relu", 0.0, 0.0),
+        "layer4": (25, "relu", 0.0),
     },
 )
 
@@ -126,3 +167,159 @@ def test_get_loss():
 
 def test_get_metrics():
     assert test0.get_metrics == metrics
+
+
+def test_create_cnnrnn():
+    test0.create_cnnrnn(
+        optimizer="adam",
+        loss="mean_squared_error",
+        metrics="mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
+        },
+    )
+    assert test0.get_model_id == "CNN-RNN"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
+
+
+def test_create_cnnlstm():
+    test0.create_cnnlstm(
+        optimizer="adam",
+        loss="mean_squared_error",
+        metrics="mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
+        },
+    )
+    assert test0.get_model_id == "CNN-LSTM"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
+
+
+def test_create_cnngru():
+    test0.create_cnngru(
+        optimizer="adam",
+        loss="mean_squared_error",
+        metrics="mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
+        },
+    )
+    assert test0.get_model_id == "CNN-GRU"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
+
+
+def test_create_cnnbirnn():
+    test0.create_cnnbirnn(
+        optimizer="adam",
+        loss="mean_squared_error",
+        metrics="mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
+        },
+    )
+    assert test0.get_model_id == "CNN-BI-RNN"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
+
+
+def test_create_cnnbilstm():
+    test0.create_cnnbilstm(
+        optimizer="adam",
+        loss="mean_squared_error",
+        metrics="mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
+        },
+    )
+    assert test0.get_model_id == "CNN-BI-LSTM"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
+
+
+def test_create_cnnbigru():
+    test0.create_cnnbigru(
+        optimizer="adam",
+        loss="mean_squared_error",
+        metrics="mean_squared_error",
+        layer_config={
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
+        },
+    )
+    assert test0.get_model_id == "CNN-BI-GRU"
+    assert test0.get_optimizer == "adam"
+    assert test0.get_loss == "mean_squared_error"
+    assert test0.get_metrics == "mean_squared_error"
+
+
+def test_create_fit_cnnrnn():
+    try:
+        test1.create_fit_cnnrnn(epochs=1)
+    except Exception as e:
+        pytest.fail(f"An exception was raised: {e}")
+
+
+def test_create_fit_cnnlstm():
+    try:
+        test1.create_fit_cnnlstm(epochs=1)
+    except Exception as e:
+        pytest.fail(f"An exception was raised: {e}")
+
+
+def test_create_cnngur():
+    try:
+        test1.create_fit_cnngru(epochs=1)
+    except Exception as e:
+        pytest.fail(f"An exception was raised: {e}")
+
+
+def test_create_fit_cnnbirnn():
+    try:
+        test1.create_fit_cnnbirnn(epochs=1)
+    except Exception as e:
+        pytest.fail(f"An exception was raised: {e}")
+
+
+def test_create_fit_cnnbilstm():
+    try:
+        test1.create_fit_cnnbilstm(epochs=1)
+    except Exception as e:
+        pytest.fail(f"An exception was raised: {e}")
+
+
+def test_create_fit_cnnbigru():
+    try:
+        test1.create_fit_cnnbigru(epochs=1)
+    except Exception as e:
+        pytest.fail(f"An exception was raised: {e}")

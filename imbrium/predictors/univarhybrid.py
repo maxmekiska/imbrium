@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import matplotlib.pyplot as plt
@@ -178,11 +179,11 @@ class HybridUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
     ):
         """Creates CNN-RNN hybrid model.
@@ -212,11 +213,11 @@ class HybridUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
     ):
         """Creates CNN-LSTM hybrid model.
@@ -246,11 +247,11 @@ class HybridUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
     ):
         """Creates CNN-GRU hybrid model.
@@ -280,11 +281,11 @@ class HybridUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
     ):
         """Creates CNN-BI-RNN hybrid model.
@@ -314,11 +315,11 @@ class HybridUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
     ):
         """Creates CNN-BI-LSTM hybrid model.
@@ -348,11 +349,11 @@ class HybridUni(UniVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
     ):
         """Creates CNN-BI-GRU hybrid model.
@@ -381,6 +382,7 @@ class HybridUni(UniVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -388,44 +390,110 @@ class HybridUni(UniVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             validation_split (float): Determines size of Validation data.
+            board (bool): Create TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
-            self.details = self.model.fit(
-                self.input_x,
-                self.input_y,
-                validation_split=validation_split,
-                epochs=epochs,
-                verbose=show_progress,
-            )
+            if board == True:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback_board],
+                )
+            else:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                )
+
         else:
-            callback = EarlyStopping(**callback_setting)
-            self.details = self.model.fit(
-                self.input_x,
-                self.input_y,
-                validation_split=validation_split,
-                epochs=epochs,
-                verbose=show_progress,
-                callbacks=[callback],
-            )
+            if board == True:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                callback = EarlyStopping(**callback_setting)
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback, callback_board],
+                )
+            else:
+                callback = EarlyStopping(**callback_setting)
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback],
+                )
         return self.details
 
     def model_blueprint(self):
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self):
-        """Plots model loss, validation loss over time."""
+    def show_performance(self, metric_name: str = ""):
+        """Plots model loss and a given metric over time."""
         information = self.details
 
-        plt.plot(information.history["loss"], color="black")
-        plt.plot(information.history["val_loss"], color="blue")
-        plt.title(self.model_id + " Model Loss")
-        plt.ylabel(self.loss)
-        plt.xlabel("Epoch")
-        plt.legend(["Train", "Test"], loc="upper right")
-        plt.tight_layout()
-        plt.show()
+        plt.style.use("dark_background")
+
+        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+        if metric_name == "":
+
+            plt.plot(information.history["loss"], color=colors[0])
+            plt.plot(information.history["val_loss"], color=colors[1])
+            plt.title(self.model_id + " Model Loss")
+            plt.ylabel(self.loss)
+            plt.xlabel("Epoch")
+            plt.legend(["Train", "Test"], loc="upper right")
+            plt.tight_layout()
+            plt.show()
+        else:
+            plt.plot(information.history["loss"], color=colors[0])
+            plt.plot(information.history["val_loss"], color=colors[1])
+            plt.plot(information.history[metric_name], color=colors[2])
+            plt.plot(information.history["val_" + metric_name], color=colors[3])
+            plt.title(self.model_id + " Model Performance")
+            plt.ylabel(metric_name)
+            plt.xlabel("Epoch")
+            plt.legend(
+                [
+                    "Train Loss",
+                    "Test Loss",
+                    "Train " + metric_name,
+                    "Test " + metric_name,
+                ],
+                loc="upper right",
+            )
+            plt.tight_layout()
+            plt.show()
 
     def predict(self, data: array) -> DataFrame:
         """Takes in a sequence of values and outputs a forecast.
@@ -471,15 +539,16 @@ class OptimizeHybridUni(HybridUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-RNN hybrid model."""
@@ -493,6 +562,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -503,15 +573,16 @@ class OptimizeHybridUni(HybridUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-LSTM hybrid model."""
@@ -525,6 +596,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -535,15 +607,16 @@ class OptimizeHybridUni(HybridUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-GRU hybrid model."""
@@ -557,6 +630,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -567,15 +641,16 @@ class OptimizeHybridUni(HybridUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-BiRNN hybrid model."""
@@ -589,6 +664,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -599,15 +675,16 @@ class OptimizeHybridUni(HybridUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-BiLSTM hybrid model."""
@@ -621,6 +698,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -631,15 +709,16 @@ class OptimizeHybridUni(HybridUni):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (25, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (25, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates CNN-BiGRU hybrid model."""
@@ -653,6 +732,7 @@ class OptimizeHybridUni(HybridUni):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]

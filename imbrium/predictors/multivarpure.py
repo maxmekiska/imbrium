@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import matplotlib.pyplot as plt
@@ -198,9 +199,19 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (50, "relu"),
-            "layer1": (25, "relu"),
-            "layer2": (25, "relu"),
+            "layer0": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                25,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates MLP model.
@@ -240,9 +251,19 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates RNN model.
@@ -272,9 +293,19 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates LSTM model.
@@ -304,10 +335,22 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
-            "layer2": (2),
-            "layer3": (50, "relu"),
+            "layer0": (
+                64,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer1": (
+                32,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer2": (2),  # pooling
+            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates CNN model.
@@ -337,9 +380,19 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates GRU model.
@@ -368,7 +421,10 @@ class PureMulti(MultiVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },  # (neurons, activation, regularization, dropout)
     ):
         """Creates BI-RNN model.
         Parameters:
@@ -396,7 +452,10 @@ class PureMulti(MultiVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
     ):
         """Creates BI-LSTM model.
         Parameters:
@@ -424,7 +483,10 @@ class PureMulti(MultiVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
     ):
         """Creates BI-GRU model.
         Parameters:
@@ -453,10 +515,25 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates Encoder-Decoder-RNN model model.
@@ -487,10 +564,25 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
     ):
         """Creates Encoder-Decoder-LSTM model model.
@@ -521,10 +613,10 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (100, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0, 0.0),
+            "layer2": (50, "relu", 0.0, 0.0),
+            "layer3": (100, "relu", 0.0),
         },
     ):
         """Creates Encoder-Decoder-GRU model model.
@@ -555,11 +647,11 @@ class PureMulti(MultiVariateMultiStep):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
             "layer2": (2),
-            "layer3": (50, "relu"),
-            "layer4": (100, "relu"),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (100, "relu", 0.0),
         },
     ):
         """Creates Encoder-Decoder-CNN model.
@@ -590,6 +682,7 @@ class PureMulti(MultiVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -597,44 +690,110 @@ class PureMulti(MultiVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             validation_split (float): Determines size of Validation data.
+            board (bool): Create TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
-            self.details = self.model.fit(
-                self.input_x,
-                self.input_y,
-                validation_split=validation_split,
-                epochs=epochs,
-                verbose=show_progress,
-            )
+            if board == True:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback_board],
+                )
+            else:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                )
+
         else:
-            callback = EarlyStopping(**callback_setting)
-            self.details = self.model.fit(
-                self.input_x,
-                self.input_y,
-                validation_split=validation_split,
-                epochs=epochs,
-                verbose=show_progress,
-                callbacks=[callback],
-            )
+            if board == True:
+                callback_board = tf.keras.callbacks.TensorBoard(
+                    log_dir="logs/fit/"
+                    + self.model_id
+                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                    histogram_freq=1,
+                )
+                callback = EarlyStopping(**callback_setting)
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback, callback_board],
+                )
+            else:
+                callback = EarlyStopping(**callback_setting)
+                self.details = self.model.fit(
+                    self.input_x,
+                    self.input_y,
+                    validation_split=validation_split,
+                    epochs=epochs,
+                    verbose=show_progress,
+                    callbacks=[callback],
+                )
         return self.details
 
     def model_blueprint(self):
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self):
-        """Plots model loss, validation loss over time."""
+    def show_performance(self, metric_name: str = ""):
+        """Plots model loss and a given metric over time."""
         information = self.details
 
-        plt.plot(information.history["loss"], color="black")
-        plt.plot(information.history["val_loss"], color="green")
-        plt.title(self.model_id + " Model Loss")
-        plt.ylabel(self.loss)
-        plt.xlabel("Epoch")
-        plt.legend(["Train", "Test"], loc="upper right")
-        plt.tight_layout()
-        plt.show()
+        plt.style.use("dark_background")
+
+        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+        if metric_name == "":
+
+            plt.plot(information.history["loss"], color=colors[0])
+            plt.plot(information.history["val_loss"], color=colors[1])
+            plt.title(self.model_id + " Model Loss")
+            plt.ylabel(self.loss)
+            plt.xlabel("Epoch")
+            plt.legend(["Train", "Test"], loc="upper right")
+            plt.tight_layout()
+            plt.show()
+        else:
+            plt.plot(information.history["loss"], color=colors[0])
+            plt.plot(information.history["val_loss"], color=colors[1])
+            plt.plot(information.history[metric_name], color=colors[2])
+            plt.plot(information.history["val_" + metric_name], color=colors[3])
+            plt.title(self.model_id + " Model Performance")
+            plt.ylabel(metric_name)
+            plt.xlabel("Epoch")
+            plt.legend(
+                [
+                    "Train Loss",
+                    "Test Loss",
+                    "Train " + metric_name,
+                    "Test " + metric_name,
+                ],
+                loc="upper right",
+            )
+            plt.tight_layout()
+            plt.show()
 
     def predict(self, data: array) -> DataFrame:
         """Takes in a sequence of values and outputs a forecast.
@@ -682,13 +841,24 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (50, "relu"),
-            "layer1": (25, "relu"),
-            "layer2": (25, "relu"),
+            "layer0": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                25,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
@@ -702,6 +872,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -712,13 +883,24 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a RNN model."""
@@ -732,6 +914,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -742,13 +925,24 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a LSTM model."""
@@ -762,6 +956,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -772,14 +967,27 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (64, 1, "relu"),
-            "layer1": (32, 1, "relu"),
-            "layer2": (2),
-            "layer3": (50, "relu"),
+            "layer0": (
+                64,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer1": (
+                32,
+                1,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, kernel_size, activation, regularization, dropout)
+            "layer2": (2),  # pooling
+            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a CNN model."""
@@ -793,6 +1001,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -803,13 +1012,24 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (40, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
+            "layer0": (
+                40,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a GRU model."""
@@ -823,6 +1043,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -832,10 +1053,14 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },  # (neurons, activation, regularization, dropout)
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-RNN model."""
@@ -849,6 +1074,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -858,10 +1084,14 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-LSTM model."""
@@ -875,6 +1105,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -884,10 +1115,14 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        layer_config: dict = {"layer0": (50, "relu"), "layer1": (50, "relu")},
+        layer_config: dict = {
+            "layer0": (50, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0),
+        },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-GRU model."""
@@ -901,6 +1136,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -911,14 +1147,30 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder RNN model."""
@@ -932,6 +1184,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -942,14 +1195,30 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (
+                100,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer1": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer2": (
+                50,
+                "relu",
+                0.0,
+                0.0,
+            ),  # (neurons, activation, regularization, dropout)
+            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder LSTM model."""
@@ -963,6 +1232,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -973,14 +1243,15 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (100, "relu", 0.0, 0.0),
+            "layer1": (50, "relu", 0.0, 0.0),
+            "layer2": (50, "relu", 0.0, 0.0),
+            "layer3": (100, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder GRU model."""
@@ -994,6 +1265,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1004,14 +1276,16 @@ class OptimizePureMulti(PureMulti):
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (100, "relu"),
-            "layer1": (50, "relu"),
-            "layer2": (50, "relu"),
-            "layer3": (100, "relu"),
+            "layer0": (64, 1, "relu", 0.0, 0.0),
+            "layer1": (32, 1, "relu", 0.0, 0.0),
+            "layer2": (2),
+            "layer3": (50, "relu", 0.0, 0.0),
+            "layer4": (100, "relu", 0.0),
         },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
+        board: bool = False,
         **callback_setting: dict,
     ):
         """Creates and trains an encoder-decoder CNN model."""
@@ -1025,6 +1299,7 @@ class OptimizePureMulti(PureMulti):
             epochs=epochs,
             show_progress=show_progress,
             validation_split=validation_split,
+            board=board,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
