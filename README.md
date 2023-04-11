@@ -17,12 +17,12 @@ Standard and Hybrid Deep Learning Multivariate-Multi-Step & Univariate-Multi-Ste
 Time Series Forecasting.
 
 
-                      ██╗███╗░░░███╗██████╗░██████╗░██╗██╗░░░██╗███╗░░░███╗
-                      ██║████╗░████║██╔══██╗██╔══██╗██║██║░░░██║████╗░████║
-                      ██║██╔████╔██║██████╦╝██████╔╝██║██║░░░██║██╔████╔██║
-                      ██║██║╚██╔╝██║██╔══██╗██╔══██╗██║██║░░░██║██║╚██╔╝██║
-                      ██║██║░╚═╝░██║██████╦╝██║░░██║██║╚██████╔╝██║░╚═╝░██║
-                      ╚═╝╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝╚═╝░╚═════╝░╚═╝░░░░░╚═╝
+                          ██╗███╗░░░███╗██████╗░██████╗░██╗██╗░░░██╗███╗░░░███╗
+                            ║████╗░████║██╔══██╗██╔══██╗██║██║░░░██║████╗░████║
+                          ██║██╔████╔██║██████╦╝██████╔╝██║██║░░░██║██╔████╔██║
+                          ██║██║╚██╔╝██║██╔══██╗██╔══██╗██║██║░░░██║██║╚██╔╝██║
+                          ██║██║░╚═╝░██║██████╦╝██║░░██║██║╚██████╔╝██║░╚═╝░██║
+                          ╚═╝╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝╚═╝░╚═════╝░╚═╝░░░░░╚═╝
 
 
 ## Introduction to Imbrium
@@ -97,6 +97,9 @@ Trained models can furthermore be saved or loaded if the user wishes to do so.
   <br>
 
 Attention: Typing has been left in the below examples to ease the configuration readability.
+
+Version 1.2.0 started supporting tensor board dashboards: https://www.tensorflow.org/tensorboard/get_started
+
 
 ### `Univariate Models`:
 
@@ -275,7 +278,7 @@ predictor.fit_model(
                    )
 
 # Have a look at the model performance
-predictor.show_performance()
+predictor.show_performance(metric_name: str = None) # optionally plot metric name against loss
 
 # Make a prediction based on new unseen data
 predictor.predict(data)
@@ -314,11 +317,11 @@ predictor.create_cnnrnn(
                         metrics: str = 'mean_squared_error',
                         layer_config = 
                         {
-                          'layer0': (64, 1, 'relu', 0.0, 0.0), 
-                          'layer1': (32, 1, 'relu', 0.0, 0.0),
-                          'layer2': (2),
-                          'layer3': (50,'relu', 0.0, 0.0),
-                          'layer4': (25, 'relu', 0.0, 0.0)
+                          'layer0': (64, 1, 'relu', 0.0, 0.0),  # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer2': (2), # (pool_size)
+                          'layer3': (50,'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer4': (25, 'relu', 0.0, 0.0) # (neurons, activation, regularization, dropout)
                         }
                       )
 
@@ -328,11 +331,11 @@ predictor.create_cnnlstm(
                          metrics: str = 'mean_squared_error',
                          layer_config = 
                         {
-                          'layer0': (64, 1, 'relu', 0.0, 0.0), 
-                          'layer1': (32, 1, 'relu', 0.0, 0.0),
-                          'layer2': (2),
-                          'layer3': (50, 'relu', 0.0, 0.0),
-                          'layer4': (25, 'relu', 0.0)
+                          'layer0': (64, 1, 'relu', 0.0, 0.0),  # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer2': (2), # (pool_size)
+                          'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                         }
                       )
 
@@ -342,11 +345,11 @@ predictor.create_cnngru(
                         metrics: str = 'mean_squared_error',
                         layer_config =
                         {
-                          'layer0': (64, 1, 'relu', 0.0, 0.0),
-                          'layer1': (32, 1, 'relu', 0.0, 0.0),
-                          'layer2': (2),
-                          'layer3': (50, 'relu', 0.0, 0.0),
-                          'layer4': (25, 'relu', 0.0)
+                          'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer2': (2), # (pool_size)
+                          'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                         }
                       )
 
@@ -356,11 +359,11 @@ predictor.create_cnnbirnn(
                           metrics: str = 'mean_squared_error',
                           layer_config =
                           {
-                            'layer0': (64, 1, 'relu', 0.0, 0.0),
-                            'layer1': (32, 1, 'relu', 0.0, 0.0),
-                            'layer2': (2),
-                            'layer3': (50, 'relu', 0.0, 0.0),
-                            'layer4': (25, 'relu', 0.0)
+                            'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer2': (2), # (pool_size)
+                            'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                            'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                           }
                         )
 
@@ -370,11 +373,11 @@ predictor.create_cnnbilstm(
                            metrics: str = 'mean_squared_error',
                            layer_config =
                            {
-                            'layer0': (64, 1, 'relu', 0.0, 0.0),
-                            'layer1': (32, 1, 'relu', 0.0, 0.0),
-                            'layer2': (2),
-                            'layer3': (50, 'relu', 0.0, 0.0),
-                            'layer4': (25, 'relu', 0.0)
+                            'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer2': (2), # (pool_size)
+                            'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                            'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                             }
                           )
 
@@ -384,11 +387,11 @@ predictor.create_cnnbigru(
                           metrics: str = 'mean_squared_error',
                           layer_config =
                           {
-                            'layer0': (64, 1, 'relu', 0.0, 0.0),
-                            'layer1': (32, 1, 'relu', 0.0, 0.0),
-                            'layer2': (2),
-                            'layer3': (50, 'relu', 0.0, 0.0),
-                            'layer4': (25, 'relu', 0.0)
+                            'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer2': (2), # (pool_size)
+                            'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                            'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                           }
                         )
 
@@ -406,7 +409,7 @@ predictor.fit_model(
                     )
 
 # Have a look at the model performance
-predictor.show_performance()
+predictor.show_performance(metric_name: str = None) # optionally plot metric name against loss
 
 # Make a prediction based on new unseen data
 predictor.predict(data: array)
@@ -443,9 +446,9 @@ predictor.create_mlp(
                      metrics: str = 'mean_squared_error',
                      layer_config: dict =
                      {
-                      'layer0': (50, 'relu', 0.0, 0.0),
-                      'layer1': (25,'relu', 0.0, 0.0),
-                      'layer2': (25, 'relu', 0.0)
+                      'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                      'layer1': (25,'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                      'layer2': (25, 'relu', 0.0) # (neurons, activation, regularization)
                      }
                     )
 
@@ -455,9 +458,9 @@ predictor.create_rnn(
                      metrics: str = 'mean_squared_error',
                      layer_config: dict = 
                      {
-                      'layer0': (40, 'relu', 0.0, 0.0),
-                      'layer1': (50,'relu', 0.0, 0.0),
-                      'layer2': (50, 'relu', 0.0)
+                      'layer0': (40, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                      'layer1': (50,'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                      'layer2': (50, 'relu', 0.0) # (neurons, activation, regularization)
                      }
                     )
 
@@ -467,9 +470,9 @@ predictor.create_lstm(
                       metrics: str = 'mean_squared_error',
                       layer_config: dict =
                       {
-                        'layer0': (40, 'relu', 0.0, 0.0),
-                        'layer1': (50,'relu', 0.0, 0.0),
-                        'layer2': (50, 'relu', 0.0)
+                        'layer0': (40, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                        'layer1': (50,'relu', 0.0, 0.0),  # (neurons, activation, regularization, dropout)
+                        'layer2': (50, 'relu', 0.0) # (neurons, activation, regularization)
                       }
                     )
 
@@ -479,10 +482,10 @@ predictor.create_gru(
                      metrics: str = 'mean_squared_error',
                      layer_config: dict =
                      {
-                      'layer0': (40, 'relu', 0.0, 0.0),
-                      'layer1': (50,'relu', 0.0, 0.0),
-                      'layer2': (50, 'relu', 0.0)
-                     }
+                      'layer0': (40, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                      'layer1': (50,'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                      'layer2': (50, 'relu', 0.0) # (neurons, activation, regularization)
+                     } 
                     )
 
 predictor.create_cnn(
@@ -491,10 +494,10 @@ predictor.create_cnn(
                      metrics: str = 'mean_squared_error',
                      layer_config: dict =
                      {
-                      'layer0': (64, 1, 'relu', 0.0, 0.0),
-                      'layer1': (32, 1, 'relu', 0.0, 0.0),
-                      'layer2': (2),
-                      'layer3': (50, 'relu', 0.0)
+                      'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                      'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                      'layer2': (2), # (pool_size)
+                      'layer3': (50, 'relu', 0.0) # (neurons, activation, regularization)
                      }
                     )
 
@@ -504,8 +507,8 @@ predictor.create_birnn(
                        metrics: str = 'mean_squared_error',
                        layer_config: dict =
                        {
-                        'layer0': (50, 'relu', 0.0),
-                        'layer1': (50, 'relu', 0.0)
+                        'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                        'layer1': (50, 'relu', 0.0) # (neurons, activation, regularization)
                        }
                       )
 
@@ -515,8 +518,8 @@ predictor.create_bilstm(
                         metrics: str = 'mean_squared_error',
                         layer_config: dict =
                         {
-                          'layer0': (50, 'relu', 0.0, 0.0),
-                          'layer1': (50, 'relu', 0.0)
+                          'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer1': (50, 'relu', 0.0) # (neurons, activation, regularization)
                         }
                       )
 
@@ -526,8 +529,8 @@ predictor.create_bigru(
                        metrics: str = 'mean_squared_error',
                        layer_config: dict =
                        {
-                        'layer0': (50, 'relu', 0.0, 0.0),
-                        'layer1': (50, 'relu', 0.0)
+                        'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                        'layer1': (50, 'relu', 0.0) # (neurons, activation, regularization)
                        }
                       )
 
@@ -537,10 +540,10 @@ predictor.create_encdec_rnn(
                             metrics: str = 'mean_squared_error',
                             layer_config: dict =
                             {
-                              'layer0': (100, 'relu', 0.0, 0.0),
-                              'layer1': (50, 'relu', 0.0, 0.0),
-                              'layer2': (50, 'relu', 0.0, 0.0),
-                              'layer3': (100, 'relu', 0.0)
+                              'layer0': (100, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer1': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer2': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer3': (100, 'relu', 0.0) # (neurons, activation, regularization)
                             }
                           )
 
@@ -550,10 +553,10 @@ predictor.create_encdec_lstm(
                              metrics: str = 'mean_squared_error',
                              layer_config: dict =
                              {
-                              'layer0': (100, 'relu', 0.0, 0.0),
-                              'layer1': (50, 'relu', 0.0, 0.0),
-                              'layer2': (50, 'relu', 0.0, 0.0),
-                              'layer3': (100, 'relu', 0.0)
+                              'layer0': (100, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer1': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer2': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer3': (100, 'relu', 0.0) # (neurons, activation, regularization)
                              }
                             )
 
@@ -563,11 +566,11 @@ predictor.create_encdec_cnn(
                             metrics: str = 'mean_squared_error',
                             layer_config: dict =
                             {
-                              'layer0': (64, 1, 'relu', 0.0, 0.0),
-                              'layer1': (32, 1, 'relu', 0.0, 0.0),
-                              'layer2': (2),
-                              'layer3': (50, 'relu', 0.0, 0.0),
-                              'layer4': (100, 'relu', 0.0)
+                              'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                              'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                              'layer2': (2), # (pool_size)
+                              'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer4': (100, 'relu', 0.0) # (neurons, activation, regularization)
                             }
                           )
 
@@ -577,10 +580,10 @@ predictor.create_encdec_gru(
                             metrics: str = 'mean_squared_error',
                             layer_config: dict =
                             {
-                              'layer0': (100, 'relu', 0.0, 0.0),
-                              'layer1': (50, 'relu', 0.0, 0.0),
-                              'layer2': (50, 'relu', 0.0, 0.0),
-                              'layer3': (100, 'relu', 0.0)
+                              'layer0': (100, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer1': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer2': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                              'layer3': (100, 'relu', 0.0) # (neurons, activation, regularization)
                             }
                           )
 
@@ -598,7 +601,7 @@ predictor.fit_model(
                   )
 
 # Have a look at the model performance
-predictor.show_performance()
+predictor.show_performance(metric_name: str = None) # optionally plot metric name against loss
 
 # Make a prediction based on new unseen data
 predictor.predict(data: array)
@@ -632,11 +635,11 @@ predictor.create_cnnrnn(
                         metrics: str = 'mean_squared_error',
                         layer_config =
                         {
-                          'layer0': (64, 1, 'relu', 0.0, 0.0),
-                          'layer1': (32, 1, 'relu', 0.0, 0.0),
-                          'layer2': (2),
-                          'layer3': (50, 'relu', 0.0, 0.0),
-                          'layer4': (25, 'relu', 0.0)
+                          'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer2': (2), # (pool_size)
+                          'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                         }
                       )
 
@@ -646,11 +649,11 @@ predictor.create_cnnlstm(
                          metrics: str = 'mean_squared_error',
                          layer_config =
                          {
-                          'layer0': (64, 1, 'relu', 0.0, 0.0),
-                          'layer1': (32, 1, 'relu', 0.0, 0.0),
-                          'layer2': (2),
-                          'layer3': (50, 'relu', 0.0, 0.0),
-                          'layer4': (25, 'relu', 0.0)
+                          'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer2': (2), # (pool_size)
+                          'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                          }
                         )
 
@@ -660,11 +663,11 @@ predictor.create_cnngru(
                         metrics: str = 'mean_squared_error',
                         layer_config =
                         {
-                          'layer0': (64, 1, 'relu', 0.0, 0.0),
-                          'layer1': (32, 1, 'relu', 0.0, 0.0),
-                          'layer2': (2),
-                          'layer3': (50, 'relu', 0.0, 0.0),
-                          'layer4': (25, 'relu', 0.0)
+                          'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                          'layer2': (2), # (pool_size)
+                          'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                          'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                         }
                       )
 
@@ -674,11 +677,11 @@ predictor.create_cnnbirnn(
                           metrics: str = 'mean_squared_error',
                           layer_config =
                           {
-                            'layer0': (64, 1, 'relu', 0.0, 0.0),
-                            'layer1': (32, 1, 'relu', 0.0, 0.0),
-                            'layer2': (2),
-                            'layer3': (50, 'relu', 0.0, 0.0),
-                            'layer4': (25, 'relu', 0.0)
+                            'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer2': (2), # (pool_size)
+                            'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                            'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                           }
                         )
 
@@ -688,11 +691,11 @@ predictor.create_cnnbilstm(
                            metrics: str = 'mean_squared_error',
                            layer_config =
                            {
-                            'layer0': (64, 1, 'relu', 0.0, 0.0),
-                            'layer1': (32, 1, 'relu', 0.0, 0.0),
-                            'layer2': (2),
-                            'layer3': (50, 'relu', 0.0, 0.0),
-                            'layer4': (25, 'relu', 0.0)
+                            'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer2': (2), # (pool_size)
+                            'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                            'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                            }
                           )
 
@@ -702,11 +705,11 @@ predictor.create_cnnbigru(
                           metrics: str = 'mean_squared_error',
                           layer_config =
                           {
-                            'layer0': (64, 1, 'relu', 0.0, 0.0),
-                            'layer1': (32, 1, 'relu', 0.0, 0.0),
-                            'layer2': (2),
-                            'layer3': (50, 'relu', 0.0, 0.0),
-                            'layer4': (25, 'relu', 0.0)
+                            'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer1': (32, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
+                            'layer2': (2), # (pool_size)
+                            'layer3': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
+                            'layer4': (25, 'relu', 0.0) # (neurons, activation, regularization)
                           }
                         )
 
@@ -724,7 +727,7 @@ predictor.fit_model(
                   )
 
 # Have a look at the model performance
-predictor.show_performance()
+predictor.show_performance(metric_name: str = None) # optionally plot metric name against loss
 
 # Make a prediction based on new unseen data
 predictor.predict(data: array)
