@@ -322,6 +322,10 @@ def test_cnnlstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                lstm_block_one=1,
+                lstm_block_two=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -344,6 +348,10 @@ def test_cnngru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                gru_block_one=1,
+                gru_block_two=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -366,6 +374,10 @@ def test_cnnbirnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                birnn_block_one=1,
+                rnn_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
