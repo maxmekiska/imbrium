@@ -297,7 +297,7 @@ def test_create_fit_cnnlstm():
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_cnngur():
+def test_create_cnngru():
     try:
         test1.create_fit_cnngru(epochs=1)
     except Exception as e:

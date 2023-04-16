@@ -180,6 +180,10 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        rnn_block_one=1,
+        rnn_block_two=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -204,6 +208,10 @@ class HybridMulti(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            rnn_block_one=rnn_block_one,
+            rnn_block_two=rnn_block_two,
             layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
