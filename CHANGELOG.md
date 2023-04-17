@@ -79,3 +79,4 @@ activation function type
 ### 1.3.0
 
 - added depth parameter to architectures
+- added optimizer configuration support

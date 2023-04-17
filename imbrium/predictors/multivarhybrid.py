@@ -364,6 +364,10 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        bilstm_block_one=1,
+        lstm_block_one=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -388,6 +392,10 @@ class HybridMulti(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            bilstm_block_one=bilstm_block_one,
+            lstm_block_one=lstm_block_one,
             layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],
@@ -402,6 +410,10 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        bigru_block_one=1,
+        gru_block_one=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -426,6 +438,10 @@ class HybridMulti(MultiVariateMultiStep):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            bigru_block_one=bigru_block_one,
+            gru_block_one=gru_block_one,
             layer_config=layer_config,
             input_shape=(
                 self.input_x.shape[1],

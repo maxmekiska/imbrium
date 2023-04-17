@@ -77,8 +77,8 @@ def mlp(
                     ),
                 )
             )
-            layer_num += 1
             model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+            layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -1489,6 +1489,10 @@ def cnnbilstm(
     optimizer: str,
     loss: str,
     metrics: str,
+    conv_block_one: int,
+    conv_block_two: int,
+    bilstm_block_one: int,
+    lstm_block_one: int,
     layer_config: dict,
     input_shape: tuple,
     output_shape: int,
@@ -1505,50 +1509,83 @@ def cnnbilstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    layer_num = 0
     model = keras.Sequential()
-    model.add(
-        TimeDistributed(
-            Conv1D(
-                filters=layer_config["layer0"][0],
-                kernel_size=layer_config["layer0"][1],
-                activation=layer_config["layer0"][2],
-                kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
-            ),
-            input_shape=input_shape,
-        )
-    )
-    model.add(Dropout(layer_config["layer0"][4]))
-    model.add(
-        TimeDistributed(
-            Conv1D(
-                filters=layer_config["layer1"][0],
-                kernel_size=layer_config["layer1"][1],
-                activation=layer_config["layer1"][2],
-                kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
+    for i in range(conv_block_one):
+        model.add(
+            TimeDistributed(
+                Conv1D(
+                    filters=layer_config[f"layer{layer_num}"][0],
+                    kernel_size=layer_config[f"layer{layer_num}"][1],
+                    activation=layer_config[f"layer{layer_num}"][2],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"][3]
+                    ),
+                ),
+                input_shape=input_shape,
             )
         )
+        model.add(Dropout(layer_config[f"layer{layer_num}"][4]))
+        layer_num += 1
+    for j in range(conv_block_two):
+        model.add(
+            TimeDistributed(
+                Conv1D(
+                    filters=layer_config[f"layer{layer_num}"][0],
+                    kernel_size=layer_config[f"layer{layer_num}"][1],
+                    activation=layer_config[f"layer{layer_num}"][2],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"][3]
+                    ),
+                )
+            )
+        )
+        model.add(Dropout(layer_config[f"layer{layer_num}"][4]))
+        layer_num += 1
+    model.add(
+        TimeDistributed(MaxPooling1D(pool_size=layer_config[f"layer{layer_num}"]))
     )
-    model.add(Dropout(layer_config["layer1"][4]))
-    model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
     model.add(TimeDistributed(Flatten()))
-    model.add(
-        Bidirectional(
-            LSTM(
-                layer_config["layer3"][0],
-                activation=layer_config["layer3"][1],
-                kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
-                return_sequences=True,
+    layer_num += 1
+    for j in range(bilstm_block_one):
+        model.add(
+            Bidirectional(
+                LSTM(
+                    layer_config[f"layer{layer_num}"][0],
+                    activation=layer_config[f"layer{layer_num}"][1],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"][2]
+                    ),
+                    return_sequences=True,
+                )
             )
         )
-    )
-    model.add(Dropout(layer_config["layer3"][3]))
-    model.add(
-        LSTM(
-            layer_config["layer4"][0],
-            activation=layer_config["layer4"][1],
-            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
-        )
-    )
+        model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+        layer_num += 1
+    for k in range(lstm_block_one):
+        if k == lstm_block_one - 1:
+            model.add(
+                LSTM(
+                    layer_config[f"layer{layer_num}"][0],
+                    activation=layer_config[f"layer{layer_num}"][1],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"][2]
+                    ),
+                )
+            )
+        else:
+            model.add(
+                LSTM(
+                    layer_config[f"layer{layer_num}"][0],
+                    activation=layer_config[f"layer{layer_num}"][1],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"][2]
+                    ),
+                    return_sequences=True,
+                )
+            )
+            model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+            layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
@@ -1559,6 +1596,10 @@ def cnnbigru(
     optimizer: str,
     loss: str,
     metrics: str,
+    conv_block_one: int,
+    conv_block_two: int,
+    bigru_block_one: int,
+    gru_block_one: int,
     layer_config: dict,
     input_shape: tuple,
     output_shape: int,
@@ -1575,50 +1616,71 @@ def cnnbigru(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    layer_num = 0
     model = keras.Sequential()
-    model.add(
-        TimeDistributed(
-            Conv1D(
-                filters=layer_config["layer0"][0],
-                kernel_size=layer_config["layer0"][1],
-                activation=layer_config["layer0"][2],
-                kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
-            ),
-            input_shape=input_shape,
-        )
-    )
-    model.add(Dropout(layer_config["layer0"][4]))
-    model.add(
-        TimeDistributed(
-            Conv1D(
-                filters=layer_config["layer1"][0],
-                kernel_size=layer_config["layer1"][1],
-                activation=layer_config["layer1"][2],
-                kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
+    for i in range(conv_block_one):
+        model.add(
+            TimeDistributed(
+                Conv1D(
+                    filters=layer_config["layer0"][0],
+                    kernel_size=layer_config["layer0"][1],
+                    activation=layer_config["layer0"][2],
+                    kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
+                ),
+                input_shape=input_shape,
             )
         )
-    )
-    model.add(Dropout(layer_config["layer1"][4]))
+        model.add(Dropout(layer_config["layer0"][4]))
+        layer_num += 1
+    for j in range(conv_block_two):
+        model.add(
+            TimeDistributed(
+                Conv1D(
+                    filters=layer_config["layer1"][0],
+                    kernel_size=layer_config["layer1"][1],
+                    activation=layer_config["layer1"][2],
+                    kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
+                )
+            )
+        )
+        model.add(Dropout(layer_config["layer1"][4]))
+        layer_num += 1
     model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
     model.add(TimeDistributed(Flatten()))
-    model.add(
-        Bidirectional(
-            GRU(
-                layer_config["layer3"][0],
-                activation=layer_config["layer3"][1],
-                kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
-                return_sequences=True,
+    layer_num += 1
+    for k in range(bigru_block_one):
+        model.add(
+            Bidirectional(
+                GRU(
+                    layer_config["layer3"][0],
+                    activation=layer_config["layer3"][1],
+                    kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
+                    return_sequences=True,
+                )
             )
         )
-    )
-    model.add(Dropout(layer_config["layer3"][3]))
-    model.add(
-        GRU(
-            layer_config["layer4"][0],
-            activation=layer_config["layer4"][1],
-            kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
-        )
-    )
+        model.add(Dropout(layer_config["layer3"][3]))
+        layer_num += 1
+    for l in range(gru_block_one):
+        if l == gru_block_one - 1:
+            model.add(
+                GRU(
+                    layer_config["layer4"][0],
+                    activation=layer_config["layer4"][1],
+                    kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+                )
+            )
+        else:
+            model.add(
+                GRU(
+                    layer_config["layer4"][0],
+                    activation=layer_config["layer4"][1],
+                    kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+                    return_sequences=True,
+                )
+            )
+            model.add(Dropout(layer_config["layer4"][3]))
+            layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 

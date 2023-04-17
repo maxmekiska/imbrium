@@ -400,6 +400,10 @@ def test_cnnbilstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                bilstm_block_one=1,
+                lstm_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -422,6 +426,10 @@ def test_cnnbigru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                bigru_block_one=1,
+                gru_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),

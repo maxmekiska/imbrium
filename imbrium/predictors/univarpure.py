@@ -6,6 +6,7 @@ import tensorflow as tf
 from numpy import array, empty, reshape
 from pandas import DataFrame
 from tensorflow import keras
+from tensorflow.keras import optimizers
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
                                      Dropout, Flatten, MaxPooling1D,
@@ -13,6 +14,7 @@ from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
+from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_standard_uni
 
@@ -290,6 +292,7 @@ class PureUni(UniVariateMultiStep):
     def create_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         lstm_block_one: int = 1,
@@ -323,8 +326,10 @@ class PureUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = lstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             lstm_block_one=lstm_block_one,
