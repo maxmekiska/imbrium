@@ -12,6 +12,7 @@ from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
+from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
 
@@ -196,6 +197,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_mlp(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         dense_block_one: int = 1,
@@ -229,6 +231,8 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         # necessary to account for hyperparameter optimization
         try:
             self.input_x = self.backup_input_x
@@ -240,7 +244,7 @@ class PureMulti(MultiVariateMultiStep):
         self.input_x = self.input_x.reshape((self.input_x.shape[0], self.dimension))
 
         self.model = mlp(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             dense_block_one=dense_block_one,
@@ -254,6 +258,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_rnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         rnn_block_one: int = 1,
@@ -287,8 +292,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = rnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             rnn_block_one=rnn_block_one,
@@ -302,6 +309,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         lstm_block_one: int = 1,
@@ -334,8 +342,11 @@ class PureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = lstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             lstm_block_one=lstm_block_one,
@@ -349,6 +360,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_cnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one: int = 1,
@@ -385,8 +397,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
@@ -400,6 +414,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_gru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         gru_block_one: int = 1,
@@ -433,8 +448,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = gru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             gru_block_one=gru_block_one,
@@ -448,6 +465,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_birnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         birnn_block_one: int = 1,
@@ -469,8 +487,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = birnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             birnn_block_one=birnn_block_one,
@@ -483,6 +503,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_bilstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         bilstm_block_one: int = 1,
@@ -504,8 +525,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = bilstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             bilstm_block_one=bilstm_block_one,
@@ -518,6 +541,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_bigru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         bigru_block_one: int = 1,
@@ -539,8 +563,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = bigru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             bigru_block_one=bigru_block_one,
@@ -553,6 +579,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_rnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         enc_rnn_block_one: int = 1,
@@ -593,8 +620,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_rnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             enc_rnn_block_one=enc_rnn_block_one,
@@ -610,6 +639,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         enc_lstm_block_one: int = 1,
@@ -650,8 +680,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_lstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             enc_lstm_block_one=enc_lstm_block_one,
@@ -667,6 +699,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_gru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         enc_gru_block_one: int = 1,
@@ -692,8 +725,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_gru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             enc_gru_block_one=enc_gru_block_one,
@@ -709,6 +744,7 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_cnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         enc_conv_block_one: int = 1,
@@ -736,8 +772,10 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_cnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             enc_conv_block_one=enc_conv_block_one,

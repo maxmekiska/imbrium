@@ -13,6 +13,7 @@ from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
+from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
 
@@ -176,6 +177,7 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnrnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one=1,
@@ -202,8 +204,10 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnrnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
@@ -218,6 +222,7 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnlstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one=1,
@@ -244,8 +249,10 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnlstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
@@ -260,6 +267,7 @@ class HybridUni(UniVariateMultiStep):
     def create_cnngru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one=1,
@@ -286,8 +294,10 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnngru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
@@ -302,6 +312,7 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnbirnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one=1,
@@ -328,8 +339,10 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnbirnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
@@ -344,6 +357,7 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnbilstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one=1,
@@ -370,8 +384,10 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnbilstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
@@ -386,6 +402,7 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnbigru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
         conv_block_one=1,
@@ -412,8 +429,10 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnbigru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
             conv_block_one=conv_block_one,
