@@ -951,6 +951,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 50,
@@ -977,6 +978,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -993,6 +995,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -1019,6 +1022,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1035,6 +1039,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -1061,6 +1066,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1077,6 +1083,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 64,
@@ -1106,6 +1113,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1122,6 +1130,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -1148,6 +1157,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1164,6 +1174,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -1179,6 +1190,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1195,6 +1207,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -1210,6 +1223,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1226,6 +1240,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -1241,6 +1256,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1257,6 +1273,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 100,
@@ -1289,6 +1306,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1305,6 +1323,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (
                 100,
@@ -1337,6 +1356,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1353,6 +1373,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (100, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0, 0.0),
@@ -1370,6 +1391,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1386,6 +1408,7 @@ class OptimizePureMulti(PureMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config: dict = {
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -1404,6 +1427,7 @@ class OptimizePureMulti(PureMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(

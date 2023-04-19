@@ -161,7 +161,7 @@ def rnn(
             )
             model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
             layer_num += 1
-        model.add(Dense(output_shape))
+    model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
     return model

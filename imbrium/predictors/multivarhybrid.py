@@ -628,6 +628,7 @@ class OptimizeHybridMulti(HybridMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -646,6 +647,7 @@ class OptimizeHybridMulti(HybridMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -662,6 +664,7 @@ class OptimizeHybridMulti(HybridMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -680,6 +683,7 @@ class OptimizeHybridMulti(HybridMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -696,6 +700,7 @@ class OptimizeHybridMulti(HybridMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -714,6 +719,7 @@ class OptimizeHybridMulti(HybridMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -730,6 +736,7 @@ class OptimizeHybridMulti(HybridMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -748,6 +755,7 @@ class OptimizeHybridMulti(HybridMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -764,6 +772,7 @@ class OptimizeHybridMulti(HybridMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -782,6 +791,7 @@ class OptimizeHybridMulti(HybridMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -798,6 +808,7 @@ class OptimizeHybridMulti(HybridMulti):
         optimizer: str = "adam",
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        optimizer_args: dict = None,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -816,6 +827,7 @@ class OptimizeHybridMulti(HybridMulti):
             optimizer=optimizer,
             loss=loss,
             metrics=metrics,
+            optimizer_args=optimizer_args,
             layer_config=layer_config,
         )
         self.fit_model(

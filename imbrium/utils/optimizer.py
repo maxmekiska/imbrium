@@ -18,6 +18,5 @@ def get_optimizer(optimizer: str, optimizer_args: dict) -> keras.optimizers.Opti
         optimizer_obj = optimizer
     else:
         optimizer_obj = optimizer_dict.get(optimizer)(**optimizer_args)
-        print(optimizer_obj.get_config())
 
     return optimizer_obj
