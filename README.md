@@ -119,8 +119,12 @@ predictor = PureUni(
 
 predictor.create_mlp(
                      optimizer: str = 'adam',
+                     optimizer_args: dict = None,
                      loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
+                     dense_block_one: int = 1,
+                     dense_block_two: int = 1,
+                     dense_block_three: int = 1,
                      layer_config: dict =
                      {
                       'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -131,8 +135,12 @@ predictor.create_mlp(
 
 predictor.create_rnn(
                      optimizer: str = 'adam',
+                     optimizer_args: dict = None,
                      loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
+                     rnn_block_one: int = 1,
+                     rnn_block_two: int = 1,
+                     rnn_block_three: int = 1,
                      layer_config: dict = 
                      {
                       'layer0': (40, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -143,8 +151,12 @@ predictor.create_rnn(
 
 predictor.create_lstm(
                       optimizer: str = 'adam',
+                      optimizer_args: dict = None,
                       loss: str = 'mean_squared_error',
                       metrics: str = 'mean_squared_error',
+                      lstm_block_one: int = 1,
+                      lstm_block_two: int = 1,
+                      lstm_block_three: int = 1,
                       layer_config: dict =
                       {
                         'layer0': (40, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -155,8 +167,12 @@ predictor.create_lstm(
 
 predictor.create_gru(
                      optimizer: str = 'adam',
+                     optimizer_args: dict = None,
                      loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
+                     gru_block_one: int = 1,
+                     gru_block_two: int = 1,
+                     gru_block_three: int = 1,
                      layer_config: dict =
                      {
                       'layer0': (40, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -167,8 +183,12 @@ predictor.create_gru(
 
 predictor.create_cnn(
                      optimizer: str = 'adam',
+                     optimizer_args: dict = None,
                      loss: str = 'mean_squared_error',
                      metrics: str = 'mean_squared_error',
+                     conv_block_one: int = 1,
+                     conv_block_two: int = 1,
+                     dense_block_one: int = 1,
                      layer_config: dict =
                      {
                       'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
@@ -180,8 +200,11 @@ predictor.create_cnn(
 
 predictor.create_birnn(
                        optimizer: str = 'adam',
+                       optimizer_args: dict = None,
                        loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
+                       birnn_block_one: int = 1,
+                       rnn_block_one: int = 1,
                        layer_config: dict =
                        {
                         'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -191,8 +214,11 @@ predictor.create_birnn(
 
 predictor.create_bilstm(
                         optimizer: str = 'adam', 
+                        optimizer_args: dict = None,
                         loss: str = 'mean_squared_error',
                         metrics: str = 'mean_squared_error',
+                        bilstm_block_one: int = 1,
+                        lstm_block_one: int = 1,
                         layer_config: dict = 
                         {
                           'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -202,8 +228,11 @@ predictor.create_bilstm(
 
 predictor.create_bigru(
                        optimizer: str = 'adam',
+                       optimizer_args: dict = None,
                        loss: str = 'mean_squared_error',
                        metrics: str = 'mean_squared_error',
+                       bigru_block_one: int = 1,
+                       gru_block_one: int = 1,
                        layer_config: dict = 
                        {
                         'layer0': (50, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -213,8 +242,13 @@ predictor.create_bigru(
 
 predictor.create_encdec_rnn(
                             optimizer: str = 'adam',
+                            optimizer_args: dict = None,
                             loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
+                            enc_rnn_block_one: int = 1,
+                            enc_rnn_block_two: int = 1,
+                            dec_rnn_block_one: int = 1,
+                            dec_rnn_block_two: int = 1,
                             layer_config: dict =
                             {
                               'layer0': (100, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -226,8 +260,13 @@ predictor.create_encdec_rnn(
 
 predictor.create_encdec_lstm(
                              optimizer: str = 'adam',
+                             optimizer_args: dict = None,
                              loss: str = 'mean_squared_error',
                              metrics: str = 'mean_squared_error',
+                             enc_lstm_block_one: int = 1,
+                             enc_lstm_block_two: int = 1,
+                             dec_lstm_block_one: int = 1,
+                             dec_lstm_block_two: int = 1,
                              layer_config: dict = 
                              {
                               'layer0': (100, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)
@@ -239,8 +278,13 @@ predictor.create_encdec_lstm(
 
 predictor.create_encdec_cnn(
                             optimizer: str = 'adam',
+                            optimizer_args: dict = None,
                             loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
+                            enc_conv_block_one: int = 1,
+                            enc_conv_block_two: int = 1,
+                            dec_gru_block_one: int = 1,
+                            dec_gru_block_two: int = 1,
                             layer_config: dict = 
                             {
                               'layer0': (64, 1, 'relu', 0.0, 0.0), # (filter_size, kernel_size, activation, regularization, dropout)
@@ -253,8 +297,13 @@ predictor.create_encdec_cnn(
 
 predictor.create_encdec_gru(
                             optimizer: str = 'adam',
+                            optimizer_args: dict = None,
                             loss: str = 'mean_squared_error',
                             metrics: str = 'mean_squared_error',
+                            enc_gru_block_one: int = 1,
+                            enc_gru_block_two: int = 1,
+                            dec_gru_block_one: int = 1,
+                            dec_gru_block_two: int = 1,
                             layer_config: dict = 
                             {
                               'layer0': (100, 'relu', 0.0, 0.0), # (neurons, activation, regularization, dropout)

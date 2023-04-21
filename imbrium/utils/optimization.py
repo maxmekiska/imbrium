@@ -31,7 +31,6 @@ def seeker(
                     )
                     return result
                 except Exception as e:
-                    # Print the error message and return infinity
                     print(f"Error during trial {trial.number}: {e}")
                     if optimization_target == "minimize":
                         return float("inf")

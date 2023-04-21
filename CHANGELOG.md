@@ -80,3 +80,4 @@ activation function type
 
 - added depth parameter to architectures
 - added optimizer configuration support
+- added optimizer configuration to seeker
