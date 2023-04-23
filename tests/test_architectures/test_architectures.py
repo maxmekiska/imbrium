@@ -12,6 +12,9 @@ def test_mlp():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                dense_block_one=1,
+                dense_block_two=1,
+                dense_block_three=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (25, "relu", 0.0, 0.0),
@@ -32,6 +35,9 @@ def test_rnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                rnn_block_one=1,
+                rnn_block_two=1,
+                rnn_block_three=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (25, "relu", 0.0, 0.0),
@@ -52,6 +58,9 @@ def test_lstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                lstm_block_one=1,
+                lstm_block_two=1,
+                lstm_block_three=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (25, "relu", 0.0, 0.0),
@@ -72,6 +81,9 @@ def test_cnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                dense_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -93,6 +105,9 @@ def test_gru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                gru_block_one=1,
+                gru_block_two=1,
+                gru_block_three=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (25, "relu", 0.0, 0.0),
@@ -113,6 +128,8 @@ def test_birnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                birnn_block_one=1,
+                rnn_block_one=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (50, "relu", 0.0),
@@ -132,6 +149,8 @@ def test_bilstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                bilstm_block_one=1,
+                lstm_block_one=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (50, "relu", 0.0),
@@ -151,6 +170,8 @@ def test_bigru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                bigru_block_one=1,
+                gru_block_one=1,
                 layer_config={
                     "layer0": (50, "relu", 0.0, 0.0),
                     "layer1": (50, "relu", 0.0),
@@ -170,6 +191,10 @@ def test_encdec_rnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                enc_rnn_block_one=1,
+                enc_rnn_block_two=1,
+                dec_rnn_block_one=1,
+                dec_rnn_block_two=1,
                 layer_config={
                     "layer0": (100, "relu", 0.0, 0.0),
                     "layer1": (50, "relu", 0.0, 0.0),
@@ -192,6 +217,10 @@ def test_encdec_lstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                enc_lstm_block_one=1,
+                enc_lstm_block_two=1,
+                dec_lstm_block_one=1,
+                dec_lstm_block_two=1,
                 layer_config={
                     "layer0": (100, "relu", 0.0, 0.0),
                     "layer1": (50, "relu", 0.0, 0.0),
@@ -213,6 +242,10 @@ def test_encdec_cnn():
             encdec_cnn(
                 optimizer="adam",
                 loss="mean_squared_error",
+                enc_conv_block_one=1,
+                enc_conv_block_two=1,
+                dec_gru_block_one=1,
+                dec_gru_block_two=1,
                 metrics="mean_squared_error",
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
@@ -237,6 +270,10 @@ def test_encdec_gru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                enc_gru_block_one=1,
+                enc_gru_block_two=1,
+                dec_gru_block_one=1,
+                dec_gru_block_two=1,
                 layer_config={
                     "layer0": (100, "relu", 0.0, 0.0),
                     "layer1": (50, "relu", 0.0, 0.0),
@@ -259,6 +296,10 @@ def test_cnnrnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                rnn_block_one=1,
+                rnn_block_two=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -281,6 +322,10 @@ def test_cnnlstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                lstm_block_one=1,
+                lstm_block_two=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -303,6 +348,10 @@ def test_cnngru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                gru_block_one=1,
+                gru_block_two=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -325,6 +374,10 @@ def test_cnnbirnn():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                birnn_block_one=1,
+                rnn_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -347,6 +400,10 @@ def test_cnnbilstm():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                bilstm_block_one=1,
+                lstm_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -369,6 +426,10 @@ def test_cnnbigru():
                 optimizer="adam",
                 loss="mean_squared_error",
                 metrics="mean_squared_error",
+                conv_block_one=1,
+                conv_block_two=1,
+                bigru_block_one=1,
+                gru_block_one=1,
                 layer_config={
                     "layer0": (64, 1, "relu", 0.0, 0.0),
                     "layer1": (32, 1, "relu", 0.0, 0.0),

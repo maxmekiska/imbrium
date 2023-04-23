@@ -9,6 +9,7 @@ def test_seeker():
 
     test_decorator = seeker(
         optimizer_range=["adam"],
+        optimizer_args_range=[{"learning_rate": 0.01}],
         layer_config_range=[1],
         optimization_target="minimize",
         n_trials=1,

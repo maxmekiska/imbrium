@@ -13,6 +13,7 @@ from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
+from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
 
@@ -176,8 +177,13 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnrnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        rnn_block_one=1,
+        rnn_block_two=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -198,10 +204,16 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnrnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            rnn_block_one=rnn_block_one,
+            rnn_block_two=rnn_block_two,
             layer_config=layer_config,
             input_shape=(None, self.modified_back, 1),
             output_shape=self.input_y.shape[1],
@@ -210,8 +222,13 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnlstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        lstm_block_one=1,
+        lstm_block_two=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -232,10 +249,16 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnlstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            lstm_block_one=lstm_block_one,
+            lstm_block_two=lstm_block_two,
             layer_config=layer_config,
             input_shape=(None, self.modified_back, 1),
             output_shape=self.input_y.shape[1],
@@ -244,8 +267,13 @@ class HybridUni(UniVariateMultiStep):
     def create_cnngru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        gru_block_one=1,
+        gru_block_two=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -266,10 +294,16 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnngru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            gru_block_one=gru_block_one,
+            gru_block_two=gru_block_two,
             layer_config=layer_config,
             input_shape=(None, self.modified_back, 1),
             output_shape=self.input_y.shape[1],
@@ -278,8 +312,13 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnbirnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        birnn_block_one=1,
+        rnn_block_one=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -300,10 +339,16 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnbirnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            birnn_block_one=birnn_block_one,
+            rnn_block_one=rnn_block_one,
             layer_config=layer_config,
             input_shape=(None, self.modified_back, 1),
             output_shape=self.input_y.shape[1],
@@ -312,8 +357,13 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnbilstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        bilstm_block_one=1,
+        lstm_block_one=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -334,10 +384,16 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnbilstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            bilstm_block_one=bilstm_block_one,
+            lstm_block_one=lstm_block_one,
             layer_config=layer_config,
             input_shape=(None, self.modified_back, 1),
             output_shape=self.input_y.shape[1],
@@ -346,8 +402,13 @@ class HybridUni(UniVariateMultiStep):
     def create_cnnbigru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one=1,
+        conv_block_two=1,
+        bigru_block_one=1,
+        gru_block_one=1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -368,10 +429,16 @@ class HybridUni(UniVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnnbigru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            bigru_block_one=bigru_block_one,
+            gru_block_one=gru_block_one,
             layer_config=layer_config,
             input_shape=(None, self.modified_back, 1),
             output_shape=self.input_y.shape[1],
@@ -536,8 +603,13 @@ class OptimizeHybridUni(HybridUni):
     def create_fit_cnnrnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        rnn_block_one: int = 1,
+        rnn_block_two: int = 1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -554,8 +626,13 @@ class OptimizeHybridUni(HybridUni):
         """Creates CNN-RNN hybrid model."""
         self.create_cnnrnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            rnn_block_one=rnn_block_one,
+            rnn_block_two=rnn_block_two,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -570,8 +647,13 @@ class OptimizeHybridUni(HybridUni):
     def create_fit_cnnlstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        lstm_block_one: int = 1,
+        lstm_block_two: int = 1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -588,8 +670,13 @@ class OptimizeHybridUni(HybridUni):
         """Creates CNN-LSTM hybrid model."""
         self.create_cnnlstm(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            lstm_block_one=lstm_block_one,
+            lstm_block_two=lstm_block_two,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -604,8 +691,13 @@ class OptimizeHybridUni(HybridUni):
     def create_fit_cnngru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        gru_block_one: int = 1,
+        gru_block_two: int = 1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -622,8 +714,13 @@ class OptimizeHybridUni(HybridUni):
         """Creates CNN-GRU hybrid model."""
         self.create_cnngru(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            gru_block_one=gru_block_one,
+            gru_block_two=gru_block_two,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -638,8 +735,13 @@ class OptimizeHybridUni(HybridUni):
     def create_fit_cnnbirnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        birnn_block_one: int = 1,
+        rnn_block_one: int = 1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -656,8 +758,13 @@ class OptimizeHybridUni(HybridUni):
         """Creates CNN-BiRNN hybrid model."""
         self.create_cnnbirnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            birnn_block_one=birnn_block_one,
+            rnn_block_one=rnn_block_one,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -672,8 +779,13 @@ class OptimizeHybridUni(HybridUni):
     def create_fit_cnnbilstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        bilstm_block_one: int = 1,
+        lstm_block_one: int = 1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -690,8 +802,13 @@ class OptimizeHybridUni(HybridUni):
         """Creates CNN-BiLSTM hybrid model."""
         self.create_cnnbilstm(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            bilstm_block_one=bilstm_block_one,
+            lstm_block_one=lstm_block_one,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -706,8 +823,13 @@ class OptimizeHybridUni(HybridUni):
     def create_fit_cnnbigru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        bigru_block_one: int = 1,
+        gru_block_one: int = 1,
         layer_config={
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -724,8 +846,13 @@ class OptimizeHybridUni(HybridUni):
         """Creates CNN-BiGRU hybrid model."""
         self.create_cnnbigru(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            bigru_block_one=bigru_block_one,
+            gru_block_one=gru_block_one,
             layer_config=layer_config,
         )
         self.fit_model(

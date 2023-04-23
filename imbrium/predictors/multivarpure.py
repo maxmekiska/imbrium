@@ -12,6 +12,7 @@ from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
+from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
 
@@ -196,8 +197,12 @@ class PureMulti(MultiVariateMultiStep):
     def create_mlp(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        dense_block_one: int = 1,
+        dense_block_two: int = 1,
+        dense_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 50,
@@ -226,6 +231,8 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         # necessary to account for hyperparameter optimization
         try:
             self.input_x = self.backup_input_x
@@ -237,9 +244,12 @@ class PureMulti(MultiVariateMultiStep):
         self.input_x = self.input_x.reshape((self.input_x.shape[0], self.dimension))
 
         self.model = mlp(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            dense_block_one=dense_block_one,
+            dense_block_two=dense_block_two,
+            dense_block_three=dense_block_three,
             layer_config=layer_config,
             input_shape=self.input_x.shape[1],
             output_shape=self.input_y.shape[1],
@@ -248,8 +258,12 @@ class PureMulti(MultiVariateMultiStep):
     def create_rnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        rnn_block_one: int = 1,
+        rnn_block_two: int = 1,
+        rnn_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -278,10 +292,15 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = rnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            rnn_block_one=rnn_block_one,
+            rnn_block_two=rnn_block_two,
+            rnn_block_three=rnn_block_three,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -290,8 +309,12 @@ class PureMulti(MultiVariateMultiStep):
     def create_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        lstm_block_one: int = 1,
+        lstm_block_two: int = 1,
+        lstm_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -320,10 +343,15 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = lstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            lstm_block_one=lstm_block_one,
+            lstm_block_two=lstm_block_two,
+            lstm_block_three=lstm_block_three,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -332,8 +360,12 @@ class PureMulti(MultiVariateMultiStep):
     def create_cnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        dense_block_one: int = 1,
         layer_config: dict = {
             "layer0": (
                 64,
@@ -365,10 +397,15 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = cnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            dense_block_one=dense_block_one,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -377,8 +414,12 @@ class PureMulti(MultiVariateMultiStep):
     def create_gru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        gru_block_one: int = 1,
+        gru_block_two: int = 1,
+        gru_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -407,10 +448,15 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = gru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            gru_block_one=gru_block_one,
+            gru_block_two=gru_block_two,
+            gru_block_three=gru_block_three,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -419,8 +465,11 @@ class PureMulti(MultiVariateMultiStep):
     def create_birnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        birnn_block_one: int = 1,
+        rnn_block_one: int = 1,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -438,10 +487,14 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = birnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            birnn_block_one=birnn_block_one,
+            rnn_block_one=rnn_block_one,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -450,8 +503,11 @@ class PureMulti(MultiVariateMultiStep):
     def create_bilstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        bilstm_block_one: int = 1,
+        lstm_block_one: int = 1,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -469,10 +525,14 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = bilstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            bilstm_block_one=bilstm_block_one,
+            lstm_block_one=lstm_block_one,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -481,8 +541,11 @@ class PureMulti(MultiVariateMultiStep):
     def create_bigru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        bigru_block_one: int = 1,
+        gru_block_one: int = 1,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -500,10 +563,14 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = bigru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            bigru_block_one=bigru_block_one,
+            gru_block_one=gru_block_one,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=self.input_y.shape[1],
@@ -512,8 +579,13 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_rnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_rnn_block_one: int = 1,
+        enc_rnn_block_two: int = 1,
+        dec_rnn_block_one: int = 1,
+        dec_rnn_block_two: int = 1,
         layer_config: dict = {
             "layer0": (
                 100,
@@ -548,10 +620,16 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_rnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            enc_rnn_block_one=enc_rnn_block_one,
+            enc_rnn_block_two=enc_rnn_block_two,
+            dec_rnn_block_one=dec_rnn_block_one,
+            dec_rnn_block_two=dec_rnn_block_two,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=1,
@@ -561,8 +639,13 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_lstm_block_one: int = 1,
+        enc_lstm_block_two: int = 1,
+        dec_lstm_block_one: int = 1,
+        dec_lstm_block_two: int = 1,
         layer_config: dict = {
             "layer0": (
                 100,
@@ -597,10 +680,16 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_lstm(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            enc_lstm_block_one=enc_lstm_block_one,
+            enc_lstm_block_two=enc_lstm_block_two,
+            dec_lstm_block_one=dec_lstm_block_one,
+            dec_lstm_block_two=dec_lstm_block_two,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=1,
@@ -610,8 +699,13 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_gru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_gru_block_one: int = 1,
+        enc_gru_block_two: int = 1,
+        dec_gru_block_one: int = 1,
+        dec_gru_block_two: int = 1,
         layer_config: dict = {
             "layer0": (100, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0, 0.0),
@@ -631,10 +725,16 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_gru(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            enc_gru_block_one=enc_gru_block_one,
+            enc_gru_block_two=enc_gru_block_two,
+            dec_gru_block_one=dec_gru_block_one,
+            dec_gru_block_two=dec_gru_block_two,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=1,
@@ -644,8 +744,13 @@ class PureMulti(MultiVariateMultiStep):
     def create_encdec_cnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_conv_block_one: int = 1,
+        enc_conv_block_two: int = 1,
+        dec_gru_block_one: int = 1,
+        dec_gru_block_two: int = 1,
         layer_config: dict = {
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -667,10 +772,16 @@ class PureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+
         self.model = encdec_cnn(
-            optimizer=optimizer,
+            optimizer=optimizer_obj,
             loss=loss,
             metrics=metrics,
+            enc_conv_block_one=enc_conv_block_one,
+            enc_conv_block_two=enc_conv_block_two,
+            dec_gru_block_one=dec_gru_block_one,
+            dec_gru_block_two=dec_gru_block_two,
             layer_config=layer_config,
             input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
             output_shape=1,
@@ -838,8 +949,12 @@ class OptimizePureMulti(PureMulti):
     def create_fit_mlp(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        dense_block_one: int = 1,
+        dense_block_two: int = 1,
+        dense_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 50,
@@ -864,8 +979,12 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a Multi-Layer-Perceptron model."""
         self.create_mlp(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            dense_block_one=dense_block_one,
+            dense_block_two=dense_block_two,
+            dense_block_three=dense_block_three,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -880,8 +999,12 @@ class OptimizePureMulti(PureMulti):
     def create_fit_rnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        rnn_block_one: int = 1,
+        rnn_block_two: int = 1,
+        rnn_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -906,8 +1029,12 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a RNN model."""
         self.create_rnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            rnn_block_one=rnn_block_one,
+            rnn_block_two=rnn_block_two,
+            rnn_block_three=rnn_block_three,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -922,8 +1049,12 @@ class OptimizePureMulti(PureMulti):
     def create_fit_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        lstm_block_one: int = 1,
+        lstm_block_two: int = 1,
+        lstm_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -948,8 +1079,12 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a LSTM model."""
         self.create_lstm(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            lstm_block_one=lstm_block_one,
+            lstm_block_two=lstm_block_two,
+            lstm_block_three=lstm_block_three,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -964,8 +1099,12 @@ class OptimizePureMulti(PureMulti):
     def create_fit_cnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        dense_block_one: int = 1,
         layer_config: dict = {
             "layer0": (
                 64,
@@ -993,8 +1132,12 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a CNN model."""
         self.create_cnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            conv_block_one=conv_block_one,
+            conv_block_two=conv_block_two,
+            dense_block_one=dense_block_one,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1009,8 +1152,12 @@ class OptimizePureMulti(PureMulti):
     def create_fit_gru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        gru_block_one: int = 1,
+        gru_block_two: int = 1,
+        gru_block_three: int = 1,
         layer_config: dict = {
             "layer0": (
                 40,
@@ -1035,8 +1182,12 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a GRU model."""
         self.create_gru(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            gru_block_one=gru_block_one,
+            gru_block_two=gru_block_two,
+            gru_block_three=gru_block_three,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1051,8 +1202,11 @@ class OptimizePureMulti(PureMulti):
     def create_fit_birnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        birnn_block_one: int = 1,
+        rnn_block_one: int = 1,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -1066,8 +1220,11 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a BI-RNN model."""
         self.create_birnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            birnn_block_one=birnn_block_one,
+            rnn_block_one=rnn_block_one,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1082,8 +1239,11 @@ class OptimizePureMulti(PureMulti):
     def create_fit_bilstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        bilstm_block_one: int = 1,
+        lstm_block_one: int = 1,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -1097,8 +1257,11 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a BI-LSTM model."""
         self.create_bilstm(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            bilstm_block_one=bilstm_block_one,
+            lstm_block_one=lstm_block_one,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1113,8 +1276,11 @@ class OptimizePureMulti(PureMulti):
     def create_fit_bigru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        bigru_block_one: int = 1,
+        gru_block_one: int = 1,
         layer_config: dict = {
             "layer0": (50, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0),
@@ -1128,8 +1294,11 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains a BI-GRU model."""
         self.create_bigru(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            bigru_block_one=bigru_block_one,
+            gru_block_one=gru_block_one,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1144,8 +1313,13 @@ class OptimizePureMulti(PureMulti):
     def create_fit_encdec_rnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_rnn_block_one: int = 1,
+        enc_rnn_block_two: int = 1,
+        dec_rnn_block_one: int = 1,
+        dec_rnn_block_two: int = 1,
         layer_config: dict = {
             "layer0": (
                 100,
@@ -1176,8 +1350,13 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains an encoder-decoder RNN model."""
         self.create_encdec_rnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            enc_rnn_block_one=enc_rnn_block_one,
+            enc_rnn_block_two=enc_rnn_block_two,
+            dec_rnn_block_one=dec_rnn_block_one,
+            dec_rnn_block_two=dec_rnn_block_two,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1192,8 +1371,13 @@ class OptimizePureMulti(PureMulti):
     def create_fit_encdec_lstm(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_lstm_block_one: int = 1,
+        enc_lstm_block_two: int = 1,
+        dec_lstm_block_one: int = 1,
+        dec_lstm_block_two: int = 1,
         layer_config: dict = {
             "layer0": (
                 100,
@@ -1224,8 +1408,13 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains an encoder-decoder LSTM model."""
         self.create_encdec_lstm(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            enc_lstm_block_one=enc_lstm_block_one,
+            enc_lstm_block_two=enc_lstm_block_two,
+            dec_lstm_block_one=dec_lstm_block_one,
+            dec_lstm_block_two=dec_lstm_block_two,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1240,8 +1429,13 @@ class OptimizePureMulti(PureMulti):
     def create_fit_encdec_gru(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_gru_block_one: int = 1,
+        enc_gru_block_two: int = 1,
+        dec_gru_block_one: int = 1,
+        dec_gru_block_two: int = 1,
         layer_config: dict = {
             "layer0": (100, "relu", 0.0, 0.0),
             "layer1": (50, "relu", 0.0, 0.0),
@@ -1257,8 +1451,13 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains an encoder-decoder GRU model."""
         self.create_encdec_gru(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            enc_gru_block_one=enc_gru_block_one,
+            enc_gru_block_two=enc_gru_block_two,
+            dec_gru_block_one=dec_gru_block_one,
+            dec_gru_block_two=dec_gru_block_two,
             layer_config=layer_config,
         )
         self.fit_model(
@@ -1273,8 +1472,13 @@ class OptimizePureMulti(PureMulti):
     def create_fit_encdec_cnn(
         self,
         optimizer: str = "adam",
+        optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
+        enc_conv_block_one: int = 1,
+        enc_conv_block_two: int = 1,
+        dec_gru_block_one: int = 1,
+        dec_gru_block_two: int = 1,
         layer_config: dict = {
             "layer0": (64, 1, "relu", 0.0, 0.0),
             "layer1": (32, 1, "relu", 0.0, 0.0),
@@ -1291,8 +1495,13 @@ class OptimizePureMulti(PureMulti):
         """Creates and trains an encoder-decoder CNN model."""
         self.create_encdec_cnn(
             optimizer=optimizer,
+            optimizer_args=optimizer_args,
             loss=loss,
             metrics=metrics,
+            enc_conv_block_one=enc_conv_block_one,
+            enc_conv_block_two=enc_conv_block_two,
+            dec_gru_block_one=dec_gru_block_one,
+            dec_gru_block_two=dec_gru_block_two,
             layer_config=layer_config,
         )
         self.fit_model(

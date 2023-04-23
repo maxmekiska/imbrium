@@ -75,3 +75,9 @@ activation function type
 - added Tensorboard support
 - changed show_performance plot to show loss and metric values
 - added optional dropout and regularization layers to architectures
+
+### 1.3.0
+
+- added depth parameter to architectures
+- added optimizer configuration support
+- added optimizer configuration to seeker
