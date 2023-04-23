@@ -195,8 +195,13 @@ class HybridUni(UniVariateMultiStep):
         """Creates CNN-RNN hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            rnn_block_one (int): Number of RNN layers in first block.
+            rnn_block_two (int): Number of RNN layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-RNN")
@@ -240,8 +245,13 @@ class HybridUni(UniVariateMultiStep):
         """Creates CNN-LSTM hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            lstm_block_one (int): Number of LSTM layers in first block.
+            lstm_block_two (int): Number of LSTM layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-LSTM")
@@ -285,8 +295,13 @@ class HybridUni(UniVariateMultiStep):
         """Creates CNN-GRU hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            gru_block_one (int): Number of GRU layers in first block.
+            gru_block_two (int): Number of GRU layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-GRU")
@@ -330,8 +345,13 @@ class HybridUni(UniVariateMultiStep):
         """Creates CNN-BI-RNN hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            birnn_block_one (int): Number of BI-RNN layers in first block.
+            rnn_block_one (int): Number of RNN layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-BI-RNN")
@@ -375,8 +395,13 @@ class HybridUni(UniVariateMultiStep):
         """Creates CNN-BI-LSTM hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            bilstm_block_one (int): Number of BI-LSTM layers in first block.
+            lstm_block_one (int): Number of LSTM layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-BI-LSTM")
@@ -420,8 +445,13 @@ class HybridUni(UniVariateMultiStep):
         """Creates CNN-BI-GRU hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            bigru_block_one (int): Number of BI-GRU layers in first block.
+            gru_block_one (int): Number of GRU layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-BI-GRU")

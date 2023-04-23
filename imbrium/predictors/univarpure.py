@@ -217,8 +217,12 @@ class PureUni(UniVariateMultiStep):
         """Creates MLP model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            dense_block_one (int): Number of dense layers in first block.
+            dense_block_two (int): Number of dense layers in second block.
+            dense_block_three (int): Number of dense layers in third block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("MLP")
@@ -272,8 +276,12 @@ class PureUni(UniVariateMultiStep):
         """Creates RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            rnn_block_one (int): Number of RNN layers in first block.
+            rnn_block_two (int): Number of RNN layers in second block.
+            rnn_block_three (int): Number of RNN layers in third block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("RNN")
@@ -323,8 +331,12 @@ class PureUni(UniVariateMultiStep):
         """Creates LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            lstm_block_one (int): Number of LSTM layers in first block.
+            lstm_block_two (int): Number of LSTM layers in second block.
+            lstm_block_three (int): Number of LSTM layers in third block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("LSTM")
@@ -377,8 +389,12 @@ class PureUni(UniVariateMultiStep):
         """Creates CNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of CNN layers in first block.
+            conv_block_two (int): Number of CNN layers in second block.
+            dense_block_one (int): Number of dense layers in first block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN")
@@ -428,8 +444,12 @@ class PureUni(UniVariateMultiStep):
         """Creates GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            gru_block_one (int): Number of GRU layers in first block.
+            gru_block_two (int): Number of GRU layers in second block.
+            gru_block_three (int): Number of GRU layers in third block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("GRU")
@@ -467,8 +487,11 @@ class PureUni(UniVariateMultiStep):
         """Creates BI-RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            birnn_block_one (int): Number of BI-RNN layers in first block.
+            rnn_block_one (int): Number of RNN layers in first block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-RNN")
@@ -505,8 +528,11 @@ class PureUni(UniVariateMultiStep):
         """Creates BI-LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            bilstm_block_one (int): Number of BI-LSTM layers in first block.
+            lstm_block_one (int): Number of LSTM layers in first block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-LSTM")
@@ -543,8 +569,11 @@ class PureUni(UniVariateMultiStep):
         """Creates BI-GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            bigru_block_one (int): Number of BI-GRU layers in first block.
+            gru_block_one (int): Number of GRU layers in first block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-GRU")
@@ -600,8 +629,13 @@ class PureUni(UniVariateMultiStep):
         """Creates Encoder-Decoder-RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_rnn_block_one (int): Number of RNN layers in first block.
+            enc_rnn_block_two (int): Number of RNN layers in second block.
+            dec_rnn_block_one (int): Number of RNN layers in first block.
+            dec_rnn_block_two (int): Number of RNN layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder-Decoder-RNN")
@@ -660,8 +694,13 @@ class PureUni(UniVariateMultiStep):
         """Creates Encoder-Decoder-LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_lstm_block_one (int): Number of LSTM layers in first block.
+            enc_lstm_block_two (int): Number of LSTM layers in second block.
+            dec_lstm_block_one (int): Number of LSTM layers in first block.
+            dec_lstm_block_two (int): Number of LSTM layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder-Decoder-LSTM")
@@ -705,8 +744,13 @@ class PureUni(UniVariateMultiStep):
         """Creates Encoder-Decoder-GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_gru_block_one (int): Number of GRU layers in first block.
+            enc_gru_block_two (int): Number of GRU layers in second block.
+            dec_gru_block_one (int): Number of GRU layers in first block.
+            dec_gru_block_two (int): Number of GRU layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder-Decoder-GRU")
@@ -752,8 +796,13 @@ class PureUni(UniVariateMultiStep):
         Encoding via CNN and Decoding via GRU.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_conv_block_one (int): Number of Conv layers in first block.
+            enc_conv_block_two (int): Number of Conv layers in second block.
+            dec_gru_block_one (int): Number of GRU layers in first block.
+            dec_gru_block_two (int): Number of GRU layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder(CNN)-Decoder(GRU)")

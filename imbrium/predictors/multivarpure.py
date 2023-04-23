@@ -222,8 +222,12 @@ class PureMulti(MultiVariateMultiStep):
         """Creates MLP model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            dense_block_one (int): Number of layers in first dense block.
+            dense_block_two (int): Number of layers in second dense block.
+            dense_block_three (int): Number of layers in third dense block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("MLP")
@@ -283,8 +287,12 @@ class PureMulti(MultiVariateMultiStep):
         """Creates RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            rnn_block_one (int): Number of layers in first rnn block.
+            rnn_block_two (int): Number of layers in second rnn block.
+            rnn_block_three (int): Number of layers in third rnn block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("RNN")
@@ -334,8 +342,12 @@ class PureMulti(MultiVariateMultiStep):
         """Creates LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            lstm_block_one (int): Number of layers in first lstm block.
+            lstm_block_two (int): Number of layers in second lstm block.
+            lstm_block_three (int): Number of layers in third lstm block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("LSTM")
@@ -388,8 +400,12 @@ class PureMulti(MultiVariateMultiStep):
         """Creates CNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of layers in first conv block.
+            conv_block_two (int): Number of layers in second conv block.
+            dense_block_one (int): Number of layers in dense block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN")
@@ -439,8 +455,12 @@ class PureMulti(MultiVariateMultiStep):
         """Creates GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            gru_block_one (int): Number of layers in first gru block.
+            gru_block_two (int): Number of layers in second gru block.
+            gru_block_three (int): Number of layers in third gru block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("GRU")
@@ -478,8 +498,11 @@ class PureMulti(MultiVariateMultiStep):
         """Creates BI-RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            birnn_block_one (int): Number of layers in first birnn block.
+            rnn_block_one (int): Number of layers in first rnn block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-RNN")
@@ -516,8 +539,11 @@ class PureMulti(MultiVariateMultiStep):
         """Creates BI-LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            bilstm_block_one (int): Number of layers in first bilstm block.
+            lstm_block_one (int): Number of layers in first lstm block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-LSTM")
@@ -554,8 +580,11 @@ class PureMulti(MultiVariateMultiStep):
         """Creates BI-GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            bigru_block_one (int): Number of layers in first bigru block.
+            gru_block_one (int): Number of layers in first gru block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-GRU")
@@ -611,8 +640,13 @@ class PureMulti(MultiVariateMultiStep):
         """Creates Encoder-Decoder-RNN model model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_rnn_block_one (int): Number of layers in first encoder rnn block.
+            enc_rnn_block_two (int): Number of layers in second encoder rnn block.
+            dec_rnn_block_one (int): Number of layers in first decoder rnn block.
+            dec_rnn_block_two (int): Number of layers in second decoder rnn block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder-Decoder-RNN")
@@ -671,8 +705,13 @@ class PureMulti(MultiVariateMultiStep):
         """Creates Encoder-Decoder-LSTM model model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_lstm_block_one (int): Number of layers in first encoder lstm block.
+            enc_lstm_block_two (int): Number of layers in second encoder lstm block.
+            dec_lstm_block_one (int): Number of layers in first decoder lstm block.
+            dec_lstm_block_two (int): Number of layers in second decoder lstm block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder-Decoder-LSTM")
@@ -716,8 +755,13 @@ class PureMulti(MultiVariateMultiStep):
         """Creates Encoder-Decoder-GRU model model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_gru_block_one (int): Number of layers in first encoder gru block.
+            enc_gru_block_two (int): Number of layers in second encoder gru block.
+            dec_gru_block_one (int): Number of layers in first decoder gru block.
+            dec_gru_block_two (int): Number of layers in second decoder gru block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder-Decoder-GRU")
@@ -763,8 +807,13 @@ class PureMulti(MultiVariateMultiStep):
         Encoding via CNN and Decoding via GRU.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimzer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            enc_conv_block_one (int): Number of layers in first encoder conv block.
+            enc_conv_block_two (int): Number of layers in second encoder conv block.
+            dec_gru_block_one (int): Number of layers in first decoder gru block.
+            dec_gru_block_two (int): Number of layers in second decoder gru block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("Encoder(CNN)-Decoder(GRU)")
