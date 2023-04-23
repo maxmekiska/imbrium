@@ -98,8 +98,15 @@ Trained models can furthermore be saved or loaded if the user wishes to do so.
 
 Attention: Typing has been left in the below examples to ease the configuration readability.
 
+#### Version updates:
+
+##### Version >= 1.2.0
+
 Version 1.2.0 started supporting tensor board dashboards: https://www.tensorflow.org/tensorboard/get_started
 
+##### Version >= 1.3.0
+
+Version 1.3.0 started supporting adjustable layer depth configurations for all architectures. If you wish to adjust the layer depth, please make sure to include a custom layer_config accounting for the correct number of layers. The last layer cannot contain a dropout parameter -> tuple needs to be of length 3: (neurons, activation, regularization).
 
 ### `Univariate Models`:
 
