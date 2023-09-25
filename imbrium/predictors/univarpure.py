@@ -1,16 +1,10 @@
 import datetime
 import os
 
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from numpy import array, empty, reshape
+from keras_core.callbacks import EarlyStopping, TensorBoard
+from keras_core.saving import load_model
+from numpy import array
 from pandas import DataFrame
-from tensorflow import keras
-from tensorflow.keras import optimizers
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
-                                     Dropout, Flatten, MaxPooling1D,
-                                     RepeatVector, SimpleRNN, TimeDistributed)
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
@@ -19,7 +13,7 @@ from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_standard_uni
 
 
-class PureUni(UniVariateMultiStep):
+class BasePureUni(UniVariateMultiStep):
     """Implements neural network based univariate multipstep predictors.
 
     Methods
@@ -199,19 +193,25 @@ class PureUni(UniVariateMultiStep):
         dense_block_two: int = 1,
         dense_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                25,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     ):
         """Creates MLP model.
@@ -594,238 +594,6 @@ class PureUni(UniVariateMultiStep):
             output_shape=self.input_y.shape[1],
         )
 
-    def create_encdec_rnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_rnn_block_one: int = 1,
-        enc_rnn_block_two: int = 1,
-        dec_rnn_block_one: int = 1,
-        dec_rnn_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-    ):
-        """Creates Encoder-Decoder-RNN model.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            optimizer_args (dict): Arguments for optimizer.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            enc_rnn_block_one (int): Number of RNN layers in first block.
-            enc_rnn_block_two (int): Number of RNN layers in second block.
-            dec_rnn_block_one (int): Number of RNN layers in first block.
-            dec_rnn_block_two (int): Number of RNN layers in second block.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder-Decoder-RNN")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_rnn(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            layer_config=layer_config,
-            enc_rnn_block_one=enc_rnn_block_one,
-            enc_rnn_block_two=enc_rnn_block_two,
-            dec_rnn_block_one=dec_rnn_block_one,
-            dec_rnn_block_two=dec_rnn_block_two,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
-            repeat=self.input_y.shape[1],
-        )
-
-    def create_encdec_lstm(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_lstm_block_one=1,
-        enc_lstm_block_two=1,
-        dec_lstm_block_one=1,
-        dec_lstm_block_two=1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-    ):
-        """Creates Encoder-Decoder-LSTM model.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            optimizer_args (dict): Arguments for optimizer.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            enc_lstm_block_one (int): Number of LSTM layers in first block.
-            enc_lstm_block_two (int): Number of LSTM layers in second block.
-            dec_lstm_block_one (int): Number of LSTM layers in first block.
-            dec_lstm_block_two (int): Number of LSTM layers in second block.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder-Decoder-LSTM")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_lstm(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_lstm_block_one=enc_lstm_block_one,
-            enc_lstm_block_two=enc_lstm_block_two,
-            dec_lstm_block_one=dec_lstm_block_one,
-            dec_lstm_block_two=dec_lstm_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
-            repeat=self.input_y.shape[1],
-        )
-
-    def create_encdec_gru(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_gru_block_one=1,
-        enc_gru_block_two=1,
-        dec_gru_block_one=1,
-        dec_gru_block_two=1,
-        layer_config: dict = {
-            "layer0": (100, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (100, "relu", 0.0),
-        },
-    ):
-        """Creates Encoder-Decoder-GRU model.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            optimizer_args (dict): Arguments for optimizer.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            enc_gru_block_one (int): Number of GRU layers in first block.
-            enc_gru_block_two (int): Number of GRU layers in second block.
-            dec_gru_block_one (int): Number of GRU layers in first block.
-            dec_gru_block_two (int): Number of GRU layers in second block.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder-Decoder-GRU")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_gru(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_gru_block_one=enc_gru_block_one,
-            enc_gru_block_two=enc_gru_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
-            repeat=self.input_y.shape[1],
-        )
-
-    def create_encdec_cnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_conv_block_one=1,
-        enc_conv_block_two=1,
-        dec_gru_block_one=1,
-        dec_gru_block_two=1,
-        layer_config: dict = {
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (100, "relu", 0.0),
-        },
-    ):
-        """Creates Encoder-Decoder-CNN model.
-        Encoding via CNN and Decoding via GRU.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            optimizer_args (dict): Arguments for optimizer.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            enc_conv_block_one (int): Number of Conv layers in first block.
-            enc_conv_block_two (int): Number of Conv layers in second block.
-            dec_gru_block_one (int): Number of GRU layers in first block.
-            dec_gru_block_two (int): Number of GRU layers in second block.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder(CNN)-Decoder(GRU)")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_cnn(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_conv_block_one=enc_conv_block_one,
-            enc_conv_block_two=enc_conv_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=self.input_x.shape[2],
-            repeat=self.input_y.shape[1],
-        )
-
     def fit_model(
         self,
         epochs: int,
@@ -844,7 +612,7 @@ class PureUni(UniVariateMultiStep):
         """
         if callback_setting == {}:
             if board == True:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -859,7 +627,7 @@ class PureUni(UniVariateMultiStep):
                     callbacks=[callback_board],
                 )
             else:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -875,7 +643,7 @@ class PureUni(UniVariateMultiStep):
 
         else:
             if board == True:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -906,43 +674,9 @@ class PureUni(UniVariateMultiStep):
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self, metric_name: str = ""):
-        """Plots model loss and a given metric over time."""
-        information = self.details
-
-        plt.style.use("dark_background")
-
-        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-
-        if metric_name == "":
-
-            plt.plot(information.history["loss"], color=colors[0])
-            plt.plot(information.history["val_loss"], color=colors[1])
-            plt.title(self.model_id + " Model Loss")
-            plt.ylabel(self.loss)
-            plt.xlabel("Epoch")
-            plt.legend(["Train", "Test"], loc="upper right")
-            plt.tight_layout()
-            plt.show()
-        else:
-            plt.plot(information.history["loss"], color=colors[0])
-            plt.plot(information.history["val_loss"], color=colors[1])
-            plt.plot(information.history[metric_name], color=colors[2])
-            plt.plot(information.history["val_" + metric_name], color=colors[3])
-            plt.title(self.model_id + " Model Performance")
-            plt.ylabel(metric_name)
-            plt.xlabel("Epoch")
-            plt.legend(
-                [
-                    "Train Loss",
-                    "Test Loss",
-                    "Train " + metric_name,
-                    "Test " + metric_name,
-                ],
-                loc="upper right",
-            )
-            plt.tight_layout()
-            plt.show()
+    def show_performance(self):
+        """Returns performance details."""
+        return self.details
 
     def predict(self, data: array) -> DataFrame:
         """Takes in a sequence of values and outputs a forecast.
@@ -971,22 +705,22 @@ class PureUni(UniVariateMultiStep):
 
         return DataFrame(y_pred, columns=[f"{self.model_id}"])
 
-    def save_model(self, absolute_path: str = CURRENT_PATH):
+    def freeze(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.
         Parameters:
            absolute_path (str): Path to save model to.
         """
         self.model.save(absolute_path)
 
-    def load_model(self, location: str):
+    def retrieve(self, location: str):
         """Load a keras model from the path specified.
         Parameters:
             location (str): Path of keras model location
         """
-        self.model = keras.models.load_model(location)
+        self.model = load_model(location)
 
 
-class OptimizePureUni(PureUni):
+class PureUni(BasePureUni):
     def create_fit_mlp(
         self,
         optimizer: str = "adam",
@@ -997,19 +731,25 @@ class OptimizePureUni(PureUni):
         dense_block_two: int = 1,
         dense_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                25,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1351,205 +1091,5 @@ class OptimizePureUni(PureUni):
         )
         return self.details.history[metrics][-1]
 
-    def create_fit_encdec_rnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_rnn_block_one: int = 1,
-        enc_rnn_block_two: int = 1,
-        dec_rnn_block_one: int = 1,
-        dec_rnn_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains a Encoder-Decoder RNN model."""
-        self.create_encdec_rnn(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_rnn_block_one=enc_rnn_block_one,
-            enc_rnn_block_two=enc_rnn_block_two,
-            dec_rnn_block_one=dec_rnn_block_one,
-            dec_rnn_block_two=dec_rnn_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
 
-    def create_fit_encdec_lstm(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_lstm_block_one: int = 1,
-        enc_lstm_block_two: int = 1,
-        dec_lstm_block_one: int = 1,
-        dec_lstm_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains a Encoder-Decoder LSTM model."""
-        self.create_encdec_lstm(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_lstm_block_one=enc_lstm_block_one,
-            enc_lstm_block_two=enc_lstm_block_two,
-            dec_lstm_block_one=dec_lstm_block_one,
-            dec_lstm_block_two=dec_lstm_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
-
-    def create_fit_encdec_gru(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_gru_block_one: int = 1,
-        enc_gru_block_two: int = 1,
-        dec_gru_block_one: int = 1,
-        dec_gru_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (100, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (100, "relu", 0.0),
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains a Encoder-Decoder GRU model."""
-        self.create_encdec_gru(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_gru_block_one=enc_gru_block_one,
-            enc_gru_block_two=enc_gru_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
-
-    def create_fit_encdec_cnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_conv_block_one: int = 1,
-        enc_conv_block_two: int = 1,
-        dec_gru_block_one: int = 1,
-        dec_gru_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (100, "relu", 0.0),
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains a Encoder-Decoder CNN model."""
-        self.create_encdec_cnn(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_conv_block_one=enc_conv_block_one,
-            enc_conv_block_two=enc_conv_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
+__all__ = ["PureUni"]

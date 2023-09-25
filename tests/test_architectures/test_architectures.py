@@ -1,8 +1,9 @@
+import keras_core
 import pytest
 
 from imbrium.architectures.models import *
 
-keras_obj = type(tf.keras.Sequential())
+keras_obj = type(keras_core.Sequential())
 
 
 def test_mlp():
@@ -16,9 +17,29 @@ def test_mlp():
                 dense_block_two=1,
                 dense_block_three=1,
                 layer_config={
-                    "layer0": (50, "relu", 0.0, 0.0),
-                    "layer1": (25, "relu", 0.0, 0.0),
-                    "layer2": (25, "relu", 0.0),
+                    "layer0": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer1": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer2": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                        }
+                    },
                 },
                 input_shape=3,
                 output_shape=3,
@@ -178,111 +199,6 @@ def test_bigru():
                 },
                 input_shape=(3, 3),
                 output_shape=3,
-            )
-        )
-        == keras_obj
-    )
-
-
-def test_encdec_rnn():
-    assert (
-        type(
-            encdec_rnn(
-                optimizer="adam",
-                loss="mean_squared_error",
-                metrics="mean_squared_error",
-                enc_rnn_block_one=1,
-                enc_rnn_block_two=1,
-                dec_rnn_block_one=1,
-                dec_rnn_block_two=1,
-                layer_config={
-                    "layer0": (100, "relu", 0.0, 0.0),
-                    "layer1": (50, "relu", 0.0, 0.0),
-                    "layer2": (50, "relu", 0.0, 0.0),
-                    "layer3": (100, "relu", 0.0),
-                },
-                input_shape=(3, 3),
-                output_shape=3,
-                repeat=3,
-            )
-        )
-        == keras_obj
-    )
-
-
-def test_encdec_lstm():
-    assert (
-        type(
-            encdec_lstm(
-                optimizer="adam",
-                loss="mean_squared_error",
-                metrics="mean_squared_error",
-                enc_lstm_block_one=1,
-                enc_lstm_block_two=1,
-                dec_lstm_block_one=1,
-                dec_lstm_block_two=1,
-                layer_config={
-                    "layer0": (100, "relu", 0.0, 0.0),
-                    "layer1": (50, "relu", 0.0, 0.0),
-                    "layer2": (50, "relu", 0.0, 0.0),
-                    "layer3": (100, "relu", 0.0),
-                },
-                input_shape=(3, 3),
-                output_shape=3,
-                repeat=3,
-            )
-        )
-        == keras_obj
-    )
-
-
-def test_encdec_cnn():
-    assert (
-        type(
-            encdec_cnn(
-                optimizer="adam",
-                loss="mean_squared_error",
-                enc_conv_block_one=1,
-                enc_conv_block_two=1,
-                dec_gru_block_one=1,
-                dec_gru_block_two=1,
-                metrics="mean_squared_error",
-                layer_config={
-                    "layer0": (64, 1, "relu", 0.0, 0.0),
-                    "layer1": (32, 1, "relu", 0.0, 0.0),
-                    "layer2": (2),
-                    "layer3": (50, "relu", 0.0, 0.0),
-                    "layer4": (100, "relu", 0.0),
-                },
-                input_shape=(3, 3),
-                output_shape=3,
-                repeat=3,
-            )
-        )
-        == keras_obj
-    )
-
-
-def test_encdec_gru():
-    assert (
-        type(
-            encdec_gru(
-                optimizer="adam",
-                loss="mean_squared_error",
-                metrics="mean_squared_error",
-                enc_gru_block_one=1,
-                enc_gru_block_two=1,
-                dec_gru_block_one=1,
-                dec_gru_block_two=1,
-                layer_config={
-                    "layer0": (100, "relu", 0.0, 0.0),
-                    "layer1": (50, "relu", 0.0, 0.0),
-                    "layer2": (50, "relu", 0.0, 0.0),
-                    "layer3": (100, "relu", 0.0),
-                },
-                input_shape=(3, 3),
-                output_shape=3,
-                repeat=3,
             )
         )
         == keras_obj

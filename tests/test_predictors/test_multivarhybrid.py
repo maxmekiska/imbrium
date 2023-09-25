@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from imbrium.predictors.multivarhybrid import *
+from imbrium.predictors.multivarhybrid import HybridMulti
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
 data_small = data[:20]
@@ -47,7 +47,7 @@ test1 = HybridMulti(
 )
 
 
-test1 = OptimizeHybridMulti(
+test1 = HybridMulti(
     1,
     5,
     5,

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from imbrium.predictors.univarhybrid import *
+from imbrium.predictors.univarhybrid import HybridUni
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
 data = data["target"]
@@ -10,7 +10,7 @@ data_small = data[:20]
 
 test0 = HybridUni(2, 10, 3, data=data, scale="standard")
 test1 = HybridUni(1, 5, 1, data=data, scale="standard")
-test2 = OptimizeHybridUni(5, 10, 2, data=data_small, scale="standard")
+test2 = HybridUni(5, 10, 2, data=data_small, scale="standard")
 
 test0.create_cnnlstm(
     optimizer="adam",

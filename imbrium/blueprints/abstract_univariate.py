@@ -80,9 +80,9 @@ class UniVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def save_model(self, absolute_path: str):
+    def freeze(self, absolute_path: str):
         pass
 
     @abstractmethod
-    def load_model(self, location: str):
+    def retrieve(self, location: str):
         pass
