@@ -258,19 +258,25 @@ class BasePureUni(UniVariateMultiStep):
         rnn_block_two: int = 1,
         rnn_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     ):
         """Creates RNN model.
@@ -313,19 +319,25 @@ class BasePureUni(UniVariateMultiStep):
         lstm_block_two: int = 1,
         lstm_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     ):
         """Creates LSTM model.
@@ -787,19 +799,25 @@ class PureUni(BasePureUni):
         rnn_block_three: int = 1,
         metrics: str = "mean_squared_error",
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -837,19 +855,25 @@ class PureUni(BasePureUni):
         lstm_block_two: int = 1,
         lstm_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,

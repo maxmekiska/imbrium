@@ -68,9 +68,25 @@ test0.create_lstm(
     loss="mean_squared_error",
     metrics="mean_squared_error",
     layer_config={
-        "layer0": (40, "relu", 0.0, 0.0),
-        "layer1": (50, "relu", 0.0, 0.0),
-        "layer2": (50, "relu", 0.0),
+        "layer0": {
+            "config": {
+                "neurons": 50,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer1": {
+            "config": {
+                "neurons": 50,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer2": {
+            "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+        },
     },
 )
 
@@ -181,9 +197,25 @@ def test_rnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     )
     assert test1.get_model_id == "RNN"
@@ -198,9 +230,25 @@ def test_create_lstm():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     )
     assert test1.get_model_id == "LSTM"

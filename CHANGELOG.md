@@ -81,3 +81,7 @@ activation function type
 - added depth parameter to architectures
 - added optimizer configuration support
 - added optimizer configuration to seeker
+
+### 2.0.0
+
+- in progress

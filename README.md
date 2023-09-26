@@ -29,16 +29,25 @@ Time Series Forecasting.
 
 Imbrium is a deep learning library that specializes in time series forecasting. Its primary objective is to provide a user-friendly repository of deep learning architectures for this purpose. The focus is on simplifying the process of creating and applying these architectures, with the goal of allowing users to create complex architectures without having to build them from scratch. Instead, the emphasis shifts to high-level configuration of the architectures.
 
-## Contributions
-
-The development and improvement of Imbrium is an ongoing process, and contributions from the community are greatly appreciated. New architectures, in particular, can help Imbrium achieve its goals more quickly. While Imbrium is currently based on Keras, it is open to being extended to other machine learning frameworks such as Pytorch.
-
-Recent research in the field of time series forecasting has shown the potential of graph-based neural networks. If you have experience in this area and would like to contribute architectures to Imbrium, your contributions would be most welcomed.
 
 ## imbrium Summary
 
 Imbrium is designed to simplify the application of deep learning models for time series forecasting. The library offers a variety of pre-built architectures, each with a fixed number of layers. However, the user retains full control over the configuration of each layer, including the number of neurons, the type of activation function, loss function, optimizer, and metrics applied. This allows for the flexibility to adapt the architecture to the specific needs of the forecast task at hand. Imbrium also offers a user-friendly interface for training and evaluating these models, making it easy to quickly iterate and test different configurations.
 
+## imbrium 2.0.0
+
+- adapting `keras_core`
+- removing internal hyperparameter tuning
+- removing encoder-decoder architectures
+- improve layer configuration
+- overall lighten the library
+
+STATUS: IN PROGRESS
+
+## LEGACY: imbrium versions <= v.1.3.0
+<details>
+  <summary>Expand</summary>
+  <br>
 
 The library differentiates between two
 modes:
@@ -1249,5 +1258,8 @@ lstm-models-for-time-series-forecasting/.
 Brwonlee, J., 2018c. How to develop multilayer perceptron models for time series forecasting [Online]. Available from:
 https://machinelearningmastery.com/how-to-develop-multilayer-
 perceptron-models-for-time-series-forecasting/.
+
+</details>
+
 
 </details>
