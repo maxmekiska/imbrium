@@ -373,22 +373,37 @@ class BasePureMulti(MultiVariateMultiStep):
         conv_block_two: int = 1,
         dense_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (
-                64,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer1": (
-                32,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer2": (2),  # pooling
-            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN model.
@@ -431,19 +446,29 @@ class BasePureMulti(MultiVariateMultiStep):
         gru_block_two: int = 1,
         gru_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates GRU model.
@@ -901,22 +926,37 @@ class PureMulti(BasePureMulti):
         conv_block_two: int = 1,
         dense_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (
-                64,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer1": (
-                32,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer2": (2),  # pooling
-            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -954,19 +994,29 @@ class PureMulti(BasePureMulti):
         gru_block_two: int = 1,
         gru_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,

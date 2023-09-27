@@ -146,10 +146,37 @@ def test_cnn():
                 conv_block_two=1,
                 dense_block_one=1,
                 layer_config={
-                    "layer0": (64, 1, "relu", 0.0, 0.0),
-                    "layer1": (32, 1, "relu", 0.0, 0.0),
-                    "layer2": (2),
-                    "layer3": (50, "relu", 0.0),
+                    "layer0": {
+                        "config": {
+                            "filters": 64,
+                            "kernel_size": 1,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer1": {
+                        "config": {
+                            "filters": 32,
+                            "kernel_size": 1,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer2": {
+                        "config": {
+                            "pool_size": 2,
+                        }
+                    },
+                    "layer3": {
+                        "config": {
+                            "neurons": 32,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
                 },
                 input_shape=(3, 3),
                 output_shape=3,
@@ -170,9 +197,29 @@ def test_gru():
                 gru_block_two=1,
                 gru_block_three=1,
                 layer_config={
-                    "layer0": (50, "relu", 0.0, 0.0),
-                    "layer1": (25, "relu", 0.0, 0.0),
-                    "layer2": (25, "relu", 0.0),
+                    "layer0": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer1": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer2": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                        }
+                    },
                 },
                 input_shape=(3, 3),
                 output_shape=3,
