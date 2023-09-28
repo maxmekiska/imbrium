@@ -465,26 +465,29 @@ def birnn(
         model.add(
             Bidirectional(
                 SimpleRNN(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     return_sequences=True,
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 ),
-                # input_shape=input_shape,
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for j in range(rnn_block_one):
         if j == rnn_block_one - 1:
             model.add(
                 SimpleRNN(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
@@ -492,14 +495,16 @@ def birnn(
             model.add(
                 SimpleRNN(
                     layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     return_sequences=True,
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
-            model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+            model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
             layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=[metrics])
@@ -536,41 +541,46 @@ def bilstm(
         model.add(
             Bidirectional(
                 LSTM(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     return_sequences=True,
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 ),
-                # input_shape=input_shape,
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for j in range(lstm_block_one):
         if j == lstm_block_one - 1:
             model.add(
                 LSTM(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
         else:
             model.add(
                 LSTM(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                     return_sequences=True,
                 )
             )
-            model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+            model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
             layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=[metrics])

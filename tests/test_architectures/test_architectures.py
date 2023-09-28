@@ -239,8 +239,21 @@ def test_birnn():
                 birnn_block_one=1,
                 rnn_block_one=1,
                 layer_config={
-                    "layer0": (50, "relu", 0.0, 0.0),
-                    "layer1": (50, "relu", 0.0),
+                    "layer0": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer1": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                        }
+                    },
                 },
                 input_shape=(3, 3),
                 output_shape=3,
@@ -260,8 +273,21 @@ def test_bilstm():
                 bilstm_block_one=1,
                 lstm_block_one=1,
                 layer_config={
-                    "layer0": (50, "relu", 0.0, 0.0),
-                    "layer1": (50, "relu", 0.0),
+                    "layer0": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                            "dropout": 0.0,
+                        }
+                    },
+                    "layer1": {
+                        "config": {
+                            "neurons": 50,
+                            "activation": "relu",
+                            "regularization": 0.0,
+                        }
+                    },
                 },
                 input_shape=(3, 3),
                 output_shape=3,

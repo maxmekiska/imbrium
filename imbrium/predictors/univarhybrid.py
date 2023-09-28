@@ -14,73 +14,7 @@ from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
 
 
 class BaseHybridUni(UniVariateMultiStep):
-    """Implements neural network based univariate multipstep hybrid predictors.
-
-    Methods
-    -------
-    set_model_id(self, name: str):
-        Setter method to change model id name.
-    get_model_id(self) -> array:
-        Getter method to retrieve model id used.
-    get_X_input(self) -> array:
-        Getter method to retrieve transformed X input - training.
-    get_X_input_shape(self) -> tuple:
-        Getter method to retrieve transformed X shape.
-    get_y_input(self) -> array:
-        Getter method to retrieve transformed y input - target.
-    get_y_input_shape(self) -> array:
-        Getter method to retrieve transformed y input shape.
-    get_optimizer(self) -> str:
-        Getter method to retrieve model optimizer used.
-    get_loss(self) -> str:
-        Getter method to retrieve used model loss.
-    get_metrics(self) -> str:
-        Getter method to retrieve model evaluation metrics used.
-    create_cnnrnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN-RNN structure.
-    create_cnnlstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN-LSTM structure.
-    create_cnngru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN-GRU structure.
-    create_cnnbirnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Buidls CNN bidirectional RNN structure.
-    create_cnnbilstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN bidirectional LSTM structure.
-    create_cnnbigru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN bidirectional GRU structure.
-    fit_model(self, epochs: int, show_progress: int = 1,
-    validation_split: float = 0.20,
-    **callback_setting: dict):
-        Fitting model onto provided data.
-    model_blueprint(self):
-        Print blueprint of layer structure.
-    show_performance(self):
-        Evaluate and plot model performance.
-    predict(self, data: array):
-        Takes in input data and outputs model forecasts.
-    save_model(self, absolute_path: str = CURRENT_PATH):
-        Saves current Keras model to current directory.
-    load_model(self, location: str):
-        Load model from location specified.
-    """
+    """Implements neural network based univariate multipstep hybrid predictors."""
 
     CURRENT_PATH = os.getcwd()
 

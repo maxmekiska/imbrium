@@ -345,9 +345,21 @@ def test_create_birnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "BI-RNN"
@@ -362,9 +374,21 @@ def test_create_bilstm():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "BI-LSTM"

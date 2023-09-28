@@ -14,100 +14,7 @@ from imbrium.utils.transformer import data_prep_uni, sequence_prep_standard_uni
 
 
 class BasePureUni(UniVariateMultiStep):
-    """Implements neural network based univariate multipstep predictors.
-
-    Methods
-    -------
-    set_model_id(self, name: str):
-        Setter method to change model id name.
-    get_model_id(self) -> array:
-        Getter method to retrieve model id used.
-    get_X_input(self) -> array:
-        Getter method to retrieve transformed X input - training.
-    get_X_input_shape(self) -> tuple:
-        Getter method to retrieve transformed X shape.
-    get_y_input(self) -> array:
-        Getter method to retrieve transformed y input - target.
-    get_y_input_shape(self) -> array:
-        Getter method to retrieve transformed y input shape.
-    get_optimizer(self) -> str:
-        Getter method to retrieve model optimizer used.
-    get_loss(self) -> str:
-        Getter method to retrieve used model loss.
-    get_metrics(self) -> str:
-        Getter method to retrieve model evaluation metrics used.
-    create_mlp(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
-    'layer2': (25, 'relu')}):
-        Builds MLP structure.
-    create_rnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-    'layer2': (50, 'relu')}):
-        Builds RNN structure.
-    create_lstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-    'layer2': (50, 'relu')}):
-        Builds LSTM structure.
-    create_cnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu')}):
-        Builds CNN structure.
-    create_gru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-    'layer2': (50, 'relu')}):
-        Builds GRU structure.
-    create_birnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-        Builds bidirectional RNN structure.
-    create_bilstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-        Builds bidirectional LSTM structure.
-    create_bigru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-        Builds bidirectional GRU structure.
-    create_encdec_rnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-    'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-        Builds encoder decoder RNN structure.
-    create_encdec_lstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-    'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-        Builds encoder decoder LSTM structure.
-    create_encdec_gru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-    'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-        Builds encoder decoder GRU structure.
-    create_encdec_cnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')}):
-        Builds encoder decoder CNN structure.
-    fit_model(self, epochs: int, show_progress: int = 1,
-    validation_split: float = 0.20,
-    **callback_setting: dict):
-        Fitting model onto provided data.
-    model_blueprint(self):
-        Print blueprint of layer structure.
-    show_performance(self):
-        Evaluate and plot model performance.
-    predict(self, data: array):
-        Takes in input data and outputs model forecasts.
-    save_model(self, absolute_path: str = CURRENT_PATH):
-        Saves current Keras model to current directory.
-    load_model(self, location: str):
-        Load model from location specified.
-    """
+    """Implements neural network based univariate multipstep predictors."""
 
     CURRENT_PATH = os.getcwd()
 
@@ -517,9 +424,22 @@ class BasePureUni(UniVariateMultiStep):
         birnn_block_one: int = 1,
         rnn_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
-        },  # (neurons, activation, regularization, dropout)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
+        },
     ):
         """Creates BI-RNN model.
         Parameters:
@@ -558,8 +478,21 @@ class BasePureUni(UniVariateMultiStep):
         bilstm_block_one: int = 1,
         lstm_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates BI-LSTM model.
@@ -1063,9 +996,22 @@ class PureUni(BasePureUni):
         birnn_block_one: int = 1,
         rnn_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
-        },  # (neurons, activation, regularization, dropout)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
+        },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
@@ -1100,8 +1046,21 @@ class PureUni(BasePureUni):
         bilstm_block_one: int = 1,
         lstm_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
