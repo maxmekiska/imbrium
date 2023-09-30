@@ -532,8 +532,21 @@ class BasePureUni(UniVariateMultiStep):
         bigru_block_one: int = 1,
         gru_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates BI-GRU model.
@@ -1096,8 +1109,21 @@ class PureUni(BasePureUni):
         bigru_block_one: int = 1,
         gru_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
