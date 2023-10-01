@@ -1058,35 +1058,46 @@ def cnnbirnn(
         model.add(
             TimeDistributed(
                 Conv1D(
-                    filters=layer_config[f"layer{layer_num}"][0],
-                    kernel_size=layer_config[f"layer{layer_num}"][1],
-                    activation=layer_config[f"layer{layer_num}"][2],
+                    filters=layer_config[f"layer{layer_num}"]["config"]["filters"],
+                    kernel_size=layer_config[f"layer{layer_num}"]["config"][
+                        "kernel_size"
+                    ],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][3]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 ),
-                # input_shape=input_shape,
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][4]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for j in range(conv_block_two):
         model.add(
             TimeDistributed(
                 Conv1D(
-                    filters=layer_config[f"layer{layer_num}"][0],
-                    kernel_size=layer_config[f"layer{layer_num}"][1],
-                    activation=layer_config[f"layer{layer_num}"][2],
+                    filters=layer_config[f"layer{layer_num}"]["config"]["filters"],
+                    kernel_size=layer_config[f"layer{layer_num}"]["config"][
+                        "kernel_size"
+                    ],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][3]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][4]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     model.add(
-        TimeDistributed(MaxPooling1D(pool_size=layer_config[f"layer{layer_num}"]))
+        TimeDistributed(
+            MaxPooling1D(
+                pool_size=layer_config[f"layer{layer_num}"]["config"]["pool_size"]
+            )
+        )
     )
     model.add(TimeDistributed(Flatten()))
     layer_num += 1
@@ -1094,40 +1105,46 @@ def cnnbirnn(
         model.add(
             Bidirectional(
                 SimpleRNN(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                     return_sequences=True,
                 )
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for l in range(rnn_block_one):
         if l == rnn_block_one - 1:
             model.add(
                 SimpleRNN(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
         else:
             model.add(
                 SimpleRNN(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                     return_sequences=True,
                 )
             )
-            model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+            model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
             layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=[metrics])
@@ -1166,35 +1183,46 @@ def cnnbilstm(
         model.add(
             TimeDistributed(
                 Conv1D(
-                    filters=layer_config[f"layer{layer_num}"][0],
-                    kernel_size=layer_config[f"layer{layer_num}"][1],
-                    activation=layer_config[f"layer{layer_num}"][2],
+                    filters=layer_config[f"layer{layer_num}"]["config"]["filters"],
+                    kernel_size=layer_config[f"layer{layer_num}"]["config"][
+                        "kernel_size"
+                    ],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][3]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 ),
-                # input_shape=input_shape,
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][4]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for j in range(conv_block_two):
         model.add(
             TimeDistributed(
                 Conv1D(
-                    filters=layer_config[f"layer{layer_num}"][0],
-                    kernel_size=layer_config[f"layer{layer_num}"][1],
-                    activation=layer_config[f"layer{layer_num}"][2],
+                    filters=layer_config[f"layer{layer_num}"]["config"]["filters"],
+                    kernel_size=layer_config[f"layer{layer_num}"]["config"][
+                        "kernel_size"
+                    ],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][3]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][4]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     model.add(
-        TimeDistributed(MaxPooling1D(pool_size=layer_config[f"layer{layer_num}"]))
+        TimeDistributed(
+            MaxPooling1D(
+                pool_size=layer_config[f"layer{layer_num}"]["config"]["pool_size"]
+            )
+        )
     )
     model.add(TimeDistributed(Flatten()))
     layer_num += 1
@@ -1202,40 +1230,46 @@ def cnnbilstm(
         model.add(
             Bidirectional(
                 LSTM(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                     return_sequences=True,
                 )
             )
         )
-        model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for k in range(lstm_block_one):
         if k == lstm_block_one - 1:
             model.add(
                 LSTM(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                 )
             )
         else:
             model.add(
                 LSTM(
-                    layer_config[f"layer{layer_num}"][0],
-                    activation=layer_config[f"layer{layer_num}"][1],
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
                     kernel_regularizer=regularizers.L2(
-                        layer_config[f"layer{layer_num}"][2]
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
                     ),
                     return_sequences=True,
                 )
             )
-            model.add(Dropout(layer_config[f"layer{layer_num}"][3]))
+            model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
             layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=[metrics])
@@ -1274,64 +1308,93 @@ def cnnbigru(
         model.add(
             TimeDistributed(
                 Conv1D(
-                    filters=layer_config["layer0"][0],
-                    kernel_size=layer_config["layer0"][1],
-                    activation=layer_config["layer0"][2],
-                    kernel_regularizer=regularizers.L2(layer_config["layer0"][3]),
+                    filters=layer_config[f"layer{layer_num}"]["config"]["filters"],
+                    kernel_size=layer_config[f"layer{layer_num}"]["config"][
+                        "kernel_size"
+                    ],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
+                    ),
                 ),
-                # input_shape=input_shape,
             )
         )
-        model.add(Dropout(layer_config["layer0"][4]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for j in range(conv_block_two):
         model.add(
             TimeDistributed(
                 Conv1D(
-                    filters=layer_config["layer1"][0],
-                    kernel_size=layer_config["layer1"][1],
-                    activation=layer_config["layer1"][2],
-                    kernel_regularizer=regularizers.L2(layer_config["layer1"][3]),
+                    filters=layer_config[f"layer{layer_num}"]["config"]["filters"],
+                    kernel_size=layer_config[f"layer{layer_num}"]["config"][
+                        "kernel_size"
+                    ],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
+                    ),
                 )
             )
         )
-        model.add(Dropout(layer_config["layer1"][4]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
-    model.add(TimeDistributed(MaxPooling1D(pool_size=layer_config["layer2"])))
+    model.add(
+        TimeDistributed(
+            MaxPooling1D(
+                pool_size=layer_config[f"layer{layer_num}"]["config"]["pool_size"]
+            )
+        )
+    )
     model.add(TimeDistributed(Flatten()))
     layer_num += 1
     for k in range(bigru_block_one):
         model.add(
             Bidirectional(
                 GRU(
-                    layer_config["layer3"][0],
-                    activation=layer_config["layer3"][1],
-                    kernel_regularizer=regularizers.L2(layer_config["layer3"][2]),
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
+                    ),
                     return_sequences=True,
                 )
             )
         )
-        model.add(Dropout(layer_config["layer3"][3]))
+        model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
         layer_num += 1
     for l in range(gru_block_one):
         if l == gru_block_one - 1:
             model.add(
                 GRU(
-                    layer_config["layer4"][0],
-                    activation=layer_config["layer4"][1],
-                    kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
+                    ),
                 )
             )
         else:
             model.add(
                 GRU(
-                    layer_config["layer4"][0],
-                    activation=layer_config["layer4"][1],
-                    kernel_regularizer=regularizers.L2(layer_config["layer4"][2]),
+                    layer_config[f"layer{layer_num}"]["config"]["neurons"],
+                    activation=layer_config[f"layer{layer_num}"]["config"][
+                        "activation"
+                    ],
+                    kernel_regularizer=regularizers.L2(
+                        layer_config[f"layer{layer_num}"]["config"]["regularization"]
+                    ),
                     return_sequences=True,
                 )
             )
-            model.add(Dropout(layer_config["layer4"][3]))
+            model.add(Dropout(layer_config[f"layer{layer_num}"]["config"]["dropout"]))
             layer_num += 1
     model.add(Dense(output_shape))
     model.compile(optimizer=optimizer, loss=loss, metrics=[metrics])
