@@ -11,10 +11,10 @@ def data_prep_uni(data: DataFrame, scaler: object) -> array:
     """
     data = array(data).reshape(-1, 1)
 
-    scaler.fit(data)
-    scaled = scaler.transform(data)
+    scaler.fit(data)  # comment
+    scaled = scaler.transform(data)  # comment
 
-    return scaled
+    return scaled  # data
 
 
 def data_prep_multi(data: DataFrame, features: list, scaler: object) -> array:
@@ -29,11 +29,12 @@ def data_prep_multi(data: DataFrame, features: list, scaler: object) -> array:
 
     target = array(data.iloc[:, 0])
 
-    scaler.fit(data.iloc[:, 1:])
-    scaled = scaler.transform(data.iloc[:, 1:])
-    scaled = scaled.transpose()
+    scaler.fit(data.iloc[:, 1:])  # comment
+    scaled = scaler.transform(data.iloc[:, 1:])  # comment
+    scaled = scaled.transpose()  # comment
 
     scaled = vstack((target, scaled))
+    # scaled = vstack((target, data.iloc[:, 1:].T))
 
     return scaled
 
