@@ -2,7 +2,8 @@ from numpy import array, dstack, empty, reshape, vstack
 from pandas import DataFrame
 
 
-def data_prep_uni(data: DataFrame, scaler: object) -> array:
+# def data_prep_uni(data: DataFrame, scaler: object) -> array:
+def data_prep_uni(data: DataFrame) -> array:
     """Prepares data input for model intake. Applies scaling to data.
     Parameters:
         data (DataFrame): Input time series.
@@ -11,13 +12,14 @@ def data_prep_uni(data: DataFrame, scaler: object) -> array:
     """
     data = array(data).reshape(-1, 1)
 
-    scaler.fit(data)  # comment
-    scaled = scaler.transform(data)  # comment
+    # scaler.fit(data)  # comment
+    # scaled = scaler.transform(data)  # comment
 
-    return scaled  # data
+    return data  # scaled  # data
 
 
-def data_prep_multi(data: DataFrame, features: list, scaler: object) -> array:
+# def data_prep_multi(data: DataFrame, features: list, scaler: object) -> array:
+def data_prep_multi(data: DataFrame, features: list) -> array:
     """Extract features and convert DataFrame to an array.
     Parameters:
         data (DataFrame): DataFrame containing multi-feature data.
@@ -29,12 +31,12 @@ def data_prep_multi(data: DataFrame, features: list, scaler: object) -> array:
 
     target = array(data.iloc[:, 0])
 
-    scaler.fit(data.iloc[:, 1:])  # comment
-    scaled = scaler.transform(data.iloc[:, 1:])  # comment
-    scaled = scaled.transpose()  # comment
+    # scaler.fit(data.iloc[:, 1:])  # comment
+    # scaled = scaler.transform(data.iloc[:, 1:])  # comment
+    # scaled = scaled.transpose()  # comment
 
-    scaled = vstack((target, scaled))
-    # scaled = vstack((target, data.iloc[:, 1:].T))
+    # scaled = vstack((target, scaled))
+    scaled = vstack((target, data.iloc[:, 1:].T))
 
     return scaled
 

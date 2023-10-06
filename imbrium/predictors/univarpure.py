@@ -9,7 +9,7 @@ from pandas import DataFrame
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.scaler import SCALER
+# from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_standard_uni
 
 
@@ -19,7 +19,10 @@ class BasePureUni(UniVariateMultiStep):
     CURRENT_PATH = os.getcwd()
 
     def __init__(
-        self, steps_past: int, steps_future: int, data=DataFrame(), scale: str = ""
+        self,
+        steps_past: int,
+        steps_future: int,
+        data=DataFrame(),  # scale: str = ""
     ) -> object:
         """
         Parameters:
@@ -28,7 +31,7 @@ class BasePureUni(UniVariateMultiStep):
             data (DataFrame): Input data for model training.
             scale (str): How to scale the data before making predictions.
         """
-        self.scaler = SCALER[scale]
+        # self.scaler = SCALER[scale]
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
@@ -36,7 +39,8 @@ class BasePureUni(UniVariateMultiStep):
 
         if len(data) > 0:
             self.data = array(data)
-            self.data = data_prep_uni(data, self.scaler)
+            # self.data = data_prep_uni(data, self.scaler)
+            self.data = data_prep_uni(data)
             self.input_x, self.input_y = sequence_prep_standard_uni(
                 self.data, steps_past, steps_future
             )
@@ -671,8 +675,8 @@ class BasePureUni(UniVariateMultiStep):
         data = array(data)
         data = data.reshape(-1, 1)
 
-        self.scaler.fit(data)
-        data = self.scaler.transform(data)
+        # self.scaler.fit(data)
+        # data = self.scaler.transform(data)
 
         dimension = data.shape[0] * data.shape[1]  # MLP case
 
