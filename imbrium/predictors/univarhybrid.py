@@ -9,7 +9,6 @@ from pandas import DataFrame
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-# from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
 
 
@@ -24,7 +23,6 @@ class BaseHybridUni(UniVariateMultiStep):
         steps_past: int,
         steps_future: int,
         data=DataFrame(),
-        # scale: str = "",
     ) -> object:
         """
         Parameters:
@@ -34,7 +32,6 @@ class BaseHybridUni(UniVariateMultiStep):
             steps_future (int): Steps predictor will look forward.
             data (array): Input data for model training. Default is empty to
             enable loading pre-trained models.
-            scale (str): How to scale the data before making predictions.
         """
         self.sub_seq = sub_seq
         self.steps_past = steps_past
@@ -43,11 +40,8 @@ class BaseHybridUni(UniVariateMultiStep):
         self.loss = ""
         self.metrics = ""
 
-        # self.scaler = SCALER[scale]
-
         if len(data) > 0:
             self.data = array(data)
-            # self.data = data_prep_uni(data, self.scaler)
             self.data = data_prep_uni(data)
             self.input_x, self.input_y, self.modified_back = sequence_prep_hybrid_uni(
                 self.data, sub_seq, steps_past, steps_future
@@ -695,9 +689,6 @@ class BaseHybridUni(UniVariateMultiStep):
         """
         data = array(data)
         data = data.reshape(-1, 1)
-
-        # self.scaler.fit(data)
-        # data = self.scaler.transform(data)
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
         data = data.reshape(1, self.sub_seq, shape_, 1)

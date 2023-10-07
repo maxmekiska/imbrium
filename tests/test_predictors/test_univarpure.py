@@ -8,9 +8,9 @@ data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
 data = data["target"]
 data_small = data[:20]
 
-test0 = PureUni(2, 3, data=data)  # , scale="standard")
-test1 = PureUni(1, 5, data=data)  # , scale="standard")
-test2 = PureUni(5, 10, data=data_small)  # , scale="standard")
+test0 = PureUni(2, 3, data=data)
+test1 = PureUni(1, 5, data=data)
+test2 = PureUni(5, 10, data=data_small)
 
 test0.create_lstm(
     optimizer="adam",
@@ -39,10 +39,8 @@ test0.create_lstm(
     },
 )
 
-# X = np.array([[1.17289952], [0.54461086]])
 X = np.array([[3.422], [2.697]])
 
-# y = np.array([[1.17289952], [0.54461086], [0.80025935]])
 y = np.array([[3.422], [2.697], [2.992]])
 
 shape_x = (20636, 2, 1)

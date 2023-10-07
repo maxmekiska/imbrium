@@ -9,7 +9,6 @@ from pandas import DataFrame
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-# from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_hybrid
 
 
@@ -25,7 +24,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
         steps_future: int,
         data=DataFrame(),
         features: list = [],
-        # scale: str = "",
     ) -> object:
         """
         Parameters:
@@ -35,7 +33,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
             data (DataFrame): Input data for model training.
             features (list): List of features. First feature in list will be
             set to the target variable.
-            scale (str): How to scale the data before making predictions.
         """
         self.sub_seq = sub_seq
         self.steps_past = steps_past
@@ -44,13 +41,10 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.loss = ""
         self.metrics = ""
 
-        # self.scaler = SCALER[scale]
-
         self.model_id = ""
         self.sub_seq = sub_seq
 
         if len(data) > 0:
-            # self.data = data_prep_multi(data, features, self.scaler)
             self.data = data_prep_multi(data, features)
             self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
                 self.data, sub_seq, steps_past, steps_future
@@ -714,8 +708,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
         Returns:
             (DataFrame): Forecast for sequence provided.
         """
-        # self.scaler.fit(data)
-        # data = self.scaler.transform(data)
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
         data = data.reshape(1, self.sub_seq, shape_, 1)

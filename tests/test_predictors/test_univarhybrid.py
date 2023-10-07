@@ -8,9 +8,9 @@ data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
 data = data["target"]
 data_small = data[:20]
 
-test0 = HybridUni(2, 10, 3, data=data)  # , scale="standard")
-test1 = HybridUni(1, 5, 1, data=data)  # , scale="standard")
-test2 = HybridUni(5, 10, 2, data=data_small)  # , scale="standard")
+test0 = HybridUni(2, 10, 3, data=data)
+test1 = HybridUni(1, 5, 1, data=data)
+test2 = HybridUni(5, 10, 2, data=data_small)
 
 test0.create_cnnlstm(
     optimizer="adam",
@@ -58,12 +58,6 @@ test0.create_cnnlstm(
     },
 )
 
-# X = np.array(
-# [
-# [[1.17289952], [0.54461086], [0.80025935], [0.29936163], [0.17197069]],
-# [[0.47008283], [0.64687025], [0.30282805], [0.05757883], [-0.13480749]],
-# ]
-# )
 X = np.array(
     [
         [[3.422], [2.697], [2.992], [2.414], [2.267]],
@@ -71,7 +65,6 @@ X = np.array(
     ]
 )
 
-# y = np.array([[0.05757883], [-0.13480749], [-0.41298771]])
 y = np.array([[2.135], [1.913], [1.592]])
 
 

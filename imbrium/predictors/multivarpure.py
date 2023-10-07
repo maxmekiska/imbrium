@@ -9,7 +9,6 @@ from pandas import DataFrame
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-# from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
 
 
@@ -25,7 +24,6 @@ class BasePureMulti(MultiVariateMultiStep):
         steps_future: int,
         data=DataFrame(),
         features=[],
-        # scale: str = "",
     ) -> object:
         """
         Parameters:
@@ -34,16 +32,13 @@ class BasePureMulti(MultiVariateMultiStep):
             data (DataFrame): Input data for model training.
             features (list): List of features. First feature in list will be
             set to the target variable.
-            scale (str): How to scale the data before making predictions.
         """
-        # self.scaler = SCALER[scale]
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
 
         if len(data) > 0:
-            # self.data = data_prep_multi(data, features, self.scaler)
             self.data = data_prep_multi(data, features)
             self.input_x, self.input_y = multistep_prep_standard(
                 self.data, steps_past, steps_future
@@ -682,8 +677,6 @@ class BasePureMulti(MultiVariateMultiStep):
         Returns:
             (DataFrame): Forecast for sequence provided.
         """
-        # self.scaler.fit(data)
-        # data = self.scaler.transform(data)
 
         dimension = data.shape[0] * data.shape[1]  # MLP case
 
