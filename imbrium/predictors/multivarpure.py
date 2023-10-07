@@ -324,7 +324,6 @@ class BasePureMulti(MultiVariateMultiStep):
                     "neurons": 32,
                     "activation": "relu",
                     "regularization": 0.0,
-                    "dropout": 0.0,
                 }
             },
         },
@@ -914,7 +913,6 @@ class PureMulti(BasePureMulti):
                     "neurons": 32,
                     "activation": "relu",
                     "regularization": 0.0,
-                    "dropout": 0.0,
                 }
             },
         },
