@@ -3,11 +3,11 @@ from pandas import DataFrame
 
 
 def data_prep_uni(data: DataFrame) -> array:
-    """Prepares data input for model intake. Applies scaling to data.
+    """Prepares data for model intake.
     Parameters:
         data (DataFrame): Input time series.
     Returns:
-        scaled (array): Scaled input time series.
+        data (array): Input time series.
     """
     data = array(data).reshape(-1, 1)
 
@@ -26,9 +26,9 @@ def data_prep_multi(data: DataFrame, features: list) -> array:
 
     target = array(data.iloc[:, 0])
 
-    scaled = vstack((target, data.iloc[:, 1:].T))
+    data = vstack((target, data.iloc[:, 1:].T))
 
-    return scaled
+    return data
 
 
 def sequence_prep_standard_uni(
