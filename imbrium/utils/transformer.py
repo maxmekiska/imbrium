@@ -1,20 +1,22 @@
 from numpy import array, dstack, empty, reshape, vstack
-from pandas import DataFrame
 
 
-def data_prep_uni(data: DataFrame) -> array:
+# def data_prep_uni(data: DataFrame) -> array:
+def data_prep_uni(data: array) -> array:
     """Prepares data for model intake.
     Parameters:
         data (DataFrame): Input time series.
     Returns:
         data (array): Input time series.
     """
-    data = array(data).reshape(-1, 1)
+    # data = array(data).reshape(-1, 1)
+    data = data.reshape(-1, 1)
 
     return data
 
 
-def data_prep_multi(data: DataFrame, features: list) -> array:
+# def data_prep_multi(data: DataFrame, features: list) -> array:
+def data_prep_multi(target: array, features: array) -> array:
     """Extract features and convert DataFrame to an array.
     Parameters:
         data (DataFrame): DataFrame containing multi-feature data.
@@ -22,11 +24,12 @@ def data_prep_multi(data: DataFrame, features: list) -> array:
     Returns:
         data (array): Array containing sequences of selected features.
     """
-    data = data[features]
+    # data = data[features]
 
-    target = array(data.iloc[:, 0])
+    # target = array(data.iloc[:, 0])
 
-    data = vstack((target, data.iloc[:, 1:].T))
+    # data = vstack((target, data.iloc[:, 1:].T))
+    data = vstack((target, features.T))
 
     return data
 

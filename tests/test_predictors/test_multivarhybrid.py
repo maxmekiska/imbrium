@@ -5,24 +5,56 @@ import pytest
 from imbrium.predictors.multivarhybrid import HybridMulti
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+target = np.array(data["target"])
+features = np.array(
+    data[
+        [
+            "HouseAge",
+            "AveRooms",
+            "AveBedrms",
+            "Population",
+            "AveOccup",
+            "Latitude",
+            "Longitude",
+            "MedInc",
+        ]
+    ]
+)
 data_small = data[:20]
+target_small = np.array(data_small["target"])
+features_small = np.array(
+    data_small[
+        [
+            "HouseAge",
+            "AveRooms",
+            "AveBedrms",
+            "Population",
+            "AveOccup",
+            "Latitude",
+            "Longitude",
+            "MedInc",
+        ]
+    ]
+)
 
 test0 = HybridMulti(
     1,
     5,
     5,
-    data=data,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
+    # data=data,
+    # features=[
+    # "target",
+    # "HouseAge",
+    # "AveRooms",
+    # "AveBedrms",
+    # "Population",
+    # "AveOccup",
+    # "Latitude",
+    # "Longitude",
+    # "MedInc",
+    # ],
+    target=target,
+    features=features,
 )
 
 
@@ -30,18 +62,20 @@ test1 = HybridMulti(
     1,
     5,
     5,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
+    # data=data_small,
+    # features=[
+    # "target",
+    # "HouseAge",
+    # "AveRooms",
+    # "AveBedrms",
+    # "Population",
+    # "AveOccup",
+    # "Latitude",
+    # "Longitude",
+    # "MedInc",
+    # ],
+    target=target_small,
+    features=features_small,
 )
 
 
@@ -49,18 +83,20 @@ test1 = HybridMulti(
     1,
     5,
     5,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
+    # data=data_small,
+    # features=[
+    # "target",
+    # "HouseAge",
+    # "AveRooms",
+    # "AveBedrms",
+    # "Population",
+    # "AveOccup",
+    # "Latitude",
+    # "Longitude",
+    # "MedInc",
+    # ],
+    target=target_small,
+    features=features_small,
 )
 
 test0.create_cnnlstm(

@@ -5,58 +5,79 @@ import pytest
 from imbrium.predictors.multivarpure import PureMulti
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+target = np.array(data["target"])
+features = np.array(
+    data[
+        [
+            "HouseAge",
+            "AveRooms",
+            "AveBedrms",
+            "Population",
+            "AveOccup",
+            "Latitude",
+            "Longitude",
+            "MedInc",
+        ]
+    ]
+)
 data_small = data[:20]
 
 test0 = PureMulti(
     2,
     10,
-    data=data,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
+    target=target,
+    features=features,
+    # data=data,
+    # features=[
+    # "target",
+    # "HouseAge",
+    # "AveRooms",
+    # "AveBedrms",
+    # "Population",
+    # "AveOccup",
+    # "Latitude",
+    # "Longitude",
+    # "MedInc",
+    # ],
 )
 
 test1 = PureMulti(
     2,
     10,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
+    # data=data_small,
+    # features=[
+    # "target",
+    # "HouseAge",
+    # "AveRooms",
+    # "AveBedrms",
+    # "Population",
+    # "AveOccup",
+    # "Latitude",
+    # "Longitude",
+    # "MedInc",
+    # ],
+    target=target,
+    features=features,
 )
 
 
 test2 = PureMulti(
     2,
     10,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
+    # data=data_small,
+    # features=[
+    # "target",
+    # "HouseAge",
+    # "AveRooms",
+    # "AveBedrms",
+    # "Population",
+    # "AveOccup",
+    # "Latitude",
+    # "Longitude",
+    # "MedInc",
+    # ],
+    target=target,
+    features=features,
 )
 
 

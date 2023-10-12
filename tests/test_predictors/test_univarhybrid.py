@@ -5,12 +5,13 @@ import pytest
 from imbrium.predictors.univarhybrid import HybridUni
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
-data = data["target"]
+# data = data["target"]
+data = np.array(data["target"])
 data_small = data[:20]
 
-test0 = HybridUni(2, 10, 3, data=data)
-test1 = HybridUni(1, 5, 1, data=data)
-test2 = HybridUni(5, 10, 2, data=data_small)
+test0 = HybridUni(2, 10, 3, target=data)
+test1 = HybridUni(1, 5, 1, target=data)
+test2 = HybridUni(5, 10, 2, target=data_small)
 
 test0.create_cnnlstm(
     optimizer="adam",

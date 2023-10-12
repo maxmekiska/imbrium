@@ -5,12 +5,13 @@ import pytest
 from imbrium.predictors.univarpure import PureUni
 
 data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
-data = data["target"]
+# data = data["target"]
+data = np.array(data["target"])
 data_small = data[:20]
 
-test0 = PureUni(2, 3, data=data)
-test1 = PureUni(1, 5, data=data)
-test2 = PureUni(5, 10, data=data_small)
+test0 = PureUni(2, 3, target=data)
+test1 = PureUni(1, 5, target=data)
+test2 = PureUni(5, 10, target=data_small)
 
 test0.create_lstm(
     optimizer="adam",

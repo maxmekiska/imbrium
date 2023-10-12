@@ -65,6 +65,7 @@ df_multi_output = np.array(
 
 df_multi_output_raw = np.array(
     [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [2, 23, 1, 20, 60, 90, 30, 10, 20, 300],
         [1, 5, 300, 600, 100, 200, 400, 60, 100, 6000],
     ],
@@ -212,13 +213,18 @@ multistep_prep_hybrid_y = np.array(
 
 def test_data_prep_uni():
     # np.testing.assert_allclose(data_prep_uni(df_uni, scaler), df_uni_output, rtol=1e-07)
-    np.testing.assert_allclose(data_prep_uni(df_uni), df_uni_output_raw, rtol=1e-07)
+    np.testing.assert_allclose(
+        data_prep_uni(np.array(df_uni)), df_uni_output_raw, rtol=1e-07
+    )
 
 
 def test_data_prep_multi():
+    target = np.array(df_multi["test0"])
+    features = np.array(df_multi[["test1", "test2"]])
     np.testing.assert_allclose(
         # data_prep_multi(df_multi, ["test1", "test2"], scaler),
-        data_prep_multi(df_multi, ["test1", "test2"]),
+        # data_prep_multi(df_multi, ["test1", "test2"]),
+        data_prep_multi(target=target, features=features),
         df_multi_output_raw,
         rtol=1e-07,
     )

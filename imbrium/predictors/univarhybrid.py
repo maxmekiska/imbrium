@@ -4,7 +4,6 @@ import os
 from keras_core.callbacks import EarlyStopping, TensorBoard
 from keras_core.saving import load_model
 from numpy import array
-from pandas import DataFrame
 
 from imbrium.architectures.models import *
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
@@ -22,7 +21,8 @@ class BaseHybridUni(UniVariateMultiStep):
         sub_seq: int,
         steps_past: int,
         steps_future: int,
-        data=DataFrame(),
+        # data=DataFrame(),
+        target=array([]),
     ) -> object:
         """
         Parameters:
@@ -40,14 +40,14 @@ class BaseHybridUni(UniVariateMultiStep):
         self.loss = ""
         self.metrics = ""
 
-        if len(data) > 0:
-            self.data = array(data)
-            self.data = data_prep_uni(data)
+        if len(target) > 0:
+            self.data = array(target)
+            self.data = data_prep_uni(target)
             self.input_x, self.input_y, self.modified_back = sequence_prep_hybrid_uni(
                 self.data, sub_seq, steps_past, steps_future
             )
         else:
-            self.data = data
+            self.data = target
 
         self.model_id = ""
 
@@ -680,14 +680,14 @@ class BaseHybridUni(UniVariateMultiStep):
         """Returns performance details."""
         return self.details
 
-    def predict(self, data: array) -> DataFrame:
+    def predict(self, data: array) -> array:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.
         Returns:
-            (DataFrame): Forecast for sequence provided.
+            (array): Forecast for sequence provided.
         """
-        data = array(data)
+        # data = array(data)
         data = data.reshape(-1, 1)
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
@@ -697,7 +697,8 @@ class BaseHybridUni(UniVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        return DataFrame(y_pred, columns=[f"{self.model_id}"])
+        # return DataFrame(y_pred, columns=[f"{self.model_id}"])
+        return y_pred
 
     def freeze(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.

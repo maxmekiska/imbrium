@@ -17,7 +17,6 @@ setup(
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "setuptools >= 41.0.0",
-        "pandas >= 2.0.3, < 2.1.0",
         "keras-core==0.1.5",
     ],
     classifiers=[
