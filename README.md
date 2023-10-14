@@ -40,8 +40,13 @@ imbrium is designed to simplify the application of deep learning models for time
 - removing internal hyperparameter tuning
 - removing encoder-decoder architectures
 - improve layer configuration
+- split input data into target and feature numpy arrays
 - overall lighten the library
 
+### Examples
+
+Notebook showing how to use the library:
+- https://github.com/maxmekiska/ImbriumTesting-Demo 
 
 ## LEGACY: imbrium versions <= v.1.3.0
 <details>
