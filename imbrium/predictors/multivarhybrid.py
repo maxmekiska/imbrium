@@ -5,7 +5,8 @@ from keras_core.callbacks import EarlyStopping, TensorBoard
 from keras_core.saving import load_model
 from numpy import array
 
-from imbrium.architectures.models import *
+from imbrium.architectures.models import (cnnbigru, cnnbilstm, cnnbirnn,
+                                          cnngru, cnnlstm, cnnrnn)
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_hybrid
@@ -21,8 +22,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
         sub_seq: int,
         steps_past: int,
         steps_future: int,
-        # data=DataFrame(),
-        # features: list = [],
         target: array = array([]),
         features: array = array([]),
     ) -> object:
@@ -31,9 +30,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
             sub_seq (int): Divide data into further subsequences.
             steps_past (int): Steps predictor will look backward.
             steps_future (int): Steps predictor will look forward.
-            data (DataFrame): Input data for model training.
-            features (list): List of features. First feature in list will be
-            set to the target variable.
+            target (array): Input target array.
+            features (array): Input feature array.
         """
         self.sub_seq = sub_seq
         self.steps_past = steps_past
@@ -45,16 +43,13 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.model_id = ""
         self.sub_seq = sub_seq
 
-        # if len(data) > 0:
         if len(target) > 0:
-            # self.data = data_prep_multi(data, features)
             self.data = data_prep_multi(target, features)
             self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
                 self.data, sub_seq, steps_past, steps_future
             )
 
         else:
-            # self.data = data
             self.target = target
             self.features = features
 
@@ -721,7 +716,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        # return DataFrame(y_pred, columns=[f"{self.model_id}"])
         return y_pred
 
     def freeze(self, absolute_path: str = CURRENT_PATH):

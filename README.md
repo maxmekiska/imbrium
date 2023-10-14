@@ -42,7 +42,6 @@ imbrium is designed to simplify the application of deep learning models for time
 - improve layer configuration
 - overall lighten the library
 
-STATUS: IN PROGRESS
 
 ## LEGACY: imbrium versions <= v.1.3.0
 <details>

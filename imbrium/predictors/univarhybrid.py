@@ -5,7 +5,8 @@ from keras_core.callbacks import EarlyStopping, TensorBoard
 from keras_core.saving import load_model
 from numpy import array
 
-from imbrium.architectures.models import *
+from imbrium.architectures.models import (cnnbigru, cnnbilstm, cnnbirnn,
+                                          cnngru, cnnlstm, cnnrnn)
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
@@ -21,7 +22,6 @@ class BaseHybridUni(UniVariateMultiStep):
         sub_seq: int,
         steps_past: int,
         steps_future: int,
-        # data=DataFrame(),
         target=array([]),
     ) -> object:
         """
@@ -30,8 +30,7 @@ class BaseHybridUni(UniVariateMultiStep):
             look backward.
             steps_past (int): Steps predictor will look backward.
             steps_future (int): Steps predictor will look forward.
-            data (array): Input data for model training. Default is empty to
-            enable loading pre-trained models.
+            target (array): Input target data numpy array.
         """
         self.sub_seq = sub_seq
         self.steps_past = steps_past
@@ -687,7 +686,6 @@ class BaseHybridUni(UniVariateMultiStep):
         Returns:
             (array): Forecast for sequence provided.
         """
-        # data = array(data)
         data = data.reshape(-1, 1)
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
@@ -697,7 +695,6 @@ class BaseHybridUni(UniVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        # return DataFrame(y_pred, columns=[f"{self.model_id}"])
         return y_pred
 
     def freeze(self, absolute_path: str = CURRENT_PATH):

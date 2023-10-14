@@ -5,7 +5,8 @@ from keras_core.callbacks import EarlyStopping, TensorBoard
 from keras_core.saving import load_model
 from numpy import array
 
-from imbrium.architectures.models import *
+from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,
+                                          mlp, rnn)
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
@@ -21,7 +22,6 @@ class BasePureMulti(MultiVariateMultiStep):
         self,
         steps_past: int,
         steps_future: int,
-        # data=DataFrame(),
         target: array = array([]),
         features: array = array([]),
     ) -> object:
@@ -29,24 +29,20 @@ class BasePureMulti(MultiVariateMultiStep):
         Parameters:
             steps_past (int): Steps predictor will look backward.
             steps_future (int): Steps predictor will look forward.
-            data (DataFrame): Input data for model training.
-            features (list): List of features. First feature in list will be
-            set to the target variable.
+            target (array): Input target data numpy array.
+            features (array): Input feature data numpy array.
         """
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
 
-        # if len(data) > 0:
         if len(target) > 0:
             self.data = data_prep_multi(target, features)
-            # self.data = data_prep_multi(data, features)
             self.input_x, self.input_y = multistep_prep_standard(
                 self.data, steps_past, steps_future
             )
         else:
-            # self.data = data
             self.target = target
             self.features = features
 
@@ -693,7 +689,6 @@ class BasePureMulti(MultiVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        # return DataFrame(y_pred, columns=[f"{self.model_id}"])
         return y_pred
 
     def freeze(self, absolute_path: str = CURRENT_PATH):

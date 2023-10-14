@@ -84,4 +84,8 @@ activation function type
 
 ### 2.0.0
 
-- in progress
+- adapted `keras_core`
+- removed internal hyperparameter tuning
+- removed encoder-decoder architectures
+- improved layer configuration via dictionary input
+- split data argument into target and feature numpy arrays
