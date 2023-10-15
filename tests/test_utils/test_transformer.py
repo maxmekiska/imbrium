@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import *
 
 data_uni = {"test0": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
@@ -33,6 +32,8 @@ df_uni_output = np.array(
     ]
 )
 
+df_uni_output_raw = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])
+
 df_multi_output = np.array(
     [
         [
@@ -60,6 +61,14 @@ df_multi_output = np.array(
             2.98394511e00,
         ],
     ]
+)
+
+df_multi_output_raw = np.array(
+    [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        [2, 23, 1, 20, 60, 90, 30, 10, 20, 300],
+        [1, 5, 300, 600, 100, 200, 400, 60, 100, 6000],
+    ],
 )
 
 df_sequence_prep_standard_uni_X = np.array(
@@ -199,17 +208,24 @@ multistep_prep_hybrid_y = np.array(
 )
 
 
-scaler = SCALER["standard"]
+# scaler = SCALER["standard"]
 
 
 def test_data_prep_uni():
-    np.testing.assert_allclose(data_prep_uni(df_uni, scaler), df_uni_output, rtol=1e-07)
+    # np.testing.assert_allclose(data_prep_uni(df_uni, scaler), df_uni_output, rtol=1e-07)
+    np.testing.assert_allclose(
+        data_prep_uni(np.array(df_uni)), df_uni_output_raw, rtol=1e-07
+    )
 
 
 def test_data_prep_multi():
+    target = np.array(df_multi["test0"])
+    features = np.array(df_multi[["test1", "test2"]])
     np.testing.assert_allclose(
-        data_prep_multi(df_multi, ["test1", "test2"], scaler),
-        df_multi_output,
+        # data_prep_multi(df_multi, ["test1", "test2"], scaler),
+        # data_prep_multi(df_multi, ["test1", "test2"]),
+        data_prep_multi(target=target, features=features),
+        df_multi_output_raw,
         rtol=1e-07,
     )
 

@@ -1,91 +1,19 @@
 import datetime
 import os
 
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from numpy import array, empty, reshape
-from pandas import DataFrame
-from tensorflow import keras
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
-                                     Dropout, Flatten, MaxPooling1D, SimpleRNN,
-                                     TimeDistributed)
+from keras_core.callbacks import EarlyStopping, TensorBoard
+from keras_core.saving import load_model
+from numpy import array
 
-from imbrium.architectures.models import *
+from imbrium.architectures.models import (cnnbigru, cnnbilstm, cnnbirnn,
+                                          cnngru, cnnlstm, cnnrnn)
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_hybrid
 
 
-class HybridMulti(MultiVariateMultiStep):
-    """Implements neural network based multivariate multipstep hybrid predictors.
-
-    Methods
-    -------
-    set_model_id(self, name: str):
-        Setter method to change model id name.
-    get_model_id(self) -> array:
-        Getter method to retrieve model id used.
-    get_X_input(self) -> array:
-        Getter method to retrieve transformed X input - training.
-    get_X_input_shape(self) -> tuple:
-        Getter method to retrieve transformed X shape.
-    get_y_input(self) -> array:
-        Getter method to retrieve transformed y input - target.
-    get_y_input_shape(self) -> array:
-        Getter method to retrieve transformed y input shape.
-    get_optimizer(self) -> str:
-        Getter method to retrieve model optimizer used.
-    get_loss(self) -> str:
-        Getter method to retrieve used model loss.
-    get_metrics(self) -> str:
-        Getter method to retrieve model evaluation metrics used.
-    create_cnnrnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN-RNN structure.
-    create_cnnlstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN-LSTM structure.
-    create_cnngru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN-GRU structure.
-    create_cnnbirnn(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Buidls CNN bidirectional RNN structure.
-    create_cnnbilstm(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN bidirectional LSTM structure.
-    create_cnnbigru(self, optimizer: str = 'adam',
-    loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-    layer_config = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-    'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (25, 'relu')}):
-        Builds CNN bidirectional GRU structure.
-    fit_model(self, epochs: int, show_progress: int = 1,
-    validation_split: float = 0.20,
-    **callback_setting: dict):
-        Fitting model onto provided data.
-    model_blueprint(self):
-        Print blueprint of layer structure.
-    show_performance(self):
-        Evaluate and plot model performance.
-    predict(self, data: array):
-        Takes in input data and outputs model forecasts.
-    save_model(self, absolute_path: str = CURRENT_PATH):
-        Saves current Keras model to current directory.
-    load_model(self, location: str):
-        Load model from location specified.
-    """
+class BaseHybridMulti(MultiVariateMultiStep):
+    """Implements neural network based multivariate multipstep hybrid predictors."""
 
     CURRENT_PATH = os.getcwd()
 
@@ -94,19 +22,16 @@ class HybridMulti(MultiVariateMultiStep):
         sub_seq: int,
         steps_past: int,
         steps_future: int,
-        data=DataFrame(),
-        features: list = [],
-        scale: str = "",
+        target: array = array([]),
+        features: array = array([]),
     ) -> object:
         """
         Parameters:
             sub_seq (int): Divide data into further subsequences.
             steps_past (int): Steps predictor will look backward.
             steps_future (int): Steps predictor will look forward.
-            data (DataFrame): Input data for model training.
-            features (list): List of features. First feature in list will be
-            set to the target variable.
-            scale (str): How to scale the data before making predictions.
+            target (array): Input target array.
+            features (array): Input feature array.
         """
         self.sub_seq = sub_seq
         self.steps_past = steps_past
@@ -115,19 +40,18 @@ class HybridMulti(MultiVariateMultiStep):
         self.loss = ""
         self.metrics = ""
 
-        self.scaler = SCALER[scale]
-
         self.model_id = ""
         self.sub_seq = sub_seq
 
-        if len(data) > 0:
-            self.data = data_prep_multi(data, features, self.scaler)
+        if len(target) > 0:
+            self.data = data_prep_multi(target, features)
             self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
                 self.data, sub_seq, steps_past, steps_future
             )
 
         else:
-            self.data = data
+            self.target = target
+            self.features = features
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -182,16 +106,49 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        conv_block_one=1,
-        conv_block_two=1,
-        rnn_block_one=1,
-        rnn_block_two=1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        rnn_block_one: int = 1,
+        rnn_block_two: int = 1,
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN-RNN hybrid model.
@@ -231,23 +188,61 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        conv_block_one=1,
-        conv_block_two=1,
-        lstm_block_one=1,
-        lstm_block_two=1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        lstm_block_one: int = 1,
+        lstm_block_two: int = 1,
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN-LSTM hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            lstm_block_one (int): Number of LSTM layers in first block.
+            lstm_block_two (int): Number of LSTM layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-LSTM")
@@ -280,23 +275,61 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        conv_block_one=1,
-        conv_block_two=1,
-        gru_block_one=1,
-        gru_block_two=1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        gru_block_one: int = 1,
+        gru_block_two: int = 1,
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN-GRU hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            gru_block_one (int): Number of GRU layers in first block.
+            gru_block_two (int): Number of GRU layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-GRU")
@@ -329,23 +362,61 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        conv_block_one=1,
-        conv_block_two=1,
-        birnn_block_one=1,
-        rnn_block_one=1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        birnn_block_one: int = 1,
+        rnn_block_one: int = 1,
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN-BI-RNN hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            birnn_block_one (int): Number of BI-RNN layers in first block.
+            rnn_block_one (int): Number of RNN layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-BI-RNN")
@@ -378,23 +449,61 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        conv_block_one=1,
-        conv_block_two=1,
-        bilstm_block_one=1,
-        lstm_block_one=1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        bilstm_block_one: int = 1,
+        lstm_block_one: int = 1,
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN-BI-LSTM hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            bilstm_block_one (int): Number of BI-LSTM layers in first block.
+            lstm_block_one (int): Number of LSTM layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-BI-LSTM")
@@ -427,23 +536,61 @@ class HybridMulti(MultiVariateMultiStep):
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
         metrics: str = "mean_squared_error",
-        conv_block_one=1,
-        conv_block_two=1,
-        bigru_block_one=1,
-        gru_block_one=1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        conv_block_one: int = 1,
+        conv_block_two: int = 1,
+        bigru_block_one: int = 1,
+        gru_block_one: int = 1,
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN-BI-GRU hybrid model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            bigru_block_one (int): Number of BI-GRU layers in first block.
+            gru_block_one (int): Number of GRU layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-BI-GRU")
@@ -488,7 +635,7 @@ class HybridMulti(MultiVariateMultiStep):
         """
         if callback_setting == {}:
             if board == True:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -503,7 +650,7 @@ class HybridMulti(MultiVariateMultiStep):
                     callbacks=[callback_board],
                 )
             else:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -519,7 +666,7 @@ class HybridMulti(MultiVariateMultiStep):
 
         else:
             if board == True:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -550,53 +697,17 @@ class HybridMulti(MultiVariateMultiStep):
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self, metric_name: str = ""):
-        """Plots model loss and a given metric over time."""
-        information = self.details
+    def show_performance(self):
+        """Returns performance details."""
+        return self.details
 
-        plt.style.use("dark_background")
-
-        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-
-        if metric_name == "":
-
-            plt.plot(information.history["loss"], color=colors[0])
-            plt.plot(information.history["val_loss"], color=colors[1])
-            plt.title(self.model_id + " Model Loss")
-            plt.ylabel(self.loss)
-            plt.xlabel("Epoch")
-            plt.legend(["Train", "Test"], loc="upper right")
-            plt.tight_layout()
-            plt.show()
-        else:
-            plt.plot(information.history["loss"], color=colors[0])
-            plt.plot(information.history["val_loss"], color=colors[1])
-            plt.plot(information.history[metric_name], color=colors[2])
-            plt.plot(information.history["val_" + metric_name], color=colors[3])
-            plt.title(self.model_id + " Model Performance")
-            plt.ylabel(metric_name)
-            plt.xlabel("Epoch")
-            plt.legend(
-                [
-                    "Train Loss",
-                    "Test Loss",
-                    "Train " + metric_name,
-                    "Test " + metric_name,
-                ],
-                loc="upper right",
-            )
-            plt.tight_layout()
-            plt.show()
-
-    def predict(self, data: array) -> DataFrame:
+    def predict(self, data: array) -> array:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.
         Returns:
-            (DataFrame): Forecast for sequence provided.
+            (array): Forecast for sequence provided.
         """
-        self.scaler.fit(data)
-        data = self.scaler.transform(data)
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
         data = data.reshape(1, self.sub_seq, shape_, 1)
@@ -605,24 +716,24 @@ class HybridMulti(MultiVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        return DataFrame(y_pred, columns=[f"{self.model_id}"])
+        return y_pred
 
-    def save_model(self, absolute_path: str = CURRENT_PATH):
+    def freeze(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.
         Parameters:
            absolute_path (str): Path to save model to.
         """
         self.model.save(absolute_path)
 
-    def load_model(self, location: str):
+    def retrieve(self, location: str):
         """Load a keras model from the path specified.
         Parameters:
             location (str): Path of keras model location.
         """
-        self.model = keras.models.load_model(location)
+        self.model = load_model(location)
 
 
-class OptimizeHybridMulti(HybridMulti):
+class HybridMulti(BaseHybridMulti):
     def create_fit_cnnrnn(
         self,
         optimizer: str = "adam",
@@ -633,12 +744,45 @@ class OptimizeHybridMulti(HybridMulti):
         conv_block_two: int = 1,
         rnn_block_one: int = 1,
         rnn_block_two: int = 1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -677,12 +821,45 @@ class OptimizeHybridMulti(HybridMulti):
         conv_block_two: int = 1,
         lstm_block_one: int = 1,
         lstm_block_two: int = 1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -721,12 +898,45 @@ class OptimizeHybridMulti(HybridMulti):
         conv_block_two: int = 1,
         gru_block_one: int = 1,
         gru_block_two: int = 1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -765,12 +975,45 @@ class OptimizeHybridMulti(HybridMulti):
         conv_block_two: int = 1,
         birnn_block_one: int = 1,
         rnn_block_one: int = 1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -809,12 +1052,45 @@ class OptimizeHybridMulti(HybridMulti):
         conv_block_two: int = 1,
         bilstm_block_one: int = 1,
         lstm_block_one: int = 1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -853,12 +1129,45 @@ class OptimizeHybridMulti(HybridMulti):
         conv_block_two: int = 1,
         bigru_block_one: int = 1,
         gru_block_one: int = 1,
-        layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+        layer_config: dict = {
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -886,3 +1195,6 @@ class OptimizeHybridMulti(HybridMulti):
             **callback_setting,
         )
         return self.details.history[metrics][-1]
+
+
+__all__ = ["HybridMulti"]

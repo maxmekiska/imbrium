@@ -1,41 +1,31 @@
 from numpy import array, dstack, empty, reshape, vstack
-from pandas import DataFrame
 
 
-def data_prep_uni(data: DataFrame, scaler: object) -> array:
-    """Prepares data input for model intake. Applies scaling to data.
+def data_prep_uni(data: array) -> array:
+    """Prepares data for model intake.
     Parameters:
-        data (DataFrame): Input time series.
+        data (array): Input time series.
     Returns:
-        scaled (array): Scaled input time series.
+        data (array): Input time series.
     """
-    data = array(data).reshape(-1, 1)
+    data = data.reshape(-1, 1)
 
-    scaler.fit(data)
-    scaled = scaler.transform(data)
-
-    return scaled
+    return data
 
 
-def data_prep_multi(data: DataFrame, features: list, scaler: object) -> array:
+def data_prep_multi(target: array, features: array) -> array:
     """Extract features and convert DataFrame to an array.
     Parameters:
-        data (DataFrame): DataFrame containing multi-feature data.
+        data (array): DataFrame containing multi-feature data.
         features (list): All features that should be considered.
     Returns:
         data (array): Array containing sequences of selected features.
     """
-    data = data[features]
+    if target.ndim == 2:
+        target = target.T
+    data = vstack((target, features.T))
 
-    target = array(data.iloc[:, 0])
-
-    scaler.fit(data.iloc[:, 1:])
-    scaled = scaler.transform(data.iloc[:, 1:])
-    scaled = scaled.transpose()
-
-    scaled = vstack((target, scaled))
-
-    return scaled
+    return data
 
 
 def sequence_prep_standard_uni(

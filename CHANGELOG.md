@@ -81,3 +81,11 @@ activation function type
 - added depth parameter to architectures
 - added optimizer configuration support
 - added optimizer configuration to seeker
+
+### 2.0.0
+
+- adapted `keras_core`
+- removed internal hyperparameter tuning
+- removed encoder-decoder architectures
+- improved layer configuration via dictionary input
+- split data argument into target and feature numpy arrays

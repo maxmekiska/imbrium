@@ -1,118 +1,20 @@
 import datetime
 import os
 
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from numpy import array, empty, reshape
-from pandas import DataFrame
-from tensorflow import keras
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
-                                     Dropout, Flatten, MaxPooling1D, SimpleRNN)
+from keras_core.callbacks import EarlyStopping, TensorBoard
+from keras_core.saving import load_model
+from numpy import array
 
-from imbrium.architectures.models import *
+from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,
+                                          mlp, rnn)
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.scaler import SCALER
 from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
 
 
-class PureMulti(MultiVariateMultiStep):
+class BasePureMulti(MultiVariateMultiStep):
     """Implements deep neural networks based on multivariate multipstep
-    standard predictors.
-
-     Methods
-     -------
-     set_model_id(self, name: str):
-         Setter method to change model id name.
-     get_model_id(self) -> array:
-         Getter method to retrieve model id used.
-     get_X_input(self) -> array:
-         Getter method to retrieve transformed X input - training.
-     get_X_input_shape(self) -> tuple:
-         Getter method to retrieve transformed X shape.
-     get_y_input(self) -> array:
-         Getter method to retrieve transformed y input - target.
-     get_y_input_shape(self) -> array:
-         Getter method to retrieve transformed y input shape.
-     get_optimizer(self) -> str:
-         Getter method to retrieve model optimizer used.
-     get_loss(self) -> str:
-         Getter method to retrieve used model loss.
-     get_metrics(self) -> str:
-         Getter method to retrieve model evaluation metrics used.
-     create_mlp(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (25,'relu'),
-     'layer2': (25, 'relu')}):
-         Builds MLP structure.
-     create_rnn(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-     'layer2': (50, 'relu')}):
-         Builds RNN structure.
-     create_lstm(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-     'layer2': (50, 'relu')}):
-         Builds LSTM structure.
-     create_cnn(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-     'layer2': (2), 'layer3': (50, 'relu')}):
-         Builds CNN structure.
-     create_gru(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (40, 'relu'), 'layer1': (50,'relu'),
-     'layer2': (50, 'relu')}):
-         Builds GRU structure.
-     create_birnn(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-         Builds bidirectional RNN structure.
-     create_bilstm(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-         Builds bidirectional LSTM structure.
-     create_bigru(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (50, 'relu'), 'layer1': (50, 'relu')}):
-         Builds bidirectional GRU structure.
-     create_encdec_rnn(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-     'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-         Builds encoder decoder RNN structure.
-     create_encdec_lstm(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-     'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-         Builds encoder decoder LSTM structure.
-     create_encdec_gru(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (100, 'relu'), 'layer1': (50, 'relu'),
-     'layer2': (50, 'relu'), 'layer3': (100, 'relu')}):
-         Builds encoder decoder GRU structure.
-     create_encdec_cnn(self, optimizer: str = 'adam',
-     loss: str = 'mean_squared_error', metrics: str = 'mean_squared_error',
-     layer_config: dict = {'layer0': (64, 1, 'relu'), 'layer1': (32, 1, 'relu'),
-     'layer2': (2), 'layer3': (50, 'relu'), 'layer4': (100, 'relu')}):
-         Builds encoder decoder CNN structure.
-     fit_model(self, epochs: int, show_progress: int = 1,
-     validation_split: float = 0.20,
-     **callback_setting: dict):
-         Fitting model onto provided data.
-     model_blueprint(self):
-         Print blueprint of layer structure.
-     show_performance(self):
-         Evaluate and plot model performance.
-     predict(self, data: array):
-         Takes in input data and outputs model forecasts.
-     save_model(self, absolute_path: str = CURRENT_PATH):
-         Saves current Keras model to current directory.
-     load_model(self, location: str):
-         Load model from location specified.
-    """
+    standard predictors."""
 
     CURRENT_PATH = os.getcwd()
 
@@ -120,32 +22,29 @@ class PureMulti(MultiVariateMultiStep):
         self,
         steps_past: int,
         steps_future: int,
-        data=DataFrame(),
-        features=[],
-        scale: str = "",
+        target: array = array([]),
+        features: array = array([]),
     ) -> object:
         """
         Parameters:
             steps_past (int): Steps predictor will look backward.
             steps_future (int): Steps predictor will look forward.
-            data (DataFrame): Input data for model training.
-            features (list): List of features. First feature in list will be
-            set to the target variable.
-            scale (str): How to scale the data before making predictions.
+            target (array): Input target data numpy array.
+            features (array): Input feature data numpy array.
         """
-        self.scaler = SCALER[scale]
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
 
-        if len(data) > 0:
-            self.data = data_prep_multi(data, features, self.scaler)
+        if len(target) > 0:
+            self.data = data_prep_multi(target, features)
             self.input_x, self.input_y = multistep_prep_standard(
                 self.data, steps_past, steps_future
             )
         else:
-            self.data = data
+            self.target = target
+            self.features = features
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -204,26 +103,36 @@ class PureMulti(MultiVariateMultiStep):
         dense_block_two: int = 1,
         dense_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                25,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     ):
         """Creates MLP model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            dense_block_one (int): Number of layers in first dense block.
+            dense_block_two (int): Number of layers in second dense block.
+            dense_block_three (int): Number of layers in third dense block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("MLP")
@@ -265,26 +174,36 @@ class PureMulti(MultiVariateMultiStep):
         rnn_block_two: int = 1,
         rnn_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     ):
         """Creates RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            rnn_block_one (int): Number of layers in first rnn block.
+            rnn_block_two (int): Number of layers in second rnn block.
+            rnn_block_three (int): Number of layers in third rnn block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("RNN")
@@ -316,26 +235,36 @@ class PureMulti(MultiVariateMultiStep):
         lstm_block_two: int = 1,
         lstm_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     ):
         """Creates LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            lstm_block_one (int): Number of layers in first lstm block.
+            lstm_block_two (int): Number of layers in second lstm block.
+            lstm_block_three (int): Number of layers in third lstm block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("LSTM")
@@ -367,29 +296,47 @@ class PureMulti(MultiVariateMultiStep):
         conv_block_two: int = 1,
         dense_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (
-                64,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer1": (
-                32,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer2": (2),  # pooling
-            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates CNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of layers in first conv block.
+            conv_block_two (int): Number of layers in second conv block.
+            dense_block_one (int): Number of layers in dense block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN")
@@ -421,26 +368,40 @@ class PureMulti(MultiVariateMultiStep):
         gru_block_two: int = 1,
         gru_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            gru_block_one (int): Number of layers in first gru block.
+            gru_block_two (int): Number of layers in second gru block.
+            gru_block_three (int): Number of layers in third gru block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("GRU")
@@ -471,15 +432,31 @@ class PureMulti(MultiVariateMultiStep):
         birnn_block_one: int = 1,
         rnn_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
-        },  # (neurons, activation, regularization, dropout)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
+        },
     ):
         """Creates BI-RNN model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            birnn_block_one (int): Number of layers in first birnn block.
+            rnn_block_one (int): Number of layers in first rnn block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-RNN")
@@ -509,15 +486,31 @@ class PureMulti(MultiVariateMultiStep):
         bilstm_block_one: int = 1,
         lstm_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates BI-LSTM model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            bilstm_block_one (int): Number of layers in first bilstm block.
+            lstm_block_one (int): Number of layers in first lstm block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-LSTM")
@@ -547,15 +540,31 @@ class PureMulti(MultiVariateMultiStep):
         bigru_block_one: int = 1,
         gru_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     ):
         """Creates BI-GRU model.
         Parameters:
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            bigru_block_one (int): Number of layers in first bigru block.
+            gru_block_one (int): Number of layers in first gru block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("BI-GRU")
@@ -576,218 +585,6 @@ class PureMulti(MultiVariateMultiStep):
             output_shape=self.input_y.shape[1],
         )
 
-    def create_encdec_rnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_rnn_block_one: int = 1,
-        enc_rnn_block_two: int = 1,
-        dec_rnn_block_one: int = 1,
-        dec_rnn_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-    ):
-        """Creates Encoder-Decoder-RNN model model.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder-Decoder-RNN")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_rnn(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_rnn_block_one=enc_rnn_block_one,
-            enc_rnn_block_two=enc_rnn_block_two,
-            dec_rnn_block_one=dec_rnn_block_one,
-            dec_rnn_block_two=dec_rnn_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=1,
-            repeat=self.input_y.shape[1],
-        )
-
-    def create_encdec_lstm(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_lstm_block_one: int = 1,
-        enc_lstm_block_two: int = 1,
-        dec_lstm_block_one: int = 1,
-        dec_lstm_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-    ):
-        """Creates Encoder-Decoder-LSTM model model.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder-Decoder-LSTM")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_lstm(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_lstm_block_one=enc_lstm_block_one,
-            enc_lstm_block_two=enc_lstm_block_two,
-            dec_lstm_block_one=dec_lstm_block_one,
-            dec_lstm_block_two=dec_lstm_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=1,
-            repeat=self.input_y.shape[1],
-        )
-
-    def create_encdec_gru(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_gru_block_one: int = 1,
-        enc_gru_block_two: int = 1,
-        dec_gru_block_one: int = 1,
-        dec_gru_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (100, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (100, "relu", 0.0),
-        },
-    ):
-        """Creates Encoder-Decoder-GRU model model.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder-Decoder-GRU")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_gru(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_gru_block_one=enc_gru_block_one,
-            enc_gru_block_two=enc_gru_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=1,
-            repeat=self.input_y.shape[1],
-        )
-
-    def create_encdec_cnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_conv_block_one: int = 1,
-        enc_conv_block_two: int = 1,
-        dec_gru_block_one: int = 1,
-        dec_gru_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (100, "relu", 0.0),
-        },
-    ):
-        """Creates Encoder-Decoder-CNN model.
-        Encoding via CNN and Decoding via GRU.
-        Parameters:
-            optimizer (str): Optimization algorithm.
-            loss (str): Loss function.
-            metrics (str): Performance measurement.
-            layer_config (dict): Adjust neurons and acitivation functions.
-        """
-        self.set_model_id("Encoder(CNN)-Decoder(GRU)")
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
-
-        self.model = encdec_cnn(
-            optimizer=optimizer_obj,
-            loss=loss,
-            metrics=metrics,
-            enc_conv_block_one=enc_conv_block_one,
-            enc_conv_block_two=enc_conv_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-            input_shape=(self.input_x.shape[1], self.input_x.shape[2]),
-            output_shape=1,
-            repeat=self.input_y.shape[1],
-        )
-
     def fit_model(
         self,
         epochs: int,
@@ -806,7 +603,7 @@ class PureMulti(MultiVariateMultiStep):
         """
         if callback_setting == {}:
             if board == True:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -821,7 +618,7 @@ class PureMulti(MultiVariateMultiStep):
                     callbacks=[callback_board],
                 )
             else:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -837,7 +634,7 @@ class PureMulti(MultiVariateMultiStep):
 
         else:
             if board == True:
-                callback_board = tf.keras.callbacks.TensorBoard(
+                callback_board = TensorBoard(
                     log_dir="logs/fit/"
                     + self.model_id
                     + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
@@ -868,53 +665,17 @@ class PureMulti(MultiVariateMultiStep):
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self, metric_name: str = ""):
-        """Plots model loss and a given metric over time."""
-        information = self.details
+    def show_performance(self):
+        """Returns performance details."""
+        return self.details
 
-        plt.style.use("dark_background")
-
-        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-
-        if metric_name == "":
-
-            plt.plot(information.history["loss"], color=colors[0])
-            plt.plot(information.history["val_loss"], color=colors[1])
-            plt.title(self.model_id + " Model Loss")
-            plt.ylabel(self.loss)
-            plt.xlabel("Epoch")
-            plt.legend(["Train", "Test"], loc="upper right")
-            plt.tight_layout()
-            plt.show()
-        else:
-            plt.plot(information.history["loss"], color=colors[0])
-            plt.plot(information.history["val_loss"], color=colors[1])
-            plt.plot(information.history[metric_name], color=colors[2])
-            plt.plot(information.history["val_" + metric_name], color=colors[3])
-            plt.title(self.model_id + " Model Performance")
-            plt.ylabel(metric_name)
-            plt.xlabel("Epoch")
-            plt.legend(
-                [
-                    "Train Loss",
-                    "Test Loss",
-                    "Train " + metric_name,
-                    "Test " + metric_name,
-                ],
-                loc="upper right",
-            )
-            plt.tight_layout()
-            plt.show()
-
-    def predict(self, data: array) -> DataFrame:
+    def predict(self, data: array) -> array:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.
         Returns:
-            (DataFrame): Forecast for sequence provided.
+            (array): Forecast for sequence provided.
         """
-        self.scaler.fit(data)
-        data = self.scaler.transform(data)
 
         dimension = data.shape[0] * data.shape[1]  # MLP case
 
@@ -928,24 +689,24 @@ class PureMulti(MultiVariateMultiStep):
 
         y_pred = y_pred.reshape(y_pred.shape[1], y_pred.shape[0])
 
-        return DataFrame(y_pred, columns=[f"{self.model_id}"])
+        return y_pred
 
-    def save_model(self, absolute_path: str = CURRENT_PATH):
+    def freeze(self, absolute_path: str = CURRENT_PATH):
         """Save the current model to the current directory.
         Parameters:
            absolute_path (str): Path to save model to.
         """
         self.model.save(absolute_path)
 
-    def load_model(self, location: str):
+    def retrieve(self, location: str):
         """Load a keras model from the path specified.
         Parameters:
             location (str): Path of keras model location.
         """
-        self.model = keras.models.load_model(location)
+        self.model = load_model(location)
 
 
-class OptimizePureMulti(PureMulti):
+class PureMulti(BasePureMulti):
     def create_fit_mlp(
         self,
         optimizer: str = "adam",
@@ -956,19 +717,25 @@ class OptimizePureMulti(PureMulti):
         dense_block_two: int = 1,
         dense_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                25,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (25, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1006,19 +773,25 @@ class OptimizePureMulti(PureMulti):
         rnn_block_two: int = 1,
         rnn_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1056,19 +829,25 @@ class OptimizePureMulti(PureMulti):
         lstm_block_two: int = 1,
         lstm_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1106,22 +885,36 @@ class OptimizePureMulti(PureMulti):
         conv_block_two: int = 1,
         dense_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (
-                64,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer1": (
-                32,
-                1,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, kernel_size, activation, regularization, dropout)
-            "layer2": (2),  # pooling
-            "layer3": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1159,19 +952,29 @@ class OptimizePureMulti(PureMulti):
         gru_block_two: int = 1,
         gru_block_three: int = 1,
         layer_config: dict = {
-            "layer0": (
-                40,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (50, "relu", 0.0),  # (neurons, activation, regularization)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1208,9 +1011,22 @@ class OptimizePureMulti(PureMulti):
         birnn_block_one: int = 1,
         rnn_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
-        },  # (neurons, activation, regularization, dropout)
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
+        },
         epochs: int = 100,
         show_progress: int = 1,
         validation_split: float = 0.20,
@@ -1245,8 +1061,21 @@ class OptimizePureMulti(PureMulti):
         bilstm_block_one: int = 1,
         lstm_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1282,8 +1111,21 @@ class OptimizePureMulti(PureMulti):
         bigru_block_one: int = 1,
         gru_block_one: int = 1,
         layer_config: dict = {
-            "layer0": (50, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
         epochs: int = 100,
         show_progress: int = 1,
@@ -1310,205 +1152,5 @@ class OptimizePureMulti(PureMulti):
         )
         return self.details.history[metrics][-1]
 
-    def create_fit_encdec_rnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_rnn_block_one: int = 1,
-        enc_rnn_block_two: int = 1,
-        dec_rnn_block_one: int = 1,
-        dec_rnn_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains an encoder-decoder RNN model."""
-        self.create_encdec_rnn(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_rnn_block_one=enc_rnn_block_one,
-            enc_rnn_block_two=enc_rnn_block_two,
-            dec_rnn_block_one=dec_rnn_block_one,
-            dec_rnn_block_two=dec_rnn_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
 
-    def create_fit_encdec_lstm(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_lstm_block_one: int = 1,
-        enc_lstm_block_two: int = 1,
-        dec_lstm_block_one: int = 1,
-        dec_lstm_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (
-                100,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer1": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer2": (
-                50,
-                "relu",
-                0.0,
-                0.0,
-            ),  # (neurons, activation, regularization, dropout)
-            "layer3": (100, "relu", 0.0),  # (neurons, activation, regularization)
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains an encoder-decoder LSTM model."""
-        self.create_encdec_lstm(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_lstm_block_one=enc_lstm_block_one,
-            enc_lstm_block_two=enc_lstm_block_two,
-            dec_lstm_block_one=dec_lstm_block_one,
-            dec_lstm_block_two=dec_lstm_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
-
-    def create_fit_encdec_gru(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_gru_block_one: int = 1,
-        enc_gru_block_two: int = 1,
-        dec_gru_block_one: int = 1,
-        dec_gru_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (100, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (100, "relu", 0.0),
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains an encoder-decoder GRU model."""
-        self.create_encdec_gru(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_gru_block_one=enc_gru_block_one,
-            enc_gru_block_two=enc_gru_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
-
-    def create_fit_encdec_cnn(
-        self,
-        optimizer: str = "adam",
-        optimizer_args: dict = None,
-        loss: str = "mean_squared_error",
-        metrics: str = "mean_squared_error",
-        enc_conv_block_one: int = 1,
-        enc_conv_block_two: int = 1,
-        dec_gru_block_one: int = 1,
-        dec_gru_block_two: int = 1,
-        layer_config: dict = {
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (100, "relu", 0.0),
-        },
-        epochs: int = 100,
-        show_progress: int = 1,
-        validation_split: float = 0.20,
-        board: bool = False,
-        **callback_setting: dict,
-    ):
-        """Creates and trains an encoder-decoder CNN model."""
-        self.create_encdec_cnn(
-            optimizer=optimizer,
-            optimizer_args=optimizer_args,
-            loss=loss,
-            metrics=metrics,
-            enc_conv_block_one=enc_conv_block_one,
-            enc_conv_block_two=enc_conv_block_two,
-            dec_gru_block_one=dec_gru_block_one,
-            dec_gru_block_two=dec_gru_block_two,
-            layer_config=layer_config,
-        )
-        self.fit_model(
-            epochs=epochs,
-            show_progress=show_progress,
-            validation_split=validation_split,
-            board=board,
-            **callback_setting,
-        )
-        return self.details.history[metrics][-1]
+__all__ = ["PureMulti"]

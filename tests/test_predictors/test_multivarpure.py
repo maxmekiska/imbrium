@@ -2,82 +2,46 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from imbrium.predictors.multivarpure import *
+from imbrium.predictors.multivarpure import PureMulti
 
-data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+data = pd.read_csv("tests/example_dataset/mockData.csv")
+target = np.array(data["target"])
+features = np.array(
+    data[
+        [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+        ]
+    ]
+)
 data_small = data[:20]
 
 test0 = PureMulti(
     2,
     10,
-    data=data,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
+    target=target,
+    features=features,
 )
 
 test1 = PureMulti(
     2,
     10,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
+    target=target,
+    features=features,
 )
 
 
-test2 = OptimizePureMulti(
+test2 = PureMulti(
     2,
     10,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
-)
-
-test3 = OptimizePureMulti(
-    2,
-    10,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
+    target=target,
+    features=features,
 )
 
 
@@ -86,41 +50,58 @@ test0.create_lstm(
     loss="mean_squared_error",
     metrics="mean_squared_error",
     layer_config={
-        "layer0": (40, "relu", 0.0, 0.0),
-        "layer1": (50, "relu", 0.0, 0.0),
-        "layer2": (50, "relu", 0.0),
+        "layer0": {
+            "config": {
+                "neurons": 50,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer1": {
+            "config": {
+                "neurons": 50,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer2": {
+            "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+        },
     },
 )
+
 
 X = np.array(
     [
         [
-            0.98214266,
-            0.62855945,
-            -0.15375759,
-            -0.9744286,
-            -0.04959654,
-            1.05254828,
-            -1.32783522,
-            2.34476576,
+            4.10000000e01,
+            6.98412698e00,
+            1.02380952e00,
+            3.22000000e02,
+            2.55555556e00,
+            3.78800000e01,
+            -1.22230000e02,
+            8.32520000e00,
         ],
         [
-            -0.60701891,
-            0.32704136,
-            -0.26333577,
-            0.86143887,
-            -0.09251223,
-            1.04318455,
-            -1.32284391,
-            2.33223796,
+            2.10000000e01,
+            6.23813708e00,
+            9.71880492e-01,
+            2.40100000e03,
+            2.10984183e00,
+            3.78600000e01,
+            -1.22220000e02,
+            8.30140000e00,
         ],
     ]
 )
 
 y = np.array([3.585, 3.521, 3.413, 3.422, 2.697, 2.992, 2.414, 2.267, 2.611, 2.815])
 
-shape_x = (20630, 2, 8)
-shape_y = (20630, 10)
+shape_x = (488, 2, 8)
+shape_y = (488, 10)
 
 model_id = "LSTM"
 optimizer = "adam"
@@ -166,9 +147,25 @@ def test_create_mlp():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     )
     assert test0.get_model_id == "MLP"
@@ -183,9 +180,25 @@ def test_rnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     )
     assert test1.get_model_id == "RNN"
@@ -200,9 +213,25 @@ def test_create_lstm():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
+            },
         },
     )
     assert test1.get_model_id == "LSTM"
@@ -217,10 +246,37 @@ def test_create_cnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, 1, "relu", 0.0, 0.0),
-            "layer1": (50, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "CNN"
@@ -235,9 +291,29 @@ def test_create_gru():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "GRU"
@@ -252,9 +328,21 @@ def test_create_birnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "BI-RNN"
@@ -269,9 +357,21 @@ def test_create_bilstm():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "BI-LSTM"
@@ -286,9 +386,21 @@ def test_create_bigru():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "neurons": 50,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test1.get_model_id == "BI-GRU"
@@ -297,158 +409,57 @@ def test_create_bigru():
     assert test1.get_metrics == "mean_squared_error"
 
 
-def test_create_encdec_rnn():
-    test1.create_encdec_rnn(
-        optimizer="adam",
-        loss="mean_squared_error",
-        metrics="mean_squared_error",
-        layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (50, "relu", 0.0),
-        },
-    )
-    assert test1.get_model_id == "Encoder-Decoder-RNN"
-    assert test1.get_optimizer == "adam"
-    assert test1.get_loss == "mean_squared_error"
-    assert test1.get_metrics == "mean_squared_error"
-
-
-def test_create_encdec_lstm():
-    test1.create_encdec_lstm(
-        optimizer="adam",
-        loss="mean_squared_error",
-        metrics="mean_squared_error",
-        layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (50, "relu", 0.0),
-        },
-    )
-    assert test1.get_model_id == "Encoder-Decoder-LSTM"
-    assert test1.get_optimizer == "adam"
-    assert test1.get_loss == "mean_squared_error"
-    assert test1.get_metrics == "mean_squared_error"
-
-
-def test_create_encdec_gru():
-    test1.create_encdec_gru(
-        optimizer="adam",
-        loss="mean_squared_error",
-        metrics="mean_squared_error",
-        layer_config={
-            "layer0": (40, "relu", 0.0, 0.0),
-            "layer1": (50, "relu", 0.0, 0.0),
-            "layer2": (50, "relu", 0.0, 0.0),
-            "layer3": (50, "relu", 0.0),
-        },
-    )
-    assert test1.get_model_id == "Encoder-Decoder-GRU"
-    assert test1.get_optimizer == "adam"
-    assert test1.get_loss == "mean_squared_error"
-    assert test1.get_metrics == "mean_squared_error"
-
-
-def test_encdec_cnn():
-    test1.create_encdec_cnn(
-        optimizer="adam",
-        loss="mean_squared_error",
-        metrics="mean_squared_error",
-        layer_config={
-            "layer0": (40, 1, "relu", 0.0, 0.0),
-            "layer1": (50, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (50, "relu", 0.0),
-        },
-    )
-    assert test1.get_model_id == "Encoder(CNN)-Decoder(GRU)"
-    assert test1.get_optimizer == "adam"
-    assert test1.get_loss == "mean_squared_error"
-    assert test1.get_metrics == "mean_squared_error"
-
-
 def test_create_fit_mlp():
     try:
-        test2.create_fit_mlp(epochs=1)
+        test1.create_fit_mlp(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_rnn():
     try:
-        test3.create_fit_rnn(epochs=1)
+        test2.create_fit_rnn(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_lstm():
     try:
-        test3.create_fit_lstm(epochs=1)
+        test2.create_fit_lstm(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnn():
     try:
-        test3.create_fit_cnn(epochs=1)
+        test2.create_fit_cnn(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_gru():
     try:
-        test3.create_fit_gru(epochs=1)
+        test2.create_fit_gru(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_cerate_fit_birnn():
     try:
-        test3.create_fit_birnn(epochs=1)
+        test2.create_fit_birnn(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_creaste_fit_bilstm():
     try:
-        test3.create_fit_bilstm(epochs=1)
+        test2.create_fit_bilstm(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def create_fit_bigru():
     try:
-        test3.create_fit_bigru(epochs=1)
-    except Exception as e:
-        pytest.fail(f"An exception was raised: {e}")
-
-
-def create_fit_encdec_rnn():
-    try:
-        test3.create_fit_encdec_rnn(epochs=1)
-    except Exception as e:
-        pytest.fail(f"An exception was raised: {e}")
-
-
-def create_fit_encdec_lstm():
-    try:
-        test3.create_fit_encdec_lstm(epochs=1)
-    except Exception as e:
-        pytest.fail(f"An exception was raised: {e}")
-
-
-def create_fit_encdec_gru():
-    try:
-        test3.create_fit_encdec_gru(epochs=1)
-    except Exception as e:
-        pytest.fail(f"An exception was raised: {e}")
-
-
-def create_fit_encdec_cnn():
-    try:
-        test3.create_fit_encdec_cnn(epochs=1)
+        test2.create_fit_bigru(epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")

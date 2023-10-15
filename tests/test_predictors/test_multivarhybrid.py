@@ -2,28 +2,47 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from imbrium.predictors.multivarhybrid import *
+from imbrium.predictors.multivarhybrid import HybridMulti
 
-data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+data = pd.read_csv("tests/example_dataset/mockData.csv")
+target = np.array(data["target"])
+features = np.array(
+    data[
+        [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+        ]
+    ]
+)
 data_small = data[:20]
+target_small = np.array(data_small["target"])
+features_small = np.array(
+    data_small[
+        [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+        ]
+    ]
+)
 
 test0 = HybridMulti(
     1,
     5,
     5,
-    data=data,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
+    target=target,
+    features=features,
 )
 
 
@@ -31,39 +50,17 @@ test1 = HybridMulti(
     1,
     5,
     5,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
+    target=target_small,
+    features=features_small,
 )
 
 
-test1 = OptimizeHybridMulti(
+test1 = HybridMulti(
     1,
     5,
     5,
-    data=data_small,
-    features=[
-        "target",
-        "HouseAge",
-        "AveRooms",
-        "AveBedrms",
-        "Population",
-        "AveOccup",
-        "Latitude",
-        "Longitude",
-        "MedInc",
-    ],
-    scale="standard",
+    target=target_small,
+    features=features_small,
 )
 
 test0.create_cnnlstm(
@@ -71,65 +68,99 @@ test0.create_cnnlstm(
     loss="mean_squared_error",
     metrics="mean_squared_error",
     layer_config={
-        "layer0": (64, 1, "relu", 0.0, 0.0),
-        "layer1": (32, 1, "relu", 0.0, 0.0),
-        "layer2": (2),
-        "layer3": (50, "relu", 0.0, 0.0),
-        "layer4": (25, "relu", 0.0),
+        "layer0": {
+            "config": {
+                "filters": 64,
+                "kernel_size": 1,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer1": {
+            "config": {
+                "filters": 32,
+                "kernel_size": 1,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer2": {
+            "config": {
+                "pool_size": 2,
+            }
+        },
+        "layer3": {
+            "config": {
+                "neurons": 32,
+                "activation": "relu",
+                "regularization": 0.0,
+                "dropout": 0.0,
+            }
+        },
+        "layer4": {
+            "config": {
+                "neurons": 32,
+                "activation": "relu",
+                "regularization": 0.0,
+            }
+        },
     },
 )
+
 
 X = np.array(
     [
         [
-            [0.98214266],
-            [-0.60701891],
-            [1.85618152],
-            [1.85618152],
-            [1.85618152],
-            [0.62855945],
-            [0.32704136],
-            [1.15562047],
-            [0.15696608],
-            [0.3447108],
-            [-0.15375759],
-            [-0.26333577],
-            [-0.04901636],
-            [-0.04983292],
-            [-0.03290586],
-            [-0.9744286],
-            [0.86143887],
-            [-0.82077735],
-            [-0.76602806],
-            [-0.75984669],
-            [-0.04959654],
-            [-0.09251223],
-            [-0.02584253],
-            [-0.0503293],
-            [-0.08561576],
-            [1.05254828],
-            [1.04318455],
-            [1.03850269],
-            [1.03850269],
-            [1.03850269],
-            [-1.32783522],
-            [-1.32284391],
-            [-1.33282653],
-            [-1.33781784],
-            [-1.33781784],
-            [2.34476576],
-            [2.33223796],
-            [1.7826994],
-            [0.93296751],
-            [-0.012881],
+            [4.10000000e01],
+            [2.10000000e01],
+            [5.20000000e01],
+            [5.20000000e01],
+            [5.20000000e01],
+            [6.98412698e00],
+            [6.23813708e00],
+            [8.28813559e00],
+            [5.81735160e00],
+            [6.28185328e00],
+            [1.02380952e00],
+            [9.71880492e-01],
+            [1.07344633e00],
+            [1.07305936e00],
+            [1.08108108e00],
+            [3.22000000e02],
+            [2.40100000e03],
+            [4.96000000e02],
+            [5.58000000e02],
+            [5.65000000e02],
+            [2.55555556e00],
+            [2.10984183e00],
+            [2.80225989e00],
+            [2.54794520e00],
+            [2.18146718e00],
+            [3.78800000e01],
+            [3.78600000e01],
+            [3.78500000e01],
+            [3.78500000e01],
+            [3.78500000e01],
+            [-1.22230000e02],
+            [-1.22220000e02],
+            [-1.22240000e02],
+            [-1.22250000e02],
+            [-1.22250000e02],
+            [8.32520000e00],
+            [8.30140000e00],
+            [7.25740000e00],
+            [5.64310000e00],
+            [3.84620000e00],
         ]
     ]
 )
 
 y = np.array([3.422, 2.697, 2.992, 2.414, 2.267])
 
-shape_x = (20632, 1, 40, 1)
-shape_y = (20632, 5)
+shape_x = (490, 1, 40, 1)
+shape_y = (490, 5)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"
@@ -175,11 +206,44 @@ def test_create_cnnrnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test0.get_model_id == "CNN-RNN"
@@ -194,11 +258,44 @@ def test_create_cnnlstm():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test0.get_model_id == "CNN-LSTM"
@@ -213,11 +310,44 @@ def test_create_cnngru():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test0.get_model_id == "CNN-GRU"
@@ -232,11 +362,44 @@ def test_create_cnnbirnn():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test0.get_model_id == "CNN-BI-RNN"
@@ -251,11 +414,44 @@ def test_create_cnnbilstm():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test0.get_model_id == "CNN-BI-LSTM"
@@ -270,11 +466,44 @@ def test_create_cnnbigru():
         loss="mean_squared_error",
         metrics="mean_squared_error",
         layer_config={
-            "layer0": (64, 1, "relu", 0.0, 0.0),
-            "layer1": (32, 1, "relu", 0.0, 0.0),
-            "layer2": (2),
-            "layer3": (50, "relu", 0.0, 0.0),
-            "layer4": (25, "relu", 0.0),
+            "layer0": {
+                "config": {
+                    "filters": 64,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer1": {
+                "config": {
+                    "filters": 32,
+                    "kernel_size": 1,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer2": {
+                "config": {
+                    "pool_size": 2,
+                }
+            },
+            "layer3": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                    "dropout": 0.0,
+                }
+            },
+            "layer4": {
+                "config": {
+                    "neurons": 32,
+                    "activation": "relu",
+                    "regularization": 0.0,
+                }
+            },
         },
     )
     assert test0.get_model_id == "CNN-BI-GRU"
