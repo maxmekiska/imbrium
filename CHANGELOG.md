@@ -89,3 +89,8 @@ activation function type
 - removed encoder-decoder architectures
 - improved layer configuration via dictionary input
 - split data argument into target and feature numpy arrays
+ 
+### 2.0.1
+
+- bug: removed dead pandas imports 
+- chore: added tensorflow as base requirement
