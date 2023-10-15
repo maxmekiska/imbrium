@@ -4,19 +4,19 @@ import pytest
 
 from imbrium.predictors.multivarhybrid import HybridMulti
 
-data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+data = pd.read_csv("tests/example_dataset/mockData.csv")
 target = np.array(data["target"])
 features = np.array(
     data[
         [
-            "HouseAge",
-            "AveRooms",
-            "AveBedrms",
-            "Population",
-            "AveOccup",
-            "Latitude",
-            "Longitude",
-            "MedInc",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
         ]
     ]
 )
@@ -25,14 +25,14 @@ target_small = np.array(data_small["target"])
 features_small = np.array(
     data_small[
         [
-            "HouseAge",
-            "AveRooms",
-            "AveBedrms",
-            "Population",
-            "AveOccup",
-            "Latitude",
-            "Longitude",
-            "MedInc",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
         ]
     ]
 )
@@ -41,18 +41,6 @@ test0 = HybridMulti(
     1,
     5,
     5,
-    # data=data,
-    # features=[
-    # "target",
-    # "HouseAge",
-    # "AveRooms",
-    # "AveBedrms",
-    # "Population",
-    # "AveOccup",
-    # "Latitude",
-    # "Longitude",
-    # "MedInc",
-    # ],
     target=target,
     features=features,
 )
@@ -62,18 +50,6 @@ test1 = HybridMulti(
     1,
     5,
     5,
-    # data=data_small,
-    # features=[
-    # "target",
-    # "HouseAge",
-    # "AveRooms",
-    # "AveBedrms",
-    # "Population",
-    # "AveOccup",
-    # "Latitude",
-    # "Longitude",
-    # "MedInc",
-    # ],
     target=target_small,
     features=features_small,
 )
@@ -83,18 +59,6 @@ test1 = HybridMulti(
     1,
     5,
     5,
-    # data=data_small,
-    # features=[
-    # "target",
-    # "HouseAge",
-    # "AveRooms",
-    # "AveBedrms",
-    # "Population",
-    # "AveOccup",
-    # "Latitude",
-    # "Longitude",
-    # "MedInc",
-    # ],
     target=target_small,
     features=features_small,
 )
@@ -195,8 +159,8 @@ X = np.array(
 
 y = np.array([3.422, 2.697, 2.992, 2.414, 2.267])
 
-shape_x = (20632, 1, 40, 1)
-shape_y = (20632, 5)
+shape_x = (490, 1, 40, 1)
+shape_y = (490, 5)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"

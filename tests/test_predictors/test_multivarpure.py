@@ -4,19 +4,19 @@ import pytest
 
 from imbrium.predictors.multivarpure import PureMulti
 
-data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
+data = pd.read_csv("tests/example_dataset/mockData.csv")
 target = np.array(data["target"])
 features = np.array(
     data[
         [
-            "HouseAge",
-            "AveRooms",
-            "AveBedrms",
-            "Population",
-            "AveOccup",
-            "Latitude",
-            "Longitude",
-            "MedInc",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
         ]
     ]
 )
@@ -27,35 +27,11 @@ test0 = PureMulti(
     10,
     target=target,
     features=features,
-    # data=data,
-    # features=[
-    # "target",
-    # "HouseAge",
-    # "AveRooms",
-    # "AveBedrms",
-    # "Population",
-    # "AveOccup",
-    # "Latitude",
-    # "Longitude",
-    # "MedInc",
-    # ],
 )
 
 test1 = PureMulti(
     2,
     10,
-    # data=data_small,
-    # features=[
-    # "target",
-    # "HouseAge",
-    # "AveRooms",
-    # "AveBedrms",
-    # "Population",
-    # "AveOccup",
-    # "Latitude",
-    # "Longitude",
-    # "MedInc",
-    # ],
     target=target,
     features=features,
 )
@@ -64,18 +40,6 @@ test1 = PureMulti(
 test2 = PureMulti(
     2,
     10,
-    # data=data_small,
-    # features=[
-    # "target",
-    # "HouseAge",
-    # "AveRooms",
-    # "AveBedrms",
-    # "Population",
-    # "AveOccup",
-    # "Latitude",
-    # "Longitude",
-    # "MedInc",
-    # ],
     target=target,
     features=features,
 )
@@ -136,8 +100,8 @@ X = np.array(
 
 y = np.array([3.585, 3.521, 3.413, 3.422, 2.697, 2.992, 2.414, 2.267, 2.611, 2.815])
 
-shape_x = (20630, 2, 8)
-shape_y = (20630, 10)
+shape_x = (488, 2, 8)
+shape_y = (488, 10)
 
 model_id = "LSTM"
 optimizer = "adam"

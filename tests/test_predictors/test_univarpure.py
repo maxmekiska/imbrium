@@ -4,8 +4,7 @@ import pytest
 
 from imbrium.predictors.univarpure import PureUni
 
-data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
-# data = data["target"]
+data = pd.read_csv("tests/example_dataset/mockData.csv")
 data = np.array(data["target"])
 data_small = data[:20]
 
@@ -44,8 +43,8 @@ X = np.array([[3.422], [2.697]])
 
 y = np.array([[3.422], [2.697], [2.992]])
 
-shape_x = (20636, 2, 1)
-shape_y = (20636, 3, 1)
+shape_x = (494, 2, 1)
+shape_y = (494, 3, 1)
 
 model_id = "LSTM"
 optimizer = "adam"

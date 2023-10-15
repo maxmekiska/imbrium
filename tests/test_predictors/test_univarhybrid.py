@@ -4,8 +4,7 @@ import pytest
 
 from imbrium.predictors.univarhybrid import HybridUni
 
-data = pd.read_csv("tests/example_dataset/CaliforniaHousing.csv")
-# data = data["target"]
+data = pd.read_csv("tests/example_dataset/mockData.csv")
 data = np.array(data["target"])
 data_small = data[:20]
 
@@ -69,8 +68,8 @@ X = np.array(
 y = np.array([[2.135], [1.913], [1.592]])
 
 
-shape_x = (20628, 2, 5, 1)
-shape_y = (20628, 3, 1)
+shape_x = (486, 2, 5, 1)
+shape_y = (486, 3, 1)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"
