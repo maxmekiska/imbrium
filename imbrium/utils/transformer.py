@@ -14,10 +14,10 @@ def data_prep_uni(data: array) -> array:
 
 
 def data_prep_multi(target: array, features: array) -> array:
-    """Extract features and convert DataFrame to an array.
+    """Prepare target and feature numpy arrays for mulitvariate model intake.
     Parameters:
-        data (array): DataFrame containing multi-feature data.
-        features (list): All features that should be considered.
+        target (array): Array containing multi-feature data.
+        features (array): All features that should be considered.
     Returns:
         data (array): Array containing sequences of selected features.
     """

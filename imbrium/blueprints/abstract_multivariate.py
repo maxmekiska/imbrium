@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 from numpy import array
-from pandas import DataFrame
 
 
 class MultiVariateMultiStep(ABC):
@@ -76,7 +75,7 @@ class MultiVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def predict(self, data: array) -> DataFrame:
+    def predict(self, data: array) -> array:
         pass
 
     @abstractmethod
