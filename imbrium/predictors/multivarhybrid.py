@@ -19,39 +19,37 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def __init__(
         self,
-        sub_seq: int,
-        steps_past: int,
-        steps_future: int,
         target: array = array([]),
         features: array = array([]),
     ) -> object:
         """
         Parameters:
-            sub_seq (int): Divide data into further subsequences.
-            steps_past (int): Steps predictor will look backward.
-            steps_future (int): Steps predictor will look forward.
             target (array): Input target array.
             features (array): Input feature array.
         """
-        self.sub_seq = sub_seq
-        self.steps_past = steps_past
-        self.steps_future = steps_future
+        self.target = target
+        self.features = features
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
 
         self.model_id = ""
+
+    def _model_intake_prep(
+        self, sub_seq: int, steps_past: int, steps_future: int
+    ) -> None:
+        """Private method that prepares feature and label data arrays for model intake."""
+        self.steps_past = steps_past
         self.sub_seq = sub_seq
-
-        if len(target) > 0:
-            self.data = data_prep_multi(target, features)
+        temp_target = self.target.copy()
+        temp_features = self.features.copy()
+        if len(temp_target) > 0:
+            temp_data = data_prep_multi(temp_target, temp_features)
             self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
-                self.data, sub_seq, steps_past, steps_future
+                temp_data, sub_seq, steps_past, steps_future
             )
-
         else:
-            self.target = target
-            self.features = features
+            pass
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -64,6 +62,16 @@ class BaseHybridMulti(MultiVariateMultiStep):
     def get_model_id(self) -> str:
         """Get model id."""
         return self.model_id
+
+    @property
+    def get_target(self) -> array:
+        """Get original target data."""
+        return self.target
+
+    @property
+    def get_target_shape(self) -> array:
+        """Get shape of original target data."""
+        return self.target.shape
 
     @property
     def get_X_input(self) -> array:
@@ -102,6 +110,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def create_cnnrnn(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -153,15 +164,25 @@ class BaseHybridMulti(MultiVariateMultiStep):
     ):
         """Creates CNN-RNN hybrid model.
         Parameters:
+            sub_seq (int): Divide data into further subsequences.
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
+            optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
             metrics (str): Performance measurement.
+            conv_block_one (int): Number of convolutional layers in first block.
+            conv_block_two (int): Number of convolutional layers in second block.
+            rnn_block_one (int): Number of RNN layers in first block.
+            rnn_block_two (int): Number of RNN layers in second block.
             layer_config (dict): Adjust neurons and acitivation functions.
         """
         self.set_model_id("CNN-RNN")
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(sub_seq, steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -184,6 +205,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def create_cnnlstm(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -235,6 +259,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
     ):
         """Creates CNN-LSTM hybrid model.
         Parameters:
+            sub_seq (int): Divide data into further subsequences.
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -249,6 +276,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(sub_seq, steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -271,6 +300,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def create_cnngru(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -322,6 +354,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
     ):
         """Creates CNN-GRU hybrid model.
         Parameters:
+            sub_seq (int): Divide data into further subsequences.
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -336,6 +371,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(sub_seq, steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -358,6 +395,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def create_cnnbirnn(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -409,6 +449,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
     ):
         """Creates CNN-BI-RNN hybrid model.
         Parameters:
+            sub_seq (int): Divide data into further subsequences.
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -423,6 +466,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(sub_seq, steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -445,6 +490,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def create_cnnbilstm(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -496,6 +544,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
     ):
         """Creates CNN-BI-LSTM hybrid model.
         Parameters:
+            sub_seq (int): Divide data into further subsequences.
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -510,6 +561,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(sub_seq, steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -532,6 +585,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 
     def create_cnnbigru(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -583,6 +639,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
     ):
         """Creates CNN-BI-GRU hybrid model.
         Parameters:
+            sub_seq (int): Divide data into further subsequences.
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -597,6 +656,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(sub_seq, steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -701,13 +762,25 @@ class BaseHybridMulti(MultiVariateMultiStep):
         """Returns performance details."""
         return self.details
 
-    def predict(self, data: array) -> array:
+    def predict(
+        self,
+        data: array,
+        sub_seq: int = None,
+        steps_past: int = None,
+        steps_future: int = None,
+    ) -> array:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.
         Returns:
             (array): Forecast for sequence provided.
         """
+        if sub_seq != None:
+            self.sub_seq = sub_seq
+        if steps_past != None:
+            self.steps_past = steps_past
+        if steps_future != None:
+            self.steps_future = steps_future
 
         shape_ = int((data.shape[1] * self.steps_past) / self.sub_seq)
         data = data.reshape(1, self.sub_seq, shape_, 1)
@@ -736,6 +809,9 @@ class BaseHybridMulti(MultiVariateMultiStep):
 class HybridMulti(BaseHybridMulti):
     def create_fit_cnnrnn(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -792,6 +868,9 @@ class HybridMulti(BaseHybridMulti):
     ):
         """Creates CNN-RNN hybrid model."""
         self.create_cnnrnn(
+            sub_seq=sub_seq,
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -813,6 +892,9 @@ class HybridMulti(BaseHybridMulti):
 
     def create_fit_cnnlstm(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -869,6 +951,9 @@ class HybridMulti(BaseHybridMulti):
     ):
         """Creates CNN-LSTM hybrid model."""
         self.create_cnnlstm(
+            sub_seq=sub_seq,
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -890,6 +975,9 @@ class HybridMulti(BaseHybridMulti):
 
     def create_fit_cnngru(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -946,6 +1034,9 @@ class HybridMulti(BaseHybridMulti):
     ):
         """Creates CNN-GRU hybrid model."""
         self.create_cnngru(
+            sub_seq=sub_seq,
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -967,6 +1058,9 @@ class HybridMulti(BaseHybridMulti):
 
     def create_fit_cnnbirnn(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1023,6 +1117,9 @@ class HybridMulti(BaseHybridMulti):
     ):
         """Creates CNN-BiRNN hybrid model."""
         self.create_cnnbirnn(
+            sub_seq=sub_seq,
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1044,6 +1141,9 @@ class HybridMulti(BaseHybridMulti):
 
     def create_fit_cnnbilstm(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1100,6 +1200,9 @@ class HybridMulti(BaseHybridMulti):
     ):
         """Creates CNN-BiLSTM hybrid model."""
         self.create_cnnbilstm(
+            sub_seq=sub_seq,
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1121,6 +1224,9 @@ class HybridMulti(BaseHybridMulti):
 
     def create_fit_cnnbigru(
         self,
+        sub_seq: int,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1177,6 +1283,9 @@ class HybridMulti(BaseHybridMulti):
     ):
         """Creates CNN-BiGRU hybrid model."""
         self.create_cnnbigru(
+            sub_seq=sub_seq,
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,

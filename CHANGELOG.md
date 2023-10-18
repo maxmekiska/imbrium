@@ -94,3 +94,8 @@ activation function type
 
 - bug: removed dead pandas imports 
 - chore: added tensorflow as base requirement
+ 
+### 2.1.0
+
+- feat!: removed data preparation out of predictor class, sub_seq, steps_past, steps_future need now to be defined in each model method
+- this will allow more advanced hyper-parameter tuning

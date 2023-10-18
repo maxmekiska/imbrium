@@ -12,8 +12,21 @@ class MultiVariateMultiStep(ABC):
     def __init__(self):
         pass
 
+    def _model_intake_prep(self, steps_past: int, steps_future: int) -> None:
+        pass
+
     @abstractmethod
     def set_model_id(self, name: str):
+        pass
+
+    @property
+    @abstractmethod
+    def get_target(self) -> array:
+        pass
+
+    @property
+    @abstractmethod
+    def get_target_shape(self) -> array:
         pass
 
     @property
@@ -75,7 +88,13 @@ class MultiVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def predict(self, data: array) -> array:
+    def predict(
+        self,
+        data: array,
+        sub_seq: int = None,
+        steps_past: int = None,
+        steps_future: int = None,
+    ) -> array:
         pass
 
     @abstractmethod
