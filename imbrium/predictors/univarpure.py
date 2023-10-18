@@ -33,9 +33,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def _model_intake_prep(self, steps_past: int, steps_future: int) -> None:
         """Private method that prepares feature and label data arrays for model intake."""
-        temp_data = self.target.copy()
-        if len(temp_data) > 0:
-            temp_data = data_prep_uni(temp_data)
+        if len(self.target) > 0:
+            temp_data = data_prep_uni(self.target)
             self.input_x, self.input_y = sequence_prep_standard_uni(
                 temp_data, steps_past, steps_future
             )

@@ -37,10 +37,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def _model_intake_prep(self, steps_past: int, steps_future: int) -> None:
         """Private method that prepares feature and label data arrays for model intake."""
-        temp_target = self.target.copy()
-        temp_features = self.features.copy()
-        if len(temp_target) > 0:
-            temp_data = data_prep_multi(temp_target, temp_features)
+        if len(self.target) > 0:
+            temp_data = data_prep_multi(self.target, self.features)
             self.input_x, self.input_y = multistep_prep_standard(
                 temp_data, steps_past, steps_future
             )

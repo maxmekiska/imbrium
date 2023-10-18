@@ -37,9 +37,8 @@ class BaseHybridUni(UniVariateMultiStep):
         """Private method that prepares feature and label data arrays for model intake."""
         self.steps_past = steps_past
         self.sub_seq = sub_seq
-        temp_data = self.target.copy()
-        if len(temp_data) > 0:
-            temp_data = data_prep_uni(temp_data)
+        if len(self.target) > 0:
+            temp_data = data_prep_uni(self.target)
             self.input_x, self.input_y, self.modified_back = sequence_prep_hybrid_uni(
                 temp_data, sub_seq, steps_past, steps_future
             )

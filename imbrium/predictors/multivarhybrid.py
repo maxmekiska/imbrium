@@ -41,10 +41,8 @@ class BaseHybridMulti(MultiVariateMultiStep):
         """Private method that prepares feature and label data arrays for model intake."""
         self.steps_past = steps_past
         self.sub_seq = sub_seq
-        temp_target = self.target.copy()
-        temp_features = self.features.copy()
-        if len(temp_target) > 0:
-            temp_data = data_prep_multi(temp_target, temp_features)
+        if len(self.target) > 0:
+            temp_data = data_prep_multi(self.target, self.features)
             self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
                 temp_data, sub_seq, steps_past, steps_future
             )
