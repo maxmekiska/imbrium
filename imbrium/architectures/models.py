@@ -28,6 +28,7 @@ def mlp(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(shape=(input_shape,)))
@@ -111,6 +112,7 @@ def rnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -197,6 +199,7 @@ def lstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -283,6 +286,7 @@ def cnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -373,6 +377,7 @@ def gru(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -458,6 +463,7 @@ def birnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -534,6 +540,7 @@ def bilstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -610,6 +617,7 @@ def bigru(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -688,6 +696,7 @@ def cnnrnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -809,6 +818,7 @@ def cnnlstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -930,6 +940,7 @@ def cnngru(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -1051,6 +1062,7 @@ def cnnbirnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -1176,6 +1188,7 @@ def cnnbilstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
@@ -1301,6 +1314,7 @@ def cnnbigru(
     Returns:
         model (object): Returns compiled Keras model.
     """
+    keras_core.backend.clear_session()
     layer_num = 0
     model = keras_core.Sequential()
     model.add(keras_core.Input(input_shape))
