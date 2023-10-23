@@ -709,12 +709,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
                     callbacks=[callback_board],
                 )
             else:
-                callback_board = TensorBoard(
-                    log_dir="logs/fit/"
-                    + self.model_id
-                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
-                    histogram_freq=1,
-                )
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
