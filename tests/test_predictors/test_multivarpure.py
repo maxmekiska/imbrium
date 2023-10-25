@@ -23,29 +23,25 @@ features = np.array(
 data_small = data[:20]
 
 test0 = PureMulti(
-    2,
-    10,
     target=target,
     features=features,
 )
 
 test1 = PureMulti(
-    2,
-    10,
     target=target,
     features=features,
 )
 
 
 test2 = PureMulti(
-    2,
-    10,
     target=target,
     features=features,
 )
 
 
 test0.create_lstm(
+    steps_past=2,
+    steps_future=10,
     optimizer="adam",
     loss="mean_squared_error",
     metrics="mean_squared_error",
@@ -143,6 +139,8 @@ def test_get_metrics():
 
 def test_create_mlp():
     test0.create_mlp(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -176,6 +174,8 @@ def test_create_mlp():
 
 def test_rnn():
     test1.create_rnn(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -209,6 +209,8 @@ def test_rnn():
 
 def test_create_lstm():
     test1.create_lstm(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -242,6 +244,8 @@ def test_create_lstm():
 
 def test_create_cnn():
     test1.create_cnn(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -287,6 +291,8 @@ def test_create_cnn():
 
 def test_create_gru():
     test1.create_gru(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -324,6 +330,8 @@ def test_create_gru():
 
 def test_create_birnn():
     test1.create_birnn(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -353,6 +361,8 @@ def test_create_birnn():
 
 def test_create_bilstm():
     test1.create_bilstm(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -382,6 +392,8 @@ def test_create_bilstm():
 
 def test_create_bigru():
     test1.create_bigru(
+        steps_past=2,
+        steps_future=10,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -411,55 +423,55 @@ def test_create_bigru():
 
 def test_create_fit_mlp():
     try:
-        test1.create_fit_mlp(epochs=1)
+        test1.create_fit_mlp(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_rnn():
     try:
-        test2.create_fit_rnn(epochs=1)
+        test2.create_fit_rnn(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_lstm():
     try:
-        test2.create_fit_lstm(epochs=1)
+        test2.create_fit_lstm(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnn():
     try:
-        test2.create_fit_cnn(epochs=1)
+        test2.create_fit_cnn(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_gru():
     try:
-        test2.create_fit_gru(epochs=1)
+        test2.create_fit_gru(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_cerate_fit_birnn():
     try:
-        test2.create_fit_birnn(epochs=1)
+        test2.create_fit_birnn(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_creaste_fit_bilstm():
     try:
-        test2.create_fit_bilstm(epochs=1)
+        test2.create_fit_bilstm(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def create_fit_bigru():
     try:
-        test2.create_fit_bigru(epochs=1)
+        test2.create_fit_bigru(steps_past=2, steps_future=10, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")

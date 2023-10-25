@@ -38,32 +38,21 @@ features_small = np.array(
 )
 
 test0 = HybridMulti(
-    1,
-    5,
-    5,
     target=target,
     features=features,
 )
 
 
 test1 = HybridMulti(
-    1,
-    5,
-    5,
     target=target_small,
     features=features_small,
 )
 
-
-test1 = HybridMulti(
-    1,
-    5,
-    5,
-    target=target_small,
-    features=features_small,
-)
 
 test0.create_cnnlstm(
+    sub_seq=1,
+    steps_past=5,
+    steps_future=5,
     optimizer="adam",
     loss="mean_squared_error",
     metrics="mean_squared_error",
@@ -202,6 +191,9 @@ def test_get_metrics():
 
 def test_create_cnnrnn():
     test0.create_cnnrnn(
+        sub_seq=1,
+        steps_past=5,
+        steps_future=5,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -254,6 +246,9 @@ def test_create_cnnrnn():
 
 def test_create_cnnlstm():
     test0.create_cnnlstm(
+        sub_seq=1,
+        steps_past=5,
+        steps_future=5,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -306,6 +301,9 @@ def test_create_cnnlstm():
 
 def test_create_cnngru():
     test0.create_cnngru(
+        sub_seq=1,
+        steps_past=5,
+        steps_future=5,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -358,6 +356,9 @@ def test_create_cnngru():
 
 def test_create_cnnbirnn():
     test0.create_cnnbirnn(
+        sub_seq=1,
+        steps_past=5,
+        steps_future=5,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -410,6 +411,9 @@ def test_create_cnnbirnn():
 
 def test_create_cnnbilstm():
     test0.create_cnnbilstm(
+        sub_seq=1,
+        steps_past=5,
+        steps_future=5,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -462,6 +466,9 @@ def test_create_cnnbilstm():
 
 def test_create_cnnbigru():
     test0.create_cnnbigru(
+        sub_seq=1,
+        steps_past=5,
+        steps_future=5,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -514,41 +521,41 @@ def test_create_cnnbigru():
 
 def test_create_fit_cnnrnn():
     try:
-        test1.create_fit_cnnrnn(epochs=1)
+        test1.create_fit_cnnrnn(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnnlstm():
     try:
-        test1.create_fit_cnnlstm(epochs=1)
+        test1.create_fit_cnnlstm(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_cnngru():
     try:
-        test1.create_fit_cnngru(epochs=1)
+        test1.create_fit_cnngru(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnnbirnn():
     try:
-        test1.create_fit_cnnbirnn(epochs=1)
+        test1.create_fit_cnnbirnn(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnnbilstm():
     try:
-        test1.create_fit_cnnbilstm(epochs=1)
+        test1.create_fit_cnnbilstm(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnnbigru():
     try:
-        test1.create_fit_cnnbigru(epochs=1)
+        test1.create_fit_cnnbigru(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")

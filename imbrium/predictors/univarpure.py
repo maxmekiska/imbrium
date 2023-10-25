@@ -19,29 +19,27 @@ class BasePureUni(UniVariateMultiStep):
 
     def __init__(
         self,
-        steps_past: int,
-        steps_future: int,
         target: array = array([]),
     ) -> object:
         """
         Parameters:
-            steps_past (int): Steps predictor will look backward.
-            steps_future (int): Steps predictor will look forward.
             target (array): Input target data numpy array.
         """
+        self.target = target
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
 
-        if len(target) > 0:
-            self.data = target
-            self.data = data_prep_uni(target)
+    def _model_intake_prep(self, steps_past: int, steps_future: int) -> None:
+        """Private method that prepares feature and label data arrays for model intake."""
+        if len(self.target) > 0:
+            temp_data = data_prep_uni(self.target)
             self.input_x, self.input_y = sequence_prep_standard_uni(
-                self.data, steps_past, steps_future
+                temp_data, steps_past, steps_future
             )
         else:
-            self.data = target
+            pass
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -54,6 +52,16 @@ class BasePureUni(UniVariateMultiStep):
     def get_model_id(self) -> str:
         """Get model id."""
         return self.model_id
+
+    @property
+    def get_target(self) -> array:
+        """Get original target data."""
+        return self.target
+
+    @property
+    def get_target_shape(self) -> array:
+        """Get shape of original target data."""
+        return self.target.shape
 
     @property
     def get_X_input(self) -> array:
@@ -92,6 +100,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_mlp(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -123,6 +133,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates MLP model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -136,6 +148,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         self.input_x = self.input_x.reshape(
             (self.input_x.shape[0], self.input_x.shape[1])
@@ -157,6 +171,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_rnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -188,6 +204,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates RNN model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -201,6 +219,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -218,6 +238,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_lstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -249,6 +271,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates LSTM model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -262,6 +286,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -279,6 +305,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_cnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -321,6 +349,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates CNN model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -334,6 +364,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -351,6 +383,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_gru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -386,6 +420,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates GRU model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -399,6 +435,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -416,6 +454,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_birnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -442,6 +482,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates BI-RNN model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -454,6 +496,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -470,6 +514,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_bilstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -496,6 +542,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates BI-LSTM model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -508,6 +556,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -524,6 +574,8 @@ class BasePureUni(UniVariateMultiStep):
 
     def create_bigru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -550,6 +602,8 @@ class BasePureUni(UniVariateMultiStep):
     ):
         """Creates BI-GRU model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -562,6 +616,8 @@ class BasePureUni(UniVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -609,12 +665,6 @@ class BasePureUni(UniVariateMultiStep):
                     callbacks=[callback_board],
                 )
             else:
-                callback_board = TensorBoard(
-                    log_dir="logs/fit/"
-                    + self.model_id
-                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
-                    histogram_freq=1,
-                )
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
@@ -701,6 +751,8 @@ class BasePureUni(UniVariateMultiStep):
 class PureUni(BasePureUni):
     def create_fit_mlp(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -737,6 +789,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
         self.create_mlp(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -757,6 +811,8 @@ class PureUni(BasePureUni):
 
     def create_fit_rnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -793,6 +849,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a Recurrent Neural Network model."""
         self.create_rnn(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -813,6 +871,8 @@ class PureUni(BasePureUni):
 
     def create_fit_lstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -849,6 +909,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a LSTM model."""
         self.create_lstm(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -869,6 +931,8 @@ class PureUni(BasePureUni):
 
     def create_fit_cnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -916,6 +980,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a Convolutional Neural Network model."""
         self.create_cnn(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -936,6 +1002,8 @@ class PureUni(BasePureUni):
 
     def create_fit_gru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -976,6 +1044,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a GRU model."""
         self.create_gru(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -996,6 +1066,8 @@ class PureUni(BasePureUni):
 
     def create_fit_birnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1027,6 +1099,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a Bidirectional RNN model."""
         self.create_birnn(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1046,6 +1120,8 @@ class PureUni(BasePureUni):
 
     def create_fit_bilstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1077,6 +1153,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a Bidirectional LSTM model."""
         self.create_bilstm(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1096,6 +1174,8 @@ class PureUni(BasePureUni):
 
     def create_fit_bigru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1127,6 +1207,8 @@ class PureUni(BasePureUni):
     ):
         """Creates and trains a Bidirectional GRU model."""
         self.create_bigru(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,

@@ -20,31 +20,30 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def __init__(
         self,
-        steps_past: int,
-        steps_future: int,
         target: array = array([]),
         features: array = array([]),
     ) -> object:
         """
         Parameters:
-            steps_past (int): Steps predictor will look backward.
-            steps_future (int): Steps predictor will look forward.
             target (array): Input target data numpy array.
             features (array): Input feature data numpy array.
         """
+        self.target = target
+        self.features = features
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
 
-        if len(target) > 0:
-            self.data = data_prep_multi(target, features)
+    def _model_intake_prep(self, steps_past: int, steps_future: int) -> None:
+        """Private method that prepares feature and label data arrays for model intake."""
+        if len(self.target) > 0:
+            temp_data = data_prep_multi(self.target, self.features)
             self.input_x, self.input_y = multistep_prep_standard(
-                self.data, steps_past, steps_future
+                temp_data, steps_past, steps_future
             )
         else:
-            self.target = target
-            self.features = features
+            pass
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -57,6 +56,16 @@ class BasePureMulti(MultiVariateMultiStep):
     def get_model_id(self) -> str:
         """Get model id."""
         return self.model_id
+
+    @property
+    def get_target(self) -> array:
+        """Get original target data."""
+        return self.target
+
+    @property
+    def get_target_shape(self) -> array:
+        """Get shape of original target data."""
+        return self.target.shape
 
     @property
     def get_X_input(self) -> array:
@@ -95,6 +104,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_mlp(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -126,6 +137,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates MLP model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -140,13 +153,9 @@ class BasePureMulti(MultiVariateMultiStep):
         self.loss = loss
         self.metrics = metrics
 
-        optimizer_obj = get_optimizer(optimizer, optimizer_args)
+        self._model_intake_prep(steps_past, steps_future)
 
-        # necessary to account for hyperparameter optimization
-        try:
-            self.input_x = self.backup_input_x
-        except:
-            self.backup_input_x = self.input_x.copy()
+        optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
         self.dimension = self.input_x.shape[1] * self.input_x.shape[2]
 
@@ -166,6 +175,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_rnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -197,6 +208,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates RNN model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -210,6 +223,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -227,6 +242,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_lstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -258,6 +275,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates LSTM model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -271,6 +290,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -288,6 +309,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_cnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -330,6 +353,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates CNN model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -343,6 +368,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -360,6 +387,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_gru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -395,6 +424,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates GRU model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -408,6 +439,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -425,6 +458,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_birnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -451,6 +486,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates BI-RNN model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -463,6 +500,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -479,6 +518,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_bilstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -505,6 +546,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates BI-LSTM model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -517,6 +560,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -533,6 +578,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def create_bigru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -559,6 +606,8 @@ class BasePureMulti(MultiVariateMultiStep):
     ):
         """Creates BI-GRU model.
         Parameters:
+            steps_past (int): Steps predictor will look backward.
+            steps_future (int): Steps predictor will look forward.
             optimizer (str): Optimization algorithm.
             optimizer_args (dict): Arguments for optimizer.
             loss (str): Loss function.
@@ -571,6 +620,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+
+        self._model_intake_prep(steps_past, steps_future)
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
 
@@ -618,12 +669,6 @@ class BasePureMulti(MultiVariateMultiStep):
                     callbacks=[callback_board],
                 )
             else:
-                callback_board = TensorBoard(
-                    log_dir="logs/fit/"
-                    + self.model_id
-                    + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
-                    histogram_freq=1,
-                )
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
@@ -709,6 +754,8 @@ class BasePureMulti(MultiVariateMultiStep):
 class PureMulti(BasePureMulti):
     def create_fit_mlp(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -745,6 +792,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
         self.create_mlp(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -765,6 +814,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_rnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -801,6 +852,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a RNN model."""
         self.create_rnn(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -821,6 +874,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_lstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -857,6 +912,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a LSTM model."""
         self.create_lstm(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -877,6 +934,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_cnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -924,6 +983,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a CNN model."""
         self.create_cnn(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -944,6 +1005,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_gru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -984,6 +1047,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a GRU model."""
         self.create_gru(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1004,6 +1069,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_birnn(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1035,6 +1102,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a BI-RNN model."""
         self.create_birnn(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1054,6 +1123,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_bilstm(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1085,6 +1156,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a BI-LSTM model."""
         self.create_bilstm(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,
@@ -1104,6 +1177,8 @@ class PureMulti(BasePureMulti):
 
     def create_fit_bigru(
         self,
+        steps_past: int,
+        steps_future: int,
         optimizer: str = "adam",
         optimizer_args: dict = None,
         loss: str = "mean_squared_error",
@@ -1135,6 +1210,8 @@ class PureMulti(BasePureMulti):
     ):
         """Creates and trains a BI-GRU model."""
         self.create_bigru(
+            steps_past=steps_past,
+            steps_future=steps_future,
             optimizer=optimizer,
             optimizer_args=optimizer_args,
             loss=loss,

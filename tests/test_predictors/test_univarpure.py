@@ -8,11 +8,12 @@ data = pd.read_csv("tests/example_dataset/mockData.csv")
 data = np.array(data["target"])
 data_small = data[:20]
 
-test0 = PureUni(2, 3, target=data)
-test1 = PureUni(1, 5, target=data)
-test2 = PureUni(5, 10, target=data_small)
+test0 = PureUni(target=data)
+test2 = PureUni(target=data_small)
 
 test0.create_lstm(
+    steps_past=2,
+    steps_future=3,
     optimizer="adam",
     loss="mean_squared_error",
     metrics="mean_squared_error",
@@ -86,6 +87,8 @@ def test_get_metrics():
 
 def test_create_mlp():
     test0.create_mlp(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -119,6 +122,8 @@ def test_create_mlp():
 
 def test_create_rnn():
     test0.create_rnn(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -152,6 +157,8 @@ def test_create_rnn():
 
 def test_create_cnn():
     test0.create_cnn(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -197,6 +204,8 @@ def test_create_cnn():
 
 def test_create_gru():
     test0.create_gru(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -234,6 +243,8 @@ def test_create_gru():
 
 def test_create_birnn():
     test0.create_birnn(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -263,6 +274,8 @@ def test_create_birnn():
 
 def test_create_bilstm():
     test0.create_bilstm(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -292,6 +305,8 @@ def test_create_bilstm():
 
 def test_create_bigru():
     test0.create_bigru(
+        steps_past=2,
+        steps_future=3,
         optimizer="adam",
         loss="mean_squared_error",
         metrics="mean_squared_error",
@@ -321,34 +336,34 @@ def test_create_bigru():
 
 def test_create_fit_mlp():
     try:
-        test2.create_fit_mlp(epochs=1)
+        test2.create_fit_mlp(steps_past=3, steps_future=3, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_rnn():
     try:
-        test2.create_fit_rnn(epochs=1)
+        test2.create_fit_rnn(steps_past=3, steps_future=3, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_lstm():
     try:
-        test2.create_fit_lstm(epochs=1)
+        test2.create_fit_lstm(steps_past=3, steps_future=3, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_gru():
     try:
-        test2.create_fit_gru(epochs=1)
+        test2.create_fit_gru(steps_past=3, steps_future=3, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
 def test_create_fit_cnn():
     try:
-        test2.create_fit_cnn(epochs=1)
+        test2.create_fit_cnn(steps_past=3, steps_future=3, epochs=1)
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
