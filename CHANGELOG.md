@@ -92,10 +92,11 @@ activation function type
  
 ### 2.0.1
 
-- bug: removed dead pandas imports 
+- fix: removed dead pandas imports 
 - chore: added tensorflow as base requirement
  
 ### 2.1.0
 
 - feat!: removed data preparation out of predictor class, sub_seq, steps_past, steps_future need now to be defined in each model method
-- this will allow more advanced hyper-parameter tuning
+  - allows for advanced hyper parameter tuning
+- fix: removed tensor board activation logic bug
