@@ -45,6 +45,10 @@ imbrium uses the sliding window approach to generate forecasts. The sliding wind
 - split input data into target and feature numpy arrays
 - overall lighten the library
 
+## imbrium 3.0.0 `in progress`
+
+- switch from `keras_core` to `keras > 3.0.0`
+
 ### Get started with imbrium
 
 <details>

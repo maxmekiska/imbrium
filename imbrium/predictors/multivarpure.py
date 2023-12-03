@@ -1,8 +1,8 @@
 import datetime
 import os
 
-from keras_core.callbacks import EarlyStopping, TensorBoard
-from keras_core.saving import load_model
+from keras.callbacks import EarlyStopping, TensorBoard
+from keras.saving import load_model
 from numpy import array
 
 from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,

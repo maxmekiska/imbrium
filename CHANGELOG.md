@@ -84,7 +84,7 @@ activation function type
 
 ### 2.0.0
 
-- adapted `keras_core`
+- adapted `keras`
 - removed internal hyperparameter tuning
 - removed encoder-decoder architectures
 - improved layer configuration via dictionary input
@@ -100,3 +100,9 @@ activation function type
 - feat!: removed data preparation out of predictor class, sub_seq, steps_past, steps_future need now to be defined in each model method
   - allows for advanced hyper parameter tuning
 - fix: removed tensor board activation logic bug
+
+### 3.0.0
+
+- chore!: changed from temp library keras_core to keras > 3.0.0
+- removed python 3.8 support to accomodate tensorflow and keras dependiencies
+- increased major to 3.0.0 to align with keras major

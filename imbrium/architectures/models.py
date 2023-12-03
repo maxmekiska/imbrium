@@ -1,8 +1,7 @@
-import keras_core
-from keras_core import regularizers
-from keras_core.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense,
-                               Dropout, Flatten, MaxPooling1D, SimpleRNN,
-                               TimeDistributed)
+import keras
+from keras import regularizers
+from keras.layers import (GRU, LSTM, Bidirectional, Conv1D, Dense, Dropout,
+                          Flatten, MaxPooling1D, SimpleRNN, TimeDistributed)
 
 
 def mlp(
@@ -28,10 +27,10 @@ def mlp(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(shape=(input_shape,)))
+    model = keras.Sequential()
+    model.add(keras.Input(shape=(input_shape,)))
     for i in range(dense_block_one):
         model.add(
             Dense(
@@ -112,10 +111,10 @@ def rnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(rnn_block_one):
         model.add(
             SimpleRNN(
@@ -199,10 +198,10 @@ def lstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(lstm_block_one):
         model.add(
             LSTM(
@@ -286,10 +285,10 @@ def cnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             Conv1D(
@@ -377,10 +376,10 @@ def gru(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(gru_block_one):
         model.add(
             GRU(
@@ -463,10 +462,10 @@ def birnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(birnn_block_one):
         model.add(
             Bidirectional(
@@ -540,10 +539,10 @@ def bilstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(bilstm_block_one):
         model.add(
             Bidirectional(
@@ -617,10 +616,10 @@ def bigru(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(bigru_block_one):
         model.add(
             Bidirectional(
@@ -696,10 +695,10 @@ def cnnrnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             TimeDistributed(
@@ -818,10 +817,10 @@ def cnnlstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             TimeDistributed(
@@ -940,10 +939,10 @@ def cnngru(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             TimeDistributed(
@@ -1062,10 +1061,10 @@ def cnnbirnn(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             TimeDistributed(
@@ -1188,10 +1187,10 @@ def cnnbilstm(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             TimeDistributed(
@@ -1314,10 +1313,10 @@ def cnnbigru(
     Returns:
         model (object): Returns compiled Keras model.
     """
-    keras_core.backend.clear_session()
+    keras.backend.clear_session()
     layer_num = 0
-    model = keras_core.Sequential()
-    model.add(keras_core.Input(input_shape))
+    model = keras.Sequential()
+    model.add(keras.Input(input_shape))
     for i in range(conv_block_one):
         model.add(
             TimeDistributed(

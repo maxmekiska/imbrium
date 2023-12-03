@@ -1,9 +1,9 @@
-import keras_core
+import keras
 import pytest
 
 from imbrium.architectures.models import *
 
-keras_obj = type(keras_core.Sequential())
+keras_obj = type(keras.Sequential())
 
 
 def test_mlp():
