@@ -9,7 +9,8 @@ from imbrium.architectures.models import (cnnbigru, cnnbilstm, cnnbirnn,
                                           cnngru, cnnlstm, cnnrnn)
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
+from imbrium.utils.transformer import (data_prep_uni, sequence_prep_hybrid_uni,
+                                       train_test_split)
 
 
 class BaseHybridUni(UniVariateMultiStep):
@@ -42,6 +43,8 @@ class BaseHybridUni(UniVariateMultiStep):
             self.input_x, self.input_y, self.modified_back = sequence_prep_hybrid_uni(
                 temp_data, sub_seq, steps_past, steps_future
             )
+            self.input_x, self.input_x_test = train_test_split(self.input_x)
+            self.input_y, self.input_y_test = train_test_split(self.input_y)
         else:
             pass
 
@@ -722,6 +725,13 @@ class BaseHybridUni(UniVariateMultiStep):
                 )
         return self.details
 
+    def evaluate_model(self):
+        self.evaluation_details = self.model.evaluate(
+            x=self.input_x_test, y=self.input_y_test
+        )
+
+        return self.evaluation_details
+
     def model_blueprint(self):
         """Prints a summary of the models layer structure."""
         self.model.summary()
@@ -729,6 +739,10 @@ class BaseHybridUni(UniVariateMultiStep):
     def show_performance(self):
         """Returns performance details."""
         return self.details
+
+    def show_evaluation(self):
+        """Returns performance details on test data."""
+        return self.evaluation_details
 
     def predict(
         self, data: array, sub_seq: int = None, steps_past=None, steps_future=None

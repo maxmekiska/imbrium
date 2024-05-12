@@ -9,7 +9,9 @@ from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,
                                           mlp, rnn)
 from imbrium.blueprints.abstract_multivariate import MultiVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.transformer import data_prep_multi, multistep_prep_standard
+from imbrium.utils.transformer import (data_prep_multi,
+                                       multistep_prep_standard,
+                                       train_test_split)
 
 
 class BasePureMulti(MultiVariateMultiStep):
@@ -42,6 +44,8 @@ class BasePureMulti(MultiVariateMultiStep):
             self.input_x, self.input_y = multistep_prep_standard(
                 temp_data, steps_past, steps_future
             )
+            self.input_x, self.input_x_test = train_test_split(self.input_x)
+            self.input_y, self.input_y_test = train_test_split(self.input_y)
         else:
             pass
 
@@ -160,6 +164,12 @@ class BasePureMulti(MultiVariateMultiStep):
         self.dimension = self.input_x.shape[1] * self.input_x.shape[2]
 
         self.input_x = self.input_x.reshape((self.input_x.shape[0], self.dimension))
+
+        self.dimension_test = self.input_x_test.shape[1] * self.input_x_test.shape[2]
+
+        self.input_x_test = self.input_x_test.reshape(
+            (self.input_x_test.shape[0], self.dimension_test)
+        )
 
         self.model = mlp(
             optimizer=optimizer_obj,
@@ -710,6 +720,13 @@ class BasePureMulti(MultiVariateMultiStep):
                 )
         return self.details
 
+    def evaluate_model(self):
+        self.evaluation_details = self.model.evaluate(
+            x=self.input_x_test, y=self.input_y_test
+        )
+
+        return self.evaluation_details
+
     def model_blueprint(self):
         """Prints a summary of the models layer structure."""
         self.model.summary()
@@ -717,6 +734,10 @@ class BasePureMulti(MultiVariateMultiStep):
     def show_performance(self):
         """Returns performance details."""
         return self.details
+
+    def show_evaluation(self):
+        """Returns performance details on test data."""
+        return self.evaluation_details
 
     def predict(self, data: array) -> array:
         """Takes in a sequence of values and outputs a forecast.

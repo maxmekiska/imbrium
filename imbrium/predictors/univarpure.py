@@ -10,7 +10,9 @@ from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,
                                           mlp, rnn)
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.transformer import data_prep_uni, sequence_prep_standard_uni
+from imbrium.utils.transformer import (data_prep_uni,
+                                       sequence_prep_standard_uni,
+                                       train_test_split)
 
 
 class BasePureUni(UniVariateMultiStep):
@@ -39,8 +41,8 @@ class BasePureUni(UniVariateMultiStep):
             self.input_x, self.input_y = sequence_prep_standard_uni(
                 temp_data, steps_past, steps_future
             )
-            self.input_x, self.input_x_test = self._train_test_split(self.input_x)
-            self.input_y, self.input_y_test = self._train_test_split(self.input_y)
+            self.input_x, self.input_x_test = train_test_split(self.input_x)
+            self.input_y, self.input_y_test = train_test_split(self.input_y)
         else:
             pass
 

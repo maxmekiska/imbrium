@@ -148,8 +148,8 @@ X = np.array(
 
 y = np.array([3.422, 2.697, 2.992, 2.414, 2.267])
 
-shape_x = (490, 1, 40, 1)
-shape_y = (490, 5)
+shape_x = (392, 1, 40, 1)
+shape_y = (392, 5)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"
@@ -533,7 +533,7 @@ def test_create_fit_cnnlstm():
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_cnngru():
+def test_create_fit_cnngru():
     try:
         test1.create_fit_cnngru(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
     except Exception as e:

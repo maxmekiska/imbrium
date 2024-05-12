@@ -70,8 +70,8 @@ X = np.array(
 y = np.array([[2.135], [1.913], [1.592]])
 
 
-shape_x = (486, 2, 5, 1)
-shape_y = (486, 3, 1)
+shape_x = (389, 2, 5, 1)
+shape_y = (389, 3, 1)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"
