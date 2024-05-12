@@ -707,6 +707,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback_board],
+                    shuffle=False,
                 )
             else:
                 self.details = self.model.fit(
@@ -715,6 +716,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                     validation_split=validation_split,
                     epochs=epochs,
                     verbose=show_progress,
+                    shuffle=False,
                 )
 
         else:
@@ -733,6 +735,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
+                    shuffle=False,
                 )
             else:
                 callback = EarlyStopping(**callback_setting)
@@ -743,6 +746,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback],
+                    shuffle=False,
                 )
         return self.details
 

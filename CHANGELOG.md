@@ -106,3 +106,4 @@ activation function type
 - chore!: changed from temp library keras_core to keras > 3.0.0
 - removed python 3.8 support to accomodate tensorflow and keras dependiencies
 - increased major to 3.0.0 to align with keras major
+- added evaluate_model method to test model performance on test data

@@ -1,5 +1,6 @@
 import datetime
 import os
+from typing import Tuple
 
 from keras.callbacks import EarlyStopping, TensorBoard
 from keras.saving import load_model
@@ -38,8 +39,20 @@ class BasePureUni(UniVariateMultiStep):
             self.input_x, self.input_y = sequence_prep_standard_uni(
                 temp_data, steps_past, steps_future
             )
+            self.input_x, self.input_x_test = self._train_test_split(self.input_x)
+            self.input_y, self.input_y_test = self._train_test_split(self.input_y)
         else:
             pass
+
+    def _train_test_split(self, data: array, test_size=0.2) -> Tuple[array, array]:
+        """Splits the time series data into training and testing sets."""
+        n_samples = len(data)
+        n_test = int(test_size * n_samples)
+
+        train_data = data[:-n_test]
+        test_data = data[-n_test:]
+
+        return train_data, test_data
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -153,6 +166,10 @@ class BasePureUni(UniVariateMultiStep):
 
         self.input_x = self.input_x.reshape(
             (self.input_x.shape[0], self.input_x.shape[1])
+        )
+
+        self.input_x_test = self.input_x_test.reshape(
+            (self.input_x_test.shape[0], self.input_x_test.shape[1])
         )
 
         optimizer_obj = get_optimizer(optimizer, optimizer_args)
@@ -663,6 +680,7 @@ class BasePureUni(UniVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback_board],
+                    shuffle=False,
                 )
             else:
                 self.details = self.model.fit(
@@ -671,6 +689,7 @@ class BasePureUni(UniVariateMultiStep):
                     validation_split=validation_split,
                     epochs=epochs,
                     verbose=show_progress,
+                    shuffle=False,
                 )
 
         else:
@@ -689,6 +708,7 @@ class BasePureUni(UniVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
+                    shuffle=False,
                 )
             else:
                 callback = EarlyStopping(**callback_setting)
@@ -699,8 +719,16 @@ class BasePureUni(UniVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback],
+                    shuffle=False,
                 )
         return self.details
+
+    def evaluate_model(self):
+        self.evaluation_details = self.model.evaluate(
+            x=self.input_x_test, y=self.input_y_test
+        )
+
+        return self.evaluation_details
 
     def model_blueprint(self):
         """Prints a summary of the models layer structure."""
@@ -709,6 +737,10 @@ class BasePureUni(UniVariateMultiStep):
     def show_performance(self):
         """Returns performance details."""
         return self.details
+
+    def show_evaluation(self):
+        """Returns performance details on test data."""
+        return self.evaluation_details
 
     def predict(self, data: array) -> array:
         """Takes in a sequence of values and outputs a forecast.

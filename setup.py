@@ -17,9 +17,7 @@ setup(
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "setuptools >= 41.0.0",
-        #"tensorflow >=2.16.0, < 3.0.0",
-        "tf-nightly-cpu==2.16.0.dev20231130", # temporary solution for testing, waiting for release
-        "keras >=3.0.0, < 4.0.0",
+        "tensorflow>=2.16.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.9",

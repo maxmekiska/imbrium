@@ -44,8 +44,8 @@ X = np.array([[3.422], [2.697]])
 
 y = np.array([[3.422], [2.697], [2.992]])
 
-shape_x = (494, 2, 1)
-shape_y = (494, 3, 1)
+shape_x = (396, 2, 1)
+shape_y = (396, 3, 1)
 
 model_id = "LSTM"
 optimizer = "adam"
