@@ -80,11 +80,19 @@ class MultiVariateMultiStep(ABC):
         pass
 
     @abstractmethod
+    def evaluate_model(self):
+        pass
+
+    @abstractmethod
     def model_blueprint(self):
         pass
 
     @abstractmethod
     def show_performance(self):
+        pass
+
+    @abstractmethod
+    def show_evaluation(self):
         pass
 
     @abstractmethod
