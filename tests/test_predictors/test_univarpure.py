@@ -334,36 +334,41 @@ def test_create_bigru():
     assert test0.get_metrics == "mean_squared_error"
 
 
-def test_create_fit_mlp():
+def test_create_fit_mlp_evalute():
     try:
         test2.create_fit_mlp(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_rnn():
+def test_create_fit_rnn_evalute():
     try:
         test2.create_fit_rnn(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_lstm():
+def test_create_fit_lstm_evaluate():
     try:
         test2.create_fit_lstm(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_gru():
+def test_create_fit_gru_evaluate():
     try:
         test2.create_fit_gru(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnn():
+def test_create_fit_cnn_evalute():
     try:
         test2.create_fit_cnn(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")

@@ -265,7 +265,15 @@ def multistep_prep_hybrid(
 
 
 def train_test_split(data: array, test_size=0.2) -> Tuple[array, array]:
-    """Splits the time series data into training and testing sets."""
+    """Splits the time series data into training and testing sets.
+    Parameters:
+        data (array): Sequence that contains time series
+        in array format
+        test_size (float): % of original data used as test dataset
+    Returns:
+        train_data (array): Array containing train data
+        test_data  (array): Array containing test data
+    """
     n_samples = len(data)
     n_test = int(test_size * n_samples)
 
