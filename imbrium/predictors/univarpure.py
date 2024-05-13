@@ -23,12 +23,18 @@ class BasePureUni(UniVariateMultiStep):
     def __init__(
         self,
         target: array = array([]),
+        evaluation_split: float = 0.20,
+        validation_split: float = 0.20,
     ) -> object:
         """
         Parameters:
             target (array): Input target data numpy array.
+            evaluation_split (float): train test split.
+            validation_split (float): validation size of train set.
         """
         self.target = target
+        self.evaluation_split = evaluation_split
+        self.validation_split = validation_split
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
@@ -41,20 +47,14 @@ class BasePureUni(UniVariateMultiStep):
             self.input_x, self.input_y = sequence_prep_standard_uni(
                 temp_data, steps_past, steps_future
             )
-            self.input_x, self.input_x_test = train_test_split(self.input_x)
-            self.input_y, self.input_y_test = train_test_split(self.input_y)
+            self.input_x, self.input_x_test = train_test_split(
+                self.input_x, test_size=self.evaluation_split
+            )
+            self.input_y, self.input_y_test = train_test_split(
+                self.input_y, test_size=self.evaluation_split
+            )
         else:
             pass
-
-    def _train_test_split(self, data: array, test_size=0.2) -> Tuple[array, array]:
-        """Splits the time series data into training and testing sets."""
-        n_samples = len(data)
-        n_test = int(test_size * n_samples)
-
-        train_data = data[:-n_test]
-        test_data = data[-n_test:]
-
-        return train_data, test_data
 
     def set_model_id(self, name: str):
         """Setter method to change model id field.
@@ -655,7 +655,6 @@ class BasePureUni(UniVariateMultiStep):
         self,
         epochs: int,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -663,7 +662,6 @@ class BasePureUni(UniVariateMultiStep):
         Parameters:
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
-            validation_split (float): Determines size of Validation data.
             board (bool): Creates TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
@@ -678,7 +676,7 @@ class BasePureUni(UniVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback_board],
@@ -688,7 +686,7 @@ class BasePureUni(UniVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     shuffle=False,
@@ -706,7 +704,7 @@ class BasePureUni(UniVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
@@ -717,7 +715,7 @@ class BasePureUni(UniVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback],
@@ -817,7 +815,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -837,7 +834,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -877,7 +873,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -897,7 +892,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -937,7 +931,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -957,7 +950,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1008,7 +1000,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1028,7 +1019,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1072,7 +1062,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1092,7 +1081,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1127,7 +1115,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1146,7 +1133,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1181,7 +1167,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1200,7 +1185,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1235,7 +1219,6 @@ class PureUni(BasePureUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1254,7 +1237,6 @@ class PureUni(BasePureUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )

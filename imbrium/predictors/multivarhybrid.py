@@ -22,14 +22,20 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self,
         target: array = array([]),
         features: array = array([]),
+        evaluation_split: float = 0.20,
+        validation_split: float = 0.20,
     ) -> object:
         """
         Parameters:
             target (array): Input target array.
             features (array): Input feature array.
+            evaluation_split (float): train test split.
+            validation_split (float): validation size of train set.
         """
         self.target = target
         self.features = features
+        self.evaluation_split = evaluation_split
+        self.validation_split = validation_split
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
@@ -47,8 +53,12 @@ class BaseHybridMulti(MultiVariateMultiStep):
             self.input_x, self.input_y, self.modified_back = multistep_prep_hybrid(
                 temp_data, sub_seq, steps_past, steps_future
             )
-            self.input_x, self.input_x_test = train_test_split(self.input_x)
-            self.input_y, self.input_y_test = train_test_split(self.input_y)
+            self.input_x, self.input_x_test = train_test_split(
+                self.input_x, test_size=self.evaluation_split
+            )
+            self.input_y, self.input_y_test = train_test_split(
+                self.input_y, test_size=self.evaluation_split
+            )
         else:
             pass
 
@@ -683,7 +693,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
         self,
         epochs: int,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -691,7 +700,6 @@ class BaseHybridMulti(MultiVariateMultiStep):
         Parameters:
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
-            validation_split (float): Determines size of Validation data.
             board (bool): Creates TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
@@ -706,7 +714,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback_board],
@@ -716,7 +724,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     shuffle=False,
@@ -734,7 +742,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
@@ -745,7 +753,7 @@ class BaseHybridMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback],
@@ -872,7 +880,6 @@ class HybridMulti(BaseHybridMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -894,7 +901,6 @@ class HybridMulti(BaseHybridMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -955,7 +961,6 @@ class HybridMulti(BaseHybridMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -977,7 +982,6 @@ class HybridMulti(BaseHybridMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1038,7 +1042,6 @@ class HybridMulti(BaseHybridMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1060,7 +1063,6 @@ class HybridMulti(BaseHybridMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1121,7 +1123,6 @@ class HybridMulti(BaseHybridMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1143,7 +1144,6 @@ class HybridMulti(BaseHybridMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1204,7 +1204,6 @@ class HybridMulti(BaseHybridMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1226,7 +1225,6 @@ class HybridMulti(BaseHybridMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1287,7 +1285,6 @@ class HybridMulti(BaseHybridMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1309,7 +1306,6 @@ class HybridMulti(BaseHybridMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )

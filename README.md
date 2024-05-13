@@ -64,7 +64,7 @@ imbrium uses the sliding window approach to generate forecasts. The sliding wind
 from imbrium import PureUni
 
 # create a PureUni object (numpy array expected)
-predictor = PureUni(target = target_numpy_array) 
+predictor = PureUni(target = target_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
 
 # the following models are available for a PureUni objects;
 
@@ -140,7 +140,6 @@ predictor.create_fit_rnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -178,7 +177,6 @@ predictor.create_fit_lstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -227,7 +225,6 @@ predictor = create_fit_cnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -269,7 +266,6 @@ predictor.create_fit_gru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -302,7 +298,6 @@ predictor.create_fit_birnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -335,7 +330,6 @@ predictor.create_fit_bilstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -368,7 +362,6 @@ predictor.create_fit_bigru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -388,6 +381,12 @@ start_from_epoch=0
 
 # instpect model structure
 predictor.model_blueprint()
+
+# evaluate model performance on testing data
+predictor.evaluate_model()
+
+# get model performance on testing data
+predictor.show_evaluation()
 
 # insptect keras model performances via (access dictionary via history key):
 predictor.show_performance()
@@ -413,7 +412,7 @@ predictor.retrieve(location)
 from imbrium import PureMulti
 
 # create a PureMulti object (numpy array expected)
-predictor = PureMulti(target = target_numpy_array, features = features_numpy_array) 
+predictor = PureMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
 
 # the following models are available for a PureMulti objects;
 
@@ -451,7 +450,6 @@ predictor.create_fit_mlp(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -489,7 +487,6 @@ predictor.create_fit_rnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -527,7 +524,6 @@ predictor.create_fit_lstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -576,7 +572,6 @@ predictor = create_fit_cnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -618,7 +613,6 @@ predictor.create_fit_gru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -651,7 +645,6 @@ predictor.create_fit_birnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -684,7 +677,6 @@ predictor.create_fit_bilstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -717,7 +709,6 @@ predictor.create_fit_bigru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -737,6 +728,12 @@ start_from_epoch=0
 
 # instpect model structure
 predictor.model_blueprint()
+
+# evaluate model performance on testing data
+predictor.evaluate_model()
+
+# get model performance on testing data
+predictor.show_evaluation()
 
 # insptect keras model performances via (access dictionary via history key):
 predictor.show_performance()
@@ -760,7 +757,7 @@ predictor.retrieve(location)
 from imbrium import HybridUni
 
 # create a HybridUni object (numpy array expected)
-predictor = HybridUni(target = target_numpy_array) 
+predictor = HybridUni(target = target_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
 
 # the following models are available for a HybridUni objects:
 # create and fit a convolutional recurrent neural network
@@ -818,7 +815,6 @@ predictor.create_fit_cnnrnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -877,7 +873,6 @@ predictor.create_fit_cnnlstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -936,7 +931,6 @@ predictor.create_fit_cnngru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -995,7 +989,6 @@ predictor.create_fit_cnnbirnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1054,7 +1047,6 @@ predictor.create_fit_cnnbilstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1113,7 +1105,6 @@ predictor.create_fit_cnnbigru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1133,6 +1124,12 @@ start_from_epoch=0
 
 # instpect model structure
 predictor.model_blueprint()
+
+# evaluate model performance on testing data
+predictor.evaluate_model()
+
+# get model performance on testing data
+predictor.show_evaluation()
 
 # insptect keras model performances via (access dictionary via history key):
 predictor.show_performance()
@@ -1159,7 +1156,7 @@ predictor.retrieve(location)
 from imbrium import HybridMulti
 
 # create a HybridMulti object (numpy array expected)
-predictor = HybridMulti(target = target_numpy_array, features = features_numpy_array) 
+predictor = HybridMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
 
 # the following models are available for a HybridMulti objects:
 # create and fit a convolutional recurrent neural network
@@ -1217,7 +1214,6 @@ predictor.create_fit_cnnrnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1276,7 +1272,6 @@ predictor.create_fit_cnnlstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1335,7 +1330,6 @@ predictor.create_fit_cnngru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1394,7 +1388,6 @@ predictor.create_fit_cnnbirnn(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1453,7 +1446,6 @@ predictor.create_fit_cnnbilstm(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1512,7 +1504,6 @@ predictor.create_fit_cnnbigru(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1532,6 +1523,12 @@ start_from_epoch=0
 
 # instpect model structure
 predictor.model_blueprint()
+
+# evaluate model performance on testing data
+predictor.evaluate_model()
+
+# get model performance on testing data
+predictor.show_evaluation()
 
 # insptect keras model performances via (access dictionary via history key):
 predictor.show_performance()

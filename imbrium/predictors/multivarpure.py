@@ -24,14 +24,20 @@ class BasePureMulti(MultiVariateMultiStep):
         self,
         target: array = array([]),
         features: array = array([]),
+        evaluation_split: float = 0.20,
+        validation_split: float = 0.20,
     ) -> object:
         """
         Parameters:
             target (array): Input target data numpy array.
             features (array): Input feature data numpy array.
+            evaluation_split (float): train test split.
+            validation_split (float): validation size of train set.
         """
         self.target = target
         self.features = features
+        self.evaluation_split = evaluation_split
+        self.validation_split = validation_split
         self.model_id = ""
         self.optimizer = ""
         self.loss = ""
@@ -44,8 +50,12 @@ class BasePureMulti(MultiVariateMultiStep):
             self.input_x, self.input_y = multistep_prep_standard(
                 temp_data, steps_past, steps_future
             )
-            self.input_x, self.input_x_test = train_test_split(self.input_x)
-            self.input_y, self.input_y_test = train_test_split(self.input_y)
+            self.input_x, self.input_x_test = train_test_split(
+                self.input_x, test_size=self.evaluation_split
+            )
+            self.input_y, self.input_y_test = train_test_split(
+                self.input_y, test_size=self.evaluation_split
+            )
         else:
             pass
 
@@ -650,7 +660,6 @@ class BasePureMulti(MultiVariateMultiStep):
         self,
         epochs: int,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -658,7 +667,6 @@ class BasePureMulti(MultiVariateMultiStep):
         Parameters:
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
-            validation_split (float): Determines size of Validation data.
             board (bool): Create TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
@@ -673,7 +681,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback_board],
@@ -683,7 +691,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     shuffle=False,
@@ -701,7 +709,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
@@ -712,7 +720,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback],
@@ -811,7 +819,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -831,7 +838,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -871,7 +877,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -891,7 +896,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -931,7 +935,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -951,7 +954,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1002,7 +1004,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1022,7 +1023,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1066,7 +1066,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1086,7 +1085,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1121,7 +1119,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1140,7 +1137,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1175,7 +1171,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1194,7 +1189,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1229,7 +1223,6 @@ class PureMulti(BasePureMulti):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1248,7 +1241,6 @@ class PureMulti(BasePureMulti):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )

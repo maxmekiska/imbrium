@@ -104,6 +104,7 @@ activation function type
 ### 3.0.0
 
 - chore!: changed from temp library keras_core to keras > 3.0.0
-- removed python 3.8 support to accomodate tensorflow and keras dependiencies
-- increased major to 3.0.0 to align with keras major
-- added evaluate_model method to test model performance on test data
+- chore!: removed python 3.8 support to accomodate tensorflow and keras dependiencies
+- chore: increased major to 3.0.0 to align with keras major
+- feat: added evaluate_model method to test model performance on test data
+- refactor!: removed validation split from `fit_model`. Control validation and test split via evaluation_split and validation_split paramters in class variables 
