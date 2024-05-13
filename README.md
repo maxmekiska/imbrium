@@ -34,9 +34,9 @@ imbrium is a deep learning library that specializes in time series forecasting. 
 
 imbrium is designed to simplify the application of deep learning models for time series forecasting. The library offers a variety of pre-built architectures. The user retains full control over the configuration of each layer, including the number of neurons, the type of activation function, loss function, optimizer, and metrics applied. This allows for the flexibility to adapt the architecture to the specific needs of the forecast task at hand. Imbrium also offers a user-friendly interface for training and evaluating these models, making it easy to quickly iterate and test different configurations.
 
-imbrium uses the sliding window approach to generate forecasts. The sliding window approach in time series forecasting involves moving a fixed-size window (steps_past) through historical data, using the data within the window as input features. The next data points outside the window are used as the target variables (steps_future). This method allows the model to learn sequential patterns and trends in the data, enabling accurate predictions for future points in the time series. 
+imbrium uses the sliding window approach to generate forecasts. The sliding window approach in time series forecasting involves moving a fixed-size window - `steps_past` through historical data, using the data within the window as input features. The next data points outside the window are used as the target variables - `steps_future`. This method allows the model to learn sequential patterns and trends in the data, enabling accurate predictions for future points in the time series. 
 
-## imbrium 2.0.0
+## imbrium `2.0.0`
 
 - adapting `keras_core`
 - removing internal hyperparameter tuning
@@ -45,7 +45,7 @@ imbrium uses the sliding window approach to generate forecasts. The sliding wind
 - split input data into target and feature numpy arrays
 - overall lighten the library
 
-## imbrium 3.0.0 `in progress`
+## imbrium `3.0.0`
 
 - switch from `keras_core` to `keras > 3.0.0`
 
@@ -102,7 +102,6 @@ predictor.create_fit_mlp(
         },
         epochs = 100,
         show_progress = 1,
-        validation_split = 0.20,
         board = False,
 )
 
@@ -1556,7 +1555,7 @@ https://github.com/maxmekiska/ImbriumTesting-Demo/blob/main/use-case-1.ipynb
 https://github.com/maxmekiska/ImbriumTesting-Demo/blob/main/IntegrationTest.ipynb
 
 
-## LEGACY: imbrium versions <= v.1.3.0
+## legacy: imbrium versions `<= 1.3.0`
 <details>
   <summary>Expand</summary>
   <br>
