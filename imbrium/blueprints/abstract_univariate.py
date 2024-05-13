@@ -9,7 +9,13 @@ class UniVariateMultiStep(ABC):
     """
 
     @abstractmethod
-    def __init__(self):
+    def __init__(
+        self,
+        target: array = array([]),
+        features: array = array([]),
+        evaluation_split: float = 0.2,
+        validation_split: float = 0.2,
+    ):
         pass
 
     def _model_intake_prep(self, steps_past: int, steps_future: int) -> None:
@@ -80,11 +86,19 @@ class UniVariateMultiStep(ABC):
         pass
 
     @abstractmethod
+    def evaluate_model(self):
+        pass
+
+    @abstractmethod
     def model_blueprint(self):
         pass
 
     @abstractmethod
     def show_performance(self):
+        pass
+
+    @abstractmethod
+    def show_evaluation(self):
         pass
 
     @abstractmethod

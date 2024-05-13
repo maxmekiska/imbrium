@@ -1,15 +1,16 @@
 import datetime
 import os
 
-from keras_core.callbacks import EarlyStopping, TensorBoard
-from keras_core.saving import load_model
+from keras.callbacks import EarlyStopping, TensorBoard
+from keras.saving import load_model
 from numpy import array
 
 from imbrium.architectures.models import (cnnbigru, cnnbilstm, cnnbirnn,
                                           cnngru, cnnlstm, cnnrnn)
 from imbrium.blueprints.abstract_univariate import UniVariateMultiStep
 from imbrium.utils.optimizer import get_optimizer
-from imbrium.utils.transformer import data_prep_uni, sequence_prep_hybrid_uni
+from imbrium.utils.transformer import (data_prep_uni, sequence_prep_hybrid_uni,
+                                       train_test_split)
 
 
 class BaseHybridUni(UniVariateMultiStep):
@@ -20,12 +21,18 @@ class BaseHybridUni(UniVariateMultiStep):
     def __init__(
         self,
         target=array([]),
+        evaluation_split: float = 0.20,
+        validation_split: float = 0.20,
     ) -> object:
         """
         Parameters:
             target (array): Input target data numpy array.
+            evaluation_split (float): train test split.
+            validation_split (float): validation size of train set.
         """
         self.target = target
+        self.evaluation_split = evaluation_split
+        self.validation_split = validation_split
         self.optimizer = ""
         self.loss = ""
         self.metrics = ""
@@ -41,6 +48,12 @@ class BaseHybridUni(UniVariateMultiStep):
             temp_data = data_prep_uni(self.target)
             self.input_x, self.input_y, self.modified_back = sequence_prep_hybrid_uni(
                 temp_data, sub_seq, steps_past, steps_future
+            )
+            self.input_x, self.input_x_test = train_test_split(
+                self.input_x, test_size=self.evaluation_split
+            )
+            self.input_y, self.input_y_test = train_test_split(
+                self.input_y, test_size=self.evaluation_split
             )
         else:
             pass
@@ -652,7 +665,6 @@ class BaseHybridUni(UniVariateMultiStep):
         self,
         epochs: int,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -660,7 +672,6 @@ class BaseHybridUni(UniVariateMultiStep):
         Parameters:
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
-            validation_split (float): Determines size of Validation data.
             board (bool): Create TensorBoard.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
@@ -675,18 +686,20 @@ class BaseHybridUni(UniVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback_board],
+                    shuffle=False,
                 )
             else:
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
+                    shuffle=False,
                 )
 
         else:
@@ -701,22 +714,31 @@ class BaseHybridUni(UniVariateMultiStep):
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
+                    shuffle=False,
                 )
             else:
                 callback = EarlyStopping(**callback_setting)
                 self.details = self.model.fit(
                     self.input_x,
                     self.input_y,
-                    validation_split=validation_split,
+                    validation_split=self.validation_split,
                     epochs=epochs,
                     verbose=show_progress,
                     callbacks=[callback],
+                    shuffle=False,
                 )
         return self.details
+
+    def evaluate_model(self):
+        self.evaluation_details = self.model.evaluate(
+            x=self.input_x_test, y=self.input_y_test
+        )
+
+        return self.evaluation_details
 
     def model_blueprint(self):
         """Prints a summary of the models layer structure."""
@@ -725,6 +747,10 @@ class BaseHybridUni(UniVariateMultiStep):
     def show_performance(self):
         """Returns performance details."""
         return self.details
+
+    def show_evaluation(self):
+        """Returns performance details on test data."""
+        return self.evaluation_details
 
     def predict(
         self, data: array, sub_seq: int = None, steps_past=None, steps_future=None
@@ -824,7 +850,6 @@ class HybridUni(BaseHybridUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -846,7 +871,6 @@ class HybridUni(BaseHybridUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -907,7 +931,6 @@ class HybridUni(BaseHybridUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -929,7 +952,6 @@ class HybridUni(BaseHybridUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -990,7 +1012,6 @@ class HybridUni(BaseHybridUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1012,7 +1033,6 @@ class HybridUni(BaseHybridUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1073,7 +1093,6 @@ class HybridUni(BaseHybridUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1095,7 +1114,6 @@ class HybridUni(BaseHybridUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1156,7 +1174,6 @@ class HybridUni(BaseHybridUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1178,7 +1195,6 @@ class HybridUni(BaseHybridUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )
@@ -1239,7 +1255,6 @@ class HybridUni(BaseHybridUni):
         },
         epochs: int = 100,
         show_progress: int = 1,
-        validation_split: float = 0.20,
         board: bool = False,
         **callback_setting: dict,
     ):
@@ -1261,7 +1276,6 @@ class HybridUni(BaseHybridUni):
         self.fit_model(
             epochs=epochs,
             show_progress=show_progress,
-            validation_split=validation_split,
             board=board,
             **callback_setting,
         )

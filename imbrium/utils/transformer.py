@@ -1,4 +1,6 @@
-from numpy import array, dstack, empty, reshape, vstack
+from typing import Tuple
+
+from numpy import array, dstack, empty, vstack
 
 
 def data_prep_uni(data: array) -> array:
@@ -260,3 +262,22 @@ def multistep_prep_hybrid(
     X = dstack(X)
     Y = Y[0]  # getting array out of list
     return X, Y, mod
+
+
+def train_test_split(data: array, test_size=0.2) -> Tuple[array, array]:
+    """Splits the time series data into training and testing sets.
+    Parameters:
+        data (array): Sequence that contains time series
+        in array format
+        test_size (float): % of original data used as test dataset
+    Returns:
+        train_data (array): Array containing train data
+        test_data  (array): Array containing test data
+    """
+    n_samples = len(data)
+    n_test = int(test_size * n_samples)
+
+    train_data = data[:-n_test]
+    test_data = data[-n_test:]
+
+    return train_data, test_data

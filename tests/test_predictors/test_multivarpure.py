@@ -96,8 +96,8 @@ X = np.array(
 
 y = np.array([3.585, 3.521, 3.413, 3.422, 2.697, 2.992, 2.414, 2.267, 2.611, 2.815])
 
-shape_x = (488, 2, 8)
-shape_y = (488, 10)
+shape_x = (391, 2, 8)
+shape_y = (391, 10)
 
 model_id = "LSTM"
 optimizer = "adam"
@@ -421,57 +421,65 @@ def test_create_bigru():
     assert test1.get_metrics == "mean_squared_error"
 
 
-def test_create_fit_mlp():
+def test_create_fit_mlp_evalaute():
     try:
         test1.create_fit_mlp(steps_past=2, steps_future=10, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_rnn():
+def test_create_fit_rnn_evaluate():
     try:
         test2.create_fit_rnn(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_lstm():
+def test_create_fit_lstm_evaluate():
     try:
         test2.create_fit_lstm(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnn():
+def test_create_fit_cnn_evaluate():
     try:
         test2.create_fit_cnn(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_gru():
+def test_create_fit_gru_evaluate():
     try:
         test2.create_fit_gru(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_cerate_fit_birnn():
+def test_cerate_fit_birnn_evaluate():
     try:
         test2.create_fit_birnn(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_creaste_fit_bilstm():
+def test_creaste_fit_bilstm_evaluate():
     try:
         test2.create_fit_bilstm(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def create_fit_bigru():
+def create_fit_bigru_evaluate():
     try:
         test2.create_fit_bigru(steps_past=2, steps_future=10, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")

@@ -1,19 +1,17 @@
-import keras_core
+import keras
 
 
-def get_optimizer(
-    optimizer: str, optimizer_args: dict
-) -> keras_core.optimizers.Optimizer:
+def get_optimizer(optimizer: str, optimizer_args: dict) -> keras.optimizers.Optimizer:
     """Get optimizer object from string name and arguments."""
     optimizer_dict = {
-        "adadelta": keras_core.optimizers.Adadelta,
-        "adagrad": keras_core.optimizers.Adagrad,
-        "adam": keras_core.optimizers.Adam,
-        "adamax": keras_core.optimizers.Adamax,
-        "ftrl": keras_core.optimizers.Ftrl,
-        "nadam": keras_core.optimizers.Nadam,
-        "rmsprop": keras_core.optimizers.RMSprop,
-        "sgd": keras_core.optimizers.SGD,
+        "adadelta": keras.optimizers.Adadelta,
+        "adagrad": keras.optimizers.Adagrad,
+        "adam": keras.optimizers.Adam,
+        "adamax": keras.optimizers.Adamax,
+        "ftrl": keras.optimizers.Ftrl,
+        "nadam": keras.optimizers.Nadam,
+        "rmsprop": keras.optimizers.RMSprop,
+        "sgd": keras.optimizers.SGD,
     }
 
     if optimizer_args is None:

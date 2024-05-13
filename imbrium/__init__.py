@@ -1,4 +1,4 @@
-__version__ = "2.1.0"
+__version__ = "3.0.0"
 
 from imbrium.predictors.multivarhybrid import HybridMulti
 from imbrium.predictors.multivarpure import PureMulti

@@ -44,8 +44,8 @@ X = np.array([[3.422], [2.697]])
 
 y = np.array([[3.422], [2.697], [2.992]])
 
-shape_x = (494, 2, 1)
-shape_y = (494, 3, 1)
+shape_x = (396, 2, 1)
+shape_y = (396, 3, 1)
 
 model_id = "LSTM"
 optimizer = "adam"
@@ -334,36 +334,41 @@ def test_create_bigru():
     assert test0.get_metrics == "mean_squared_error"
 
 
-def test_create_fit_mlp():
+def test_create_fit_mlp_evalute():
     try:
         test2.create_fit_mlp(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_rnn():
+def test_create_fit_rnn_evalute():
     try:
         test2.create_fit_rnn(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_lstm():
+def test_create_fit_lstm_evaluate():
     try:
         test2.create_fit_lstm(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_gru():
+def test_create_fit_gru_evaluate():
     try:
         test2.create_fit_gru(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnn():
+def test_create_fit_cnn_evalute():
     try:
         test2.create_fit_cnn(steps_past=3, steps_future=3, epochs=1)
+        test2.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")

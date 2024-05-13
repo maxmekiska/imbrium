@@ -148,8 +148,8 @@ X = np.array(
 
 y = np.array([3.422, 2.697, 2.992, 2.414, 2.267])
 
-shape_x = (490, 1, 40, 1)
-shape_y = (490, 5)
+shape_x = (392, 1, 40, 1)
+shape_y = (392, 5)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"
@@ -519,43 +519,49 @@ def test_create_cnnbigru():
     assert test0.get_metrics == "mean_squared_error"
 
 
-def test_create_fit_cnnrnn():
+def test_create_fit_cnnrnn_evaluate():
     try:
         test1.create_fit_cnnrnn(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnnlstm():
+def test_create_fit_cnnlstm_evaluate():
     try:
         test1.create_fit_cnnlstm(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_cnngru():
+def test_create_fit_cnngru_evaluate():
     try:
         test1.create_fit_cnngru(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnnbirnn():
+def test_create_fit_cnnbirnn_evaluate():
     try:
         test1.create_fit_cnnbirnn(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnnbilstm():
+def test_create_fit_cnnbilstm_evaluate():
     try:
         test1.create_fit_cnnbilstm(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
 
 
-def test_create_fit_cnnbigru():
+def test_create_fit_cnnbigru_evaluate():
     try:
         test1.create_fit_cnnbigru(sub_seq=1, steps_past=5, steps_future=5, epochs=1)
+        test1.evaluate_model()
     except Exception as e:
         pytest.fail(f"An exception was raised: {e}")
