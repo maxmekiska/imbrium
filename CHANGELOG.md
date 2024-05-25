@@ -108,3 +108,8 @@ activation function type
 - chore: increased major to 3.0.0 to align with keras major
 - feat: added evaluate_model method to test model performance on test data
 - refactor!: removed validation split from `fit_model`. Control validation and test split via evaluation_split and validation_split paramters in class variables 
+  
+### 3.1.0
+
+- feat: added optional `batch_size` paramter to `fit_model`
+- refactor!: train, test, validation split default change

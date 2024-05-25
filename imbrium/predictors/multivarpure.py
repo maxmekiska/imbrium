@@ -24,8 +24,8 @@ class BasePureMulti(MultiVariateMultiStep):
         self,
         target: array = array([]),
         features: array = array([]),
-        evaluation_split: float = 0.20,
-        validation_split: float = 0.20,
+        evaluation_split: float = 0.10,  # train: 90%, test: 10%
+        validation_split: float = 0.20,  # train: 72%, test: 10%, val: 18%
     ) -> object:
         """
         Parameters:
@@ -661,6 +661,7 @@ class BasePureMulti(MultiVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -668,6 +669,7 @@ class BasePureMulti(MultiVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             board (bool): Create TensorBoard.
+            batch_size (float): Batch size.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
@@ -686,6 +688,7 @@ class BasePureMulti(MultiVariateMultiStep):
                     verbose=show_progress,
                     callbacks=[callback_board],
                     shuffle=False,
+                    batch_size=batch_size,
                 )
             else:
                 self.details = self.model.fit(
@@ -695,6 +698,7 @@ class BasePureMulti(MultiVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     shuffle=False,
+                    batch_size=batch_size,
                 )
 
         else:
@@ -714,6 +718,7 @@ class BasePureMulti(MultiVariateMultiStep):
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
                     shuffle=False,
+                    batch_size=batch_size,
                 )
             else:
                 callback = EarlyStopping(**callback_setting)
@@ -725,6 +730,7 @@ class BasePureMulti(MultiVariateMultiStep):
                     verbose=show_progress,
                     callbacks=[callback],
                     shuffle=False,
+                    batch_size=batch_size,
                 )
         return self.details
 
@@ -820,6 +826,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
@@ -839,6 +846,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -878,6 +886,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a RNN model."""
@@ -897,6 +906,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -936,6 +946,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a LSTM model."""
@@ -955,6 +966,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1005,6 +1017,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a CNN model."""
@@ -1024,6 +1037,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1067,6 +1081,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a GRU model."""
@@ -1086,6 +1101,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1120,6 +1136,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-RNN model."""
@@ -1138,6 +1155,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1172,6 +1190,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-LSTM model."""
@@ -1190,6 +1209,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1224,6 +1244,7 @@ class PureMulti(BasePureMulti):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a BI-GRU model."""
@@ -1242,6 +1263,7 @@ class PureMulti(BasePureMulti):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]

@@ -23,8 +23,8 @@ class BasePureUni(UniVariateMultiStep):
     def __init__(
         self,
         target: array = array([]),
-        evaluation_split: float = 0.20,
-        validation_split: float = 0.20,
+        evaluation_split: float = 0.10,  # train: 90%, test: 10%
+        validation_split: float = 0.20,  # train: 72%, test: 10%, val: 18%
     ) -> object:
         """
         Parameters:
@@ -656,6 +656,7 @@ class BasePureUni(UniVariateMultiStep):
         epochs: int,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Trains the model on data provided. Perfroms validation.
@@ -663,6 +664,7 @@ class BasePureUni(UniVariateMultiStep):
             epochs (int): Number of epochs to train the model.
             show_progress (int): Prints training progress.
             board (bool): Creates TensorBoard.
+            batch_size (float): Batch size.
             callback_settings (dict): Create a Keras EarlyStopping object.
         """
         if callback_setting == {}:
@@ -681,6 +683,7 @@ class BasePureUni(UniVariateMultiStep):
                     verbose=show_progress,
                     callbacks=[callback_board],
                     shuffle=False,
+                    batch_size=batch_size,
                 )
             else:
                 self.details = self.model.fit(
@@ -690,6 +693,7 @@ class BasePureUni(UniVariateMultiStep):
                     epochs=epochs,
                     verbose=show_progress,
                     shuffle=False,
+                    batch_size=batch_size,
                 )
 
         else:
@@ -709,6 +713,7 @@ class BasePureUni(UniVariateMultiStep):
                     verbose=show_progress,
                     callbacks=[callback, callback_board],
                     shuffle=False,
+                    batch_size=batch_size,
                 )
             else:
                 callback = EarlyStopping(**callback_setting)
@@ -720,6 +725,7 @@ class BasePureUni(UniVariateMultiStep):
                     verbose=show_progress,
                     callbacks=[callback],
                     shuffle=False,
+                    batch_size=batch_size,
                 )
         return self.details
 
@@ -816,6 +822,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Multi-Layer-Perceptron model."""
@@ -835,6 +842,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -874,6 +882,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Recurrent Neural Network model."""
@@ -893,6 +902,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -932,6 +942,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a LSTM model."""
@@ -951,6 +962,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1001,6 +1013,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Convolutional Neural Network model."""
@@ -1020,6 +1033,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1063,6 +1077,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a GRU model."""
@@ -1082,6 +1097,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1116,6 +1132,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Bidirectional RNN model."""
@@ -1134,6 +1151,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1168,6 +1186,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Bidirectional LSTM model."""
@@ -1186,6 +1205,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]
@@ -1220,6 +1240,7 @@ class PureUni(BasePureUni):
         epochs: int = 100,
         show_progress: int = 1,
         board: bool = False,
+        batch_size=None,
         **callback_setting: dict,
     ):
         """Creates and trains a Bidirectional GRU model."""
@@ -1238,6 +1259,7 @@ class PureUni(BasePureUni):
             epochs=epochs,
             show_progress=show_progress,
             board=board,
+            batch_size=batch_size,
             **callback_setting,
         )
         return self.details.history[metrics][-1]

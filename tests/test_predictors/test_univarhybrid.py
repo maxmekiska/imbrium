@@ -9,7 +9,7 @@ data = np.array(data["target"])
 data_small = data[:20]
 
 test0 = HybridUni(target=data)
-test2 = HybridUni(target=data_small)
+test2 = HybridUni(target=data_small, validation_split=0.2, evaluation_split=0.2)
 
 test0.create_cnnlstm(
     sub_seq=2,
@@ -70,8 +70,8 @@ X = np.array(
 y = np.array([[2.135], [1.913], [1.592]])
 
 
-shape_x = (389, 2, 5, 1)
-shape_y = (389, 3, 1)
+shape_x = (438, 2, 5, 1)
+shape_y = (438, 3, 1)
 
 model_id = "CNN-LSTM"
 optimizer = "adam"
