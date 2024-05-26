@@ -734,10 +734,26 @@ class BasePureMulti(MultiVariateMultiStep):
                 )
         return self.details
 
-    def evaluate_model(self):
-        self.evaluation_details = self.model.evaluate(
-            x=self.input_x_test, y=self.input_y_test
-        )
+    def evaluate_model(self, board: bool = False):
+        """Evaluate model on test set.
+        Parameters:
+            board (bool): Create TensorBoard.
+        """
+        if board == True:
+            callback_board = TensorBoard(
+                log_dir="logs/eval/"
+                + self.model_id
+                + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
+                histogram_freq=1,
+            )
+            self.evaluation_details = self.model.evaluate(
+                x=self.input_x_test, y=self.input_y_test, callbacks=[callback_board]
+            )
+        else:
+            self.evaluation_details = self.model.evaluate(
+                x=self.input_x_test,
+                y=self.input_y_test,
+            )
 
         return self.evaluation_details
 

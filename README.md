@@ -5,7 +5,7 @@
 | Build | Status|
 |---|---|
 | `MAIN BUILD`  |  ![master](https://github.com/maxmekiska/imbrium/actions/workflows/main.yml/badge.svg?branch=main) |
-|  `DEV BUILD`   |  ![development](https://github.com/maxmekiska/imbrium/actions/workflows/main.yml/badge.svg?branch=development) |
+| `DEV BUILD`   |  ![development](https://github.com/maxmekiska/imbrium/actions/workflows/main.yml/badge.svg?branch=development) |
 
 ## Pip install
 
@@ -37,15 +37,17 @@ imbrium is designed to simplify the application of deep learning models for time
 imbrium uses the sliding window approach to generate forecasts. The sliding window approach in time series forecasting involves moving a fixed-size window - `steps_past` through historical data, using the data within the window as input features. The next data points outside the window are used as the target variables - `steps_future`. This method allows the model to learn sequential patterns and trends in the data, enabling accurate predictions for future points in the time series. 
 
 
-## imbrium `3.0.0`
-
-- switch from `keras_core` to `keras > 3.0.0`
-
 ### Get started with imbrium
 
 <details>
   <summary>Expand</summary>
   <br>
+
+Note, if you choose to use Tensor Board, run the follwoing commonad to disply the results:
+
+```shell
+ tensorboard --logdir logs/
+```
 
 <details>
   <summary>Univariate Pure Predictors</summary>
@@ -56,7 +58,7 @@ imbrium uses the sliding window approach to generate forecasts. The sliding wind
 from imbrium import PureUni
 
 # create a PureUni object (numpy array expected)
-predictor = PureUni(target = target_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
+predictor = PureUni(target = target_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
 
 # the following models are available for a PureUni objects;
 
@@ -93,6 +95,7 @@ predictor.create_fit_mlp(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -130,6 +133,7 @@ predictor.create_fit_rnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -167,6 +171,7 @@ predictor.create_fit_lstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -215,6 +220,7 @@ predictor = create_fit_cnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -256,6 +262,7 @@ predictor.create_fit_gru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -288,6 +295,7 @@ predictor.create_fit_birnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -320,6 +328,7 @@ predictor.create_fit_bilstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -352,6 +361,7 @@ predictor.create_fit_bigru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -374,7 +384,7 @@ start_from_epoch=0
 predictor.model_blueprint()
 
 # evaluate model performance on testing data
-predictor.evaluate_model()
+predictor.evaluate_model(board=False)
 
 # get model performance on testing data
 predictor.show_evaluation()
@@ -403,7 +413,7 @@ predictor.retrieve(location)
 from imbrium import PureMulti
 
 # create a PureMulti object (numpy array expected)
-predictor = PureMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
+predictor = PureMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
 
 # the following models are available for a PureMulti objects;
 
@@ -440,6 +450,7 @@ predictor.create_fit_mlp(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -477,6 +488,7 @@ predictor.create_fit_rnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -514,6 +526,7 @@ predictor.create_fit_lstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -562,6 +575,7 @@ predictor = create_fit_cnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -603,6 +617,7 @@ predictor.create_fit_gru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -635,6 +650,7 @@ predictor.create_fit_birnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -667,6 +683,7 @@ predictor.create_fit_bilstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -699,6 +716,7 @@ predictor.create_fit_bigru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -721,7 +739,7 @@ start_from_epoch=0
 predictor.model_blueprint()
 
 # evaluate model performance on testing data
-predictor.evaluate_model()
+predictor.evaluate_model(board=False)
 
 # get model performance on testing data
 predictor.show_evaluation()
@@ -748,7 +766,7 @@ predictor.retrieve(location)
 from imbrium import HybridUni
 
 # create a HybridUni object (numpy array expected)
-predictor = HybridUni(target = target_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
+predictor = HybridUni(target = target_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
 
 # the following models are available for a HybridUni objects:
 # create and fit a convolutional recurrent neural network
@@ -805,6 +823,7 @@ predictor.create_fit_cnnrnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -863,6 +882,7 @@ predictor.create_fit_cnnlstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -921,6 +941,7 @@ predictor.create_fit_cnngru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -979,6 +1000,7 @@ predictor.create_fit_cnnbirnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1037,6 +1059,7 @@ predictor.create_fit_cnnbilstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1095,6 +1118,7 @@ predictor.create_fit_cnnbigru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1117,7 +1141,7 @@ start_from_epoch=0
 predictor.model_blueprint()
 
 # evaluate model performance on testing data
-predictor.evaluate_model()
+predictor.evaluate_model(board=False)
 
 # get model performance on testing data
 predictor.show_evaluation()
@@ -1147,7 +1171,7 @@ predictor.retrieve(location)
 from imbrium import HybridMulti
 
 # create a HybridMulti object (numpy array expected)
-predictor = HybridMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.2, validation_split = 0.2) 
+predictor = HybridMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
 
 # the following models are available for a HybridMulti objects:
 # create and fit a convolutional recurrent neural network
@@ -1204,6 +1228,7 @@ predictor.create_fit_cnnrnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1262,6 +1287,7 @@ predictor.create_fit_cnnlstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1320,6 +1346,7 @@ predictor.create_fit_cnngru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1378,6 +1405,7 @@ predictor.create_fit_cnnbirnn(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1436,6 +1464,7 @@ predictor.create_fit_cnnbilstm(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1494,6 +1523,7 @@ predictor.create_fit_cnnbigru(
             },
         },
         epochs = 100,
+        batch_size = None,
         show_progress = 1,
         board = False,
 )
@@ -1516,7 +1546,7 @@ start_from_epoch=0
 predictor.model_blueprint()
 
 # evaluate model performance on testing data
-predictor.evaluate_model()
+predictor.evaluate_model(board=False)
 
 # get model performance on testing data
 predictor.show_evaluation()
