@@ -43,7 +43,7 @@ imbrium uses the sliding window approach to generate forecasts. The sliding wind
   <summary>Expand</summary>
   <br>
 
-Note, if you choose to use Tensor Board, run the follwoing commonad to disply the results:
+Note, if you choose to use TensorBoard, run the following command to display the results:
 
 ```shell
  tensorboard --logdir logs/
