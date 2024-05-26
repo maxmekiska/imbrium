@@ -1,10 +1,9 @@
 import datetime
 import os
-from typing import Tuple
 
+import numpy as np
 from keras.callbacks import EarlyStopping, TensorBoard
 from keras.saving import load_model
-from numpy import array
 
 from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,
                                           mlp, rnn)
@@ -22,7 +21,7 @@ class BasePureUni(UniVariateMultiStep):
 
     def __init__(
         self,
-        target: array = array([]),
+        target: np.ndarray = np.array([]),
         evaluation_split: float = 0.10,  # train: 90%, test: 10%
         validation_split: float = 0.20,  # train: 72%, test: 10%, val: 18%
     ) -> object:
@@ -69,17 +68,17 @@ class BasePureUni(UniVariateMultiStep):
         return self.model_id
 
     @property
-    def get_target(self) -> array:
+    def get_target(self) -> np.ndarray:
         """Get original target data."""
         return self.target
 
     @property
-    def get_target_shape(self) -> array:
+    def get_target_shape(self) -> np.ndarray:
         """Get shape of original target data."""
         return self.target.shape
 
     @property
-    def get_X_input(self) -> array:
+    def get_X_input(self) -> np.ndarray:
         """Get transformed feature data."""
         return self.input_x
 
@@ -89,7 +88,7 @@ class BasePureUni(UniVariateMultiStep):
         return self.input_x.shape
 
     @property
-    def get_y_input(self) -> array:
+    def get_y_input(self) -> np.ndarray:
         """Get transformed target data."""
         return self.input_y
 
@@ -764,7 +763,7 @@ class BasePureUni(UniVariateMultiStep):
         """Returns performance details on test data."""
         return self.evaluation_details
 
-    def predict(self, data: array) -> array:
+    def predict(self, data: np.ndarray) -> np.ndarray:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.

@@ -1,9 +1,10 @@
 import datetime
 import os
+from typing import Any
 
+import numpy as np
 from keras.callbacks import EarlyStopping, TensorBoard
 from keras.saving import load_model
-from numpy import array
 
 from imbrium.architectures.models import (cnnbigru, cnnbilstm, cnnbirnn,
                                           cnngru, cnnlstm, cnnrnn)
@@ -20,7 +21,7 @@ class BaseHybridUni(UniVariateMultiStep):
 
     def __init__(
         self,
-        target=array([]),
+        target: np.ndarray = np.array([]),
         evaluation_split: float = 0.10,  # train: 90%, test: 10%
         validation_split: float = 0.20,  # train: 72%, test: 10%, val: 18%
     ) -> object:
@@ -58,7 +59,7 @@ class BaseHybridUni(UniVariateMultiStep):
         else:
             pass
 
-    def set_model_id(self, name: str):
+    def set_model_id(self, name: str) -> None:
         """Setter method to change model id field.
         Parameters:
             name (str): Name for selected Model.
@@ -71,32 +72,32 @@ class BaseHybridUni(UniVariateMultiStep):
         return self.model_id
 
     @property
-    def get_target(self) -> array:
+    def get_target(self) -> np.ndarray:
         """Get original target data."""
         return self.target
 
     @property
-    def get_target_shape(self) -> array:
+    def get_target_shape(self) -> np.ndarray:
         """Get shape of original target data."""
         return self.target.shape
 
     @property
-    def get_X_input(self) -> array:
+    def get_X_input(self) -> np.ndarray:
         """Get transformed feature data."""
         return self.input_x
 
     @property
-    def get_X_input_shape(self) -> tuple:
+    def get_X_input_shape(self) -> tuple[int, int]:
         """Get shape fo transformed feature data."""
         return self.input_x.shape
 
     @property
-    def get_y_input(self) -> array:
+    def get_y_input(self) -> np.ndarray:
         """Get transformed target data."""
         return self.input_y
 
     @property
-    def get_y_input_shape(self) -> tuple:
+    def get_y_input_shape(self) -> tuple[int, int]:
         """Get shape fo transformed target data."""
         return self.input_y.shape
 
@@ -168,7 +169,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN-RNN hybrid model.
         Parameters:
             sub_seq (int): Divide data into further subsequences.
@@ -259,7 +260,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN-LSTM hybrid model.
         Parameters:
             sub_seq (int): Divide data into further subsequences.
@@ -350,7 +351,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN-GRU hybrid model.
         Parameters:
             sub_seq (int): Divide data into further subsequences.
@@ -441,7 +442,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN-BI-RNN hybrid model.
         Parameters:
             sub_seq (int): Divide data into further subsequences.
@@ -532,7 +533,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN-BI-LSTM hybrid model.
         Parameters:
             sub_seq (int): Divide data into further subsequences.
@@ -623,7 +624,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN-BI-GRU hybrid model.
         Parameters:
             sub_seq (int): Divide data into further subsequences.
@@ -668,7 +669,7 @@ class BaseHybridUni(UniVariateMultiStep):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> Any:
         """Trains the model on data provided. Perfroms validation.
         Parameters:
             epochs (int): Number of epochs to train the model.
@@ -739,7 +740,7 @@ class BaseHybridUni(UniVariateMultiStep):
                 )
         return self.details
 
-    def evaluate_model(self, board: bool = False):
+    def evaluate_model(self, board: bool = False) -> Any:
         """Evaluate model on test set.
         Parameters:
             board (bool): Create TensorBoard.
@@ -762,21 +763,21 @@ class BaseHybridUni(UniVariateMultiStep):
 
         return self.evaluation_details
 
-    def model_blueprint(self):
+    def model_blueprint(self) -> Any:
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self):
+    def show_performance(self) -> Any:
         """Returns performance details."""
         return self.details
 
-    def show_evaluation(self):
+    def show_evaluation(self) -> Any:
         """Returns performance details on test data."""
         return self.evaluation_details
 
     def predict(
-        self, data: array, sub_seq: int = None, steps_past=None, steps_future=None
-    ) -> array:
+        self, data: np.ndarray, sub_seq: int = None, steps_past=None, steps_future=None
+    ) -> np.ndarray:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.
@@ -801,14 +802,14 @@ class BaseHybridUni(UniVariateMultiStep):
 
         return y_pred
 
-    def freeze(self, absolute_path: str = CURRENT_PATH):
+    def freeze(self, absolute_path: str = CURRENT_PATH) -> None:
         """Save the current model to the current directory.
         Parameters:
            absolute_path (str): Path to save model to.
         """
         self.model.save(absolute_path)
 
-    def retrieve(self, location: str):
+    def retrieve(self, location: str) -> None:
         """Load a keras model from the path specified.
         Parameters:
             location (str): Path of keras model location.
@@ -875,7 +876,7 @@ class HybridUni(BaseHybridUni):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates CNN-RNN hybrid model."""
         self.create_cnnrnn(
             sub_seq=sub_seq,
@@ -958,7 +959,7 @@ class HybridUni(BaseHybridUni):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates CNN-LSTM hybrid model."""
         self.create_cnnlstm(
             sub_seq=sub_seq,
@@ -1041,7 +1042,7 @@ class HybridUni(BaseHybridUni):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates CNN-GRU hybrid model."""
         self.create_cnngru(
             sub_seq=sub_seq,
@@ -1124,7 +1125,7 @@ class HybridUni(BaseHybridUni):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates CNN-BiRNN hybrid model."""
         self.create_cnnbirnn(
             sub_seq=sub_seq,
@@ -1207,7 +1208,7 @@ class HybridUni(BaseHybridUni):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates CNN-BiLSTM hybrid model."""
         self.create_cnnbilstm(
             sub_seq=sub_seq,
@@ -1290,7 +1291,7 @@ class HybridUni(BaseHybridUni):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates CNN-BiGRU hybrid model."""
         self.create_cnnbigru(
             sub_seq=sub_seq,

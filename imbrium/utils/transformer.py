@@ -1,9 +1,7 @@
-from typing import Tuple
-
-from numpy import array, dstack, empty, vstack
+import numpy as np
 
 
-def data_prep_uni(data: array) -> array:
+def data_prep_uni(data: np.ndarray) -> np.ndarray:
     """Prepares data for model intake.
     Parameters:
         data (array): Input time series.
@@ -15,7 +13,7 @@ def data_prep_uni(data: array) -> array:
     return data
 
 
-def data_prep_multi(target: array, features: array) -> array:
+def data_prep_multi(target: np.ndarray, features: np.ndarray) -> np.ndarray:
     """Prepare target and feature numpy arrays for mulitvariate model intake.
     Parameters:
         target (array): Array containing multi-feature data.
@@ -25,14 +23,14 @@ def data_prep_multi(target: array, features: array) -> array:
     """
     if target.ndim == 2:
         target = target.T
-    data = vstack((target, features.T))
+    data = np.vstack((target, features.T))
 
     return data
 
 
 def sequence_prep_standard_uni(
-    input_sequence: array, steps_past: int, steps_future: int
-) -> [(array, array)]:
+    input_sequence: np.ndarray, steps_past: int, steps_future: int
+) -> tuple[np.ndarray, np.ndarray]:
     """Prepares data input into X and y sequences. Length of the X sequence
     is determined by steps_past while the length of y is determined by
     steps_future. In detail, the predictor looks at sequence X and
@@ -48,7 +46,7 @@ def sequence_prep_standard_uni(
     """
     length = len(input_sequence)
     if length == 0:
-        return (empty(shape=[steps_past, steps_past]), 0)
+        return (np.empty(shape=[steps_past, steps_past]), 0)
     X = []
     y = []
     if length <= steps_past:
@@ -64,15 +62,15 @@ def sequence_prep_standard_uni(
             break
         X.append(input_sequence[i:last])
         y.append(input_sequence[last : last + steps_future])
-    y = array(y)
-    X = array(X)
+    y = np.array(y)
+    X = np.array(X)
     X = X.reshape((X.shape[0], X.shape[1], 1))
     return X, y
 
 
 def sequence_prep_standard_multi(
-    input_sequence: array, steps_past: int, steps_future: int
-) -> [(array, array)]:
+    input_sequence: np.ndarray, steps_past: int, steps_future: int
+) -> tuple[np.ndarray, np.ndarray]:
     """Prepares data input into X and y sequences. Lenght of the X sequence is dertermined by steps_past while the length of y is determined by steps_future. In detail, the predictor looks at sequence X and predicts sequence y.
     Parameters:
         input_sequence (array): Sequence that contains time series in array format
@@ -84,7 +82,7 @@ def sequence_prep_standard_multi(
     """
     length = len(input_sequence)
     if length == 0:
-        return (empty(shape=[steps_past, steps_past]), 0)
+        return (np.empty(shape=[steps_past, steps_past]), 0)
     X = []
     y = []
     if length <= steps_past:
@@ -103,15 +101,15 @@ def sequence_prep_standard_multi(
         X.append(input_sequence[i:last])
         # modification to use correct target y sequence
         y.append(input_sequence[last - 1 : last - 1 + steps_future])
-    y = array(y)
-    X = array(X)
+    y = np.array(y)
+    X = np.array(X)
     X = X.reshape((X.shape[0], X.shape[1], 1))
     return X, y
 
 
 def sequence_prep_hybrid_uni(
-    input_sequence: array, sub_seq: int, steps_past: int, steps_future: int
-) -> [(array, array, int)]:
+    input_sequence: np.ndarray, sub_seq: int, steps_past: int, steps_future: int
+) -> tuple[np.ndarray, np.ndarray, int]:
     """Prepares data input into X and y sequences. Length of the X sequence
     is determined by steps_past while the length of y is determined by
     steps_future. In detail, the predictor looks at sequence X and
@@ -146,16 +144,16 @@ def sequence_prep_hybrid_uni(
             break
         X.append(input_sequence[i:last])
         y.append(input_sequence[last : last + steps_future])
-    y = array(y)
-    X = array(X)
+    y = np.array(y)
+    X = np.array(X)
     modified_back = X.shape[1] // sub_seq
     X = X.reshape((X.shape[0], sub_seq, modified_back, 1))
     return X, y, modified_back
 
 
 def sequence_prep_hybrid_multi(
-    input_sequence: array, sub_seq: int, steps_past: int, steps_future: int
-) -> [(array, array, int)]:
+    input_sequence: np.ndarray, sub_seq: int, steps_past: int, steps_future: int
+) -> tuple[np.ndarray, np.ndarray, int]:
     """Prepares data input into X and y sequences. Lenght of the X sequence
     is dertermined by steps_past while the length of y is determined by
     steps_future. In detail, the predictor looks at sequence X and
@@ -172,7 +170,7 @@ def sequence_prep_hybrid_multi(
     """
     length = len(input_sequence)
     if length == 0:
-        return (empty(shape=[steps_past, steps_past]), 0)
+        return (np.empty(shape=[steps_past, steps_past]), 0)
     X = []
     y = []
     if length <= steps_past:
@@ -191,8 +189,8 @@ def sequence_prep_hybrid_multi(
         X.append(input_sequence[i:last])
         # modification to use correct target y sequence
         y.append(input_sequence[last - 1 : last - 1 + steps_future])
-    y = array(y)
-    X = array(X)
+    y = np.array(y)
+    X = np.array(X)
     modified_back = X.shape[1] // sub_seq
     X = X.reshape((X.shape[0], sub_seq, modified_back, 1))
     return (
@@ -203,8 +201,8 @@ def sequence_prep_hybrid_multi(
 
 
 def multistep_prep_standard(
-    input_sequence: array, steps_past: int, steps_future: int
-) -> [(array, array)]:
+    input_sequence: np.ndarray, steps_past: int, steps_future: int
+) -> tuple[np.ndarray, np.ndarray]:
     """This function prepares input sequences into a suitable input format for a multivariate multistep model. The first seqeunce in the array needs to be the target variable y.
     Parameters:
         input_sequence (array): Sequence that contains time series in array format
@@ -225,14 +223,14 @@ def multistep_prep_standard(
             continue  # skip since target column not requiered in X array
         x, _ = sequence_prep_standard_multi(input_sequence[i], steps_past, steps_future)
         X.append(x)
-    X = dstack(X)
+    X = np.dstack(X)
     Y = Y[0]  # getting array out of list
     return X, Y
 
 
 def multistep_prep_hybrid(
-    input_sequence: array, sub_seq: int, steps_past: int, steps_future: int
-) -> [(array, array)]:
+    input_sequence: np.ndarray, sub_seq: int, steps_past: int, steps_future: int
+) -> tuple[np.ndarray, np.ndarray]:
     """This function prepares input sequences into a suitable input format
     for a multivariate multistep model. The first seqeunce in the array
     needs to be the target variable y.
@@ -259,12 +257,12 @@ def multistep_prep_hybrid(
             input_sequence[i], sub_seq, steps_past, steps_future
         )
         X.append(x)
-    X = dstack(X)
+    X = np.dstack(X)
     Y = Y[0]  # getting array out of list
     return X, Y, mod
 
 
-def train_test_split(data: array, test_size=0.2) -> Tuple[array, array]:
+def train_test_split(data: np.ndarray, test_size=0.2) -> tuple[np.ndarray, np.ndarray]:
     """Splits the time series data into training and testing sets.
     Parameters:
         data (array): Sequence that contains time series

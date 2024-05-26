@@ -1,5 +1,5 @@
 # imbrium [![Downloads](https://pepy.tech/badge/imbrium)](https://pepy.tech/project/imbrium) [![PyPi](https://img.shields.io/pypi/v/imbrium.svg?color=blue)](https://pypi.org/project/imbrium/) [![GitHub license](https://img.shields.io/github/license/maxmekiska/Imbrium?color=black)](https://github.com/maxmekiska/Imbrium/blob/main/LICENSE) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/imbrium.svg)](https://pypi.python.org/project/imbrium/)
- 
+
 ## Status
 
 | Build | Status|
@@ -34,7 +34,7 @@ imbrium is a deep learning library that specializes in time series forecasting. 
 
 imbrium is designed to simplify the application of deep learning models for time series forecasting. The library offers a variety of pre-built architectures. The user retains full control over the configuration of each layer, including the number of neurons, the type of activation function, loss function, optimizer, and metrics applied. This allows for the flexibility to adapt the architecture to the specific needs of the forecast task at hand. Imbrium also offers a user-friendly interface for training and evaluating these models, making it easy to quickly iterate and test different configurations.
 
-imbrium uses the sliding window approach to generate forecasts. The sliding window approach in time series forecasting involves moving a fixed-size window - `steps_past` through historical data, using the data within the window as input features. The next data points outside the window are used as the target variables - `steps_future`. This method allows the model to learn sequential patterns and trends in the data, enabling accurate predictions for future points in the time series. 
+imbrium uses the sliding window approach to generate forecasts. The sliding window approach in time series forecasting involves moving a fixed-size window - `steps_past` through historical data, using the data within the window as input features. The next data points outside the window are used as the target variables - `steps_future`. This method allows the model to learn sequential patterns and trends in the data, enabling accurate predictions for future points in the time series.
 
 
 ### Get started with imbrium
@@ -58,12 +58,12 @@ Note, if you choose to use TensorBoard, run the following command to display the
 from imbrium import PureUni
 
 # create a PureUni object (numpy array expected)
-predictor = PureUni(target = target_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
+predictor = PureUni(target = target_numpy_array, evaluation_split = 0.1, validation_split = 0.2)
 
 # the following models are available for a PureUni objects;
 
 # create and fit a muti-layer perceptron model
-predictor.create_fit_mlp( 
+predictor.create_fit_mlp(
         steps_past,
         steps_future,
         optimizer = "adam",
@@ -225,7 +225,7 @@ predictor = create_fit_cnn(
         board = False,
 )
 
-# create and fit a gated recurrent unit neural network  
+# create and fit a gated recurrent unit neural network
 predictor.create_fit_gru(
         steps_past,
         steps_future,
@@ -400,7 +400,7 @@ predictor.freeze(absolute_path)
 
 # load saved predictor via:
 predictor.retrieve(location)
-```  
+```
 
 </details>
 
@@ -413,12 +413,12 @@ predictor.retrieve(location)
 from imbrium import PureMulti
 
 # create a PureMulti object (numpy array expected)
-predictor = PureMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
+predictor = PureMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.1, validation_split = 0.2)
 
 # the following models are available for a PureMulti objects;
 
 # create and fit a muti-layer perceptron model
-predictor.create_fit_mlp( 
+predictor.create_fit_mlp(
         steps_past,
         steps_future,
         optimizer = "adam",
@@ -580,7 +580,7 @@ predictor = create_fit_cnn(
         board = False,
 )
 
-# create and fit a gated recurrent unit neural network  
+# create and fit a gated recurrent unit neural network
 predictor.create_fit_gru(
         steps_past,
         steps_future,
@@ -755,7 +755,7 @@ predictor.freeze(absolute_path)
 
 # load saved predictor via:
 predictor.retrieve(location)
-```  
+```
 </details>
 
 <details>
@@ -766,7 +766,7 @@ predictor.retrieve(location)
 from imbrium import HybridUni
 
 # create a HybridUni object (numpy array expected)
-predictor = HybridUni(target = target_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
+predictor = HybridUni(target = target_numpy_array, evaluation_split = 0.1, validation_split = 0.2)
 
 # the following models are available for a HybridUni objects:
 # create and fit a convolutional recurrent neural network
@@ -887,7 +887,7 @@ predictor.create_fit_cnnlstm(
         board = False,
 )
 
-# create and fit a convolutional gated recurrent unit neural network  
+# create and fit a convolutional gated recurrent unit neural network
 predictor.create_fit_cnngru(
         sub_seq,
         steps_past,
@@ -1158,7 +1158,7 @@ predictor.freeze(absolute_path)
 
 # load saved predictor via:
 predictor.retrieve(location)
-```  
+```
 
 </details>
 
@@ -1171,7 +1171,7 @@ predictor.retrieve(location)
 from imbrium import HybridMulti
 
 # create a HybridMulti object (numpy array expected)
-predictor = HybridMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.1, validation_split = 0.2) 
+predictor = HybridMulti(target = target_numpy_array, features = features_numpy_array, evaluation_split = 0.1, validation_split = 0.2)
 
 # the following models are available for a HybridMulti objects:
 # create and fit a convolutional recurrent neural network
@@ -1292,7 +1292,7 @@ predictor.create_fit_cnnlstm(
         board = False,
 )
 
-# create and fit a convolutional gated recurrent unit neural network  
+# create and fit a convolutional gated recurrent unit neural network
 predictor.create_fit_cnngru(
         sub_seq,
         steps_past,
@@ -1563,7 +1563,7 @@ predictor.freeze(absolute_path)
 
 # load saved predictor via:
 predictor.retrieve(location)
-```  
+```
 </details>
 
 </details>

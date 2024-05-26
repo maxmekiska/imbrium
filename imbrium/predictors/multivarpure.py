@@ -1,9 +1,10 @@
 import datetime
 import os
+from typing import Any
 
+import numpy as np
 from keras.callbacks import EarlyStopping, TensorBoard
 from keras.saving import load_model
-from numpy import array
 
 from imbrium.architectures.models import (bigru, bilstm, birnn, cnn, gru, lstm,
                                           mlp, rnn)
@@ -22,8 +23,8 @@ class BasePureMulti(MultiVariateMultiStep):
 
     def __init__(
         self,
-        target: array = array([]),
-        features: array = array([]),
+        target: np.ndarray = np.array([]),
+        features: np.ndarray = np.array([]),
         evaluation_split: float = 0.10,  # train: 90%, test: 10%
         validation_split: float = 0.20,  # train: 72%, test: 10%, val: 18%
     ) -> object:
@@ -59,7 +60,7 @@ class BasePureMulti(MultiVariateMultiStep):
         else:
             pass
 
-    def set_model_id(self, name: str):
+    def set_model_id(self, name: str) -> None:
         """Setter method to change model id field.
         Parameters:
             name (str): Name for selected Model.
@@ -72,32 +73,32 @@ class BasePureMulti(MultiVariateMultiStep):
         return self.model_id
 
     @property
-    def get_target(self) -> array:
+    def get_target(self) -> np.ndarray:
         """Get original target data."""
         return self.target
 
     @property
-    def get_target_shape(self) -> array:
+    def get_target_shape(self) -> np.ndarray:
         """Get shape of original target data."""
         return self.target.shape
 
     @property
-    def get_X_input(self) -> array:
+    def get_X_input(self) -> np.ndarray:
         """Get transformed feature data."""
         return self.input_x
 
     @property
-    def get_X_input_shape(self) -> tuple:
+    def get_X_input_shape(self) -> tuple[int, int]:
         """Get shape fo transformed feature data."""
         return self.input_x.shape
 
     @property
-    def get_y_input(self) -> array:
+    def get_y_input(self) -> np.ndarray:
         """Get transformed target data."""
         return self.input_y
 
     @property
-    def get_y_input_shape(self) -> tuple:
+    def get_y_input_shape(self) -> tuple[int, int]:
         """Get shape fo transformed target data."""
         return self.input_y.shape
 
@@ -148,7 +149,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
             },
         },
-    ):
+    ) -> None:
         """Creates MLP model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -225,7 +226,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
             },
         },
-    ):
+    ) -> None:
         """Creates RNN model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -292,7 +293,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 "config": {"neurons": 50, "activation": "relu", "regularization": 0.0}
             },
         },
-    ):
+    ) -> None:
         """Creates LSTM model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -370,7 +371,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates CNN model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -441,7 +442,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates GRU model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -503,7 +504,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates BI-RNN model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -563,7 +564,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates BI-LSTM model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -623,7 +624,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 }
             },
         },
-    ):
+    ) -> None:
         """Creates BI-GRU model.
         Parameters:
             steps_past (int): Steps predictor will look backward.
@@ -663,7 +664,7 @@ class BasePureMulti(MultiVariateMultiStep):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> Any:
         """Trains the model on data provided. Perfroms validation.
         Parameters:
             epochs (int): Number of epochs to train the model.
@@ -734,7 +735,7 @@ class BasePureMulti(MultiVariateMultiStep):
                 )
         return self.details
 
-    def evaluate_model(self, board: bool = False):
+    def evaluate_model(self, board: bool = False) -> Any:
         """Evaluate model on test set.
         Parameters:
             board (bool): Create TensorBoard.
@@ -757,19 +758,19 @@ class BasePureMulti(MultiVariateMultiStep):
 
         return self.evaluation_details
 
-    def model_blueprint(self):
+    def model_blueprint(self) -> Any:
         """Prints a summary of the models layer structure."""
         self.model.summary()
 
-    def show_performance(self):
+    def show_performance(self) -> Any:
         """Returns performance details."""
         return self.details
 
-    def show_evaluation(self):
+    def show_evaluation(self) -> Any:
         """Returns performance details on test data."""
         return self.evaluation_details
 
-    def predict(self, data: array) -> array:
+    def predict(self, data: np.ndarray) -> np.ndarray:
         """Takes in a sequence of values and outputs a forecast.
         Parameters:
             data (array): Input sequence which needs to be forecasted.
@@ -791,14 +792,14 @@ class BasePureMulti(MultiVariateMultiStep):
 
         return y_pred
 
-    def freeze(self, absolute_path: str = CURRENT_PATH):
+    def freeze(self, absolute_path: str = CURRENT_PATH) -> None:
         """Save the current model to the current directory.
         Parameters:
            absolute_path (str): Path to save model to.
         """
         self.model.save(absolute_path)
 
-    def retrieve(self, location: str):
+    def retrieve(self, location: str) -> None:
         """Load a keras model from the path specified.
         Parameters:
             location (str): Path of keras model location.
@@ -844,7 +845,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a Multi-Layer-Perceptron model."""
         self.create_mlp(
             steps_past=steps_past,
@@ -904,7 +905,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a RNN model."""
         self.create_rnn(
             steps_past=steps_past,
@@ -964,7 +965,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a LSTM model."""
         self.create_lstm(
             steps_past=steps_past,
@@ -1035,7 +1036,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a CNN model."""
         self.create_cnn(
             steps_past=steps_past,
@@ -1099,7 +1100,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a GRU model."""
         self.create_gru(
             steps_past=steps_past,
@@ -1154,7 +1155,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a BI-RNN model."""
         self.create_birnn(
             steps_past=steps_past,
@@ -1208,7 +1209,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a BI-LSTM model."""
         self.create_bilstm(
             steps_past=steps_past,
@@ -1262,7 +1263,7 @@ class PureMulti(BasePureMulti):
         board: bool = False,
         batch_size=None,
         **callback_setting: dict,
-    ):
+    ) -> float:
         """Creates and trains a BI-GRU model."""
         self.create_bigru(
             steps_past=steps_past,

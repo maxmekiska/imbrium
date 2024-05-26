@@ -17,7 +17,7 @@ setup(
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "setuptools >= 41.0.0",
-        "tensorflow>=2.16.0",
+        "tensorflow >=2.16.0, <2.17.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.9",
