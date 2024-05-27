@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from numpy import array
+import numpy as np
 
 
 class UniVariateMultiStep(ABC):
@@ -11,8 +11,8 @@ class UniVariateMultiStep(ABC):
     @abstractmethod
     def __init__(
         self,
-        target: array = array([]),
-        features: array = array([]),
+        target: np.ndarray = np.array([]),
+        features: np.ndarray = np.array([]),
         evaluation_split: float = 0.2,
         validation_split: float = 0.2,
     ):
@@ -27,12 +27,12 @@ class UniVariateMultiStep(ABC):
 
     @property
     @abstractmethod
-    def get_target(self) -> array:
+    def get_target(self) -> np.ndarray:
         pass
 
     @property
     @abstractmethod
-    def get_target_shape(self) -> array:
+    def get_target_shape(self) -> np.ndarray:
         pass
 
     @property
@@ -42,7 +42,7 @@ class UniVariateMultiStep(ABC):
 
     @property
     @abstractmethod
-    def get_X_input(self) -> array:
+    def get_X_input(self) -> np.ndarray:
         pass
 
     @property
@@ -52,7 +52,7 @@ class UniVariateMultiStep(ABC):
 
     @property
     @abstractmethod
-    def get_y_input(self) -> array:
+    def get_y_input(self) -> np.ndarray:
         pass
 
     @property
@@ -79,6 +79,8 @@ class UniVariateMultiStep(ABC):
     def fit_model(
         self,
         epochs: int,
+        board: bool = False,
+        batch_size=None,
         show_progress: int = 1,
         validation_split: float = 0.20,
         **callback_setting: dict
@@ -86,7 +88,7 @@ class UniVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def evaluate_model(self):
+    def evaluate_model(self, board: bool = False):
         pass
 
     @abstractmethod
@@ -102,7 +104,7 @@ class UniVariateMultiStep(ABC):
         pass
 
     @abstractmethod
-    def predict(self, data: array) -> array:
+    def predict(self, data: np.ndarray) -> np.ndarray:
         pass
 
     @abstractmethod

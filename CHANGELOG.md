@@ -89,12 +89,12 @@ activation function type
 - removed encoder-decoder architectures
 - improved layer configuration via dictionary input
 - split data argument into target and feature numpy arrays
- 
+
 ### 2.0.1
 
-- fix: removed dead pandas imports 
+- fix: removed dead pandas imports
 - chore: added tensorflow as base requirement
- 
+
 ### 2.1.0
 
 - feat!: removed data preparation out of predictor class, sub_seq, steps_past, steps_future need now to be defined in each model method
@@ -107,4 +107,12 @@ activation function type
 - chore!: removed python 3.8 support to accomodate tensorflow and keras dependiencies
 - chore: increased major to 3.0.0 to align with keras major
 - feat: added evaluate_model method to test model performance on test data
-- refactor!: removed validation split from `fit_model`. Control validation and test split via evaluation_split and validation_split paramters in class variables 
+- refactor!: removed validation split from `fit_model`. Control validation and test split via evaluation_split and validation_split paramters in class variables
+
+### 3.1.0
+
+- feat: added optional `batch_size` paramter to `fit_model`
+- feat: added Tensor Board to `evaluate_model`
+- refactor!: train, test, validation split default change
+- chore: added pre-commit checks
+- refactor: added, improved typing

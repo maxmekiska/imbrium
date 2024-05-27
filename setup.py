@@ -13,11 +13,11 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     name="imbrium",
-    version="3.0.0",
+    version="3.1.0",
     packages=find_packages(include=["imbrium", "imbrium.*"]),
     install_requires=[
         "setuptools >= 41.0.0",
-        "tensorflow>=2.16.0",
+        "tensorflow >=2.16.0, <2.17.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.9",
